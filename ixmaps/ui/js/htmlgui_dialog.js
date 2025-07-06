@@ -145,7 +145,7 @@ $Log: htmlgui.js,v $
 					}
 				});
 			}else
-			if ( (szUrl.substr(0,1) == ".") ){
+			if ( 1 || (szUrl.substr(0,1) == ".") ){
 				$("#"+szElement)[0].innerHTML = 
 					"<div overflow=\"auto\">"+
 					"<iframe style=\"width:100%;height:"+(dialogHeight-75)+"px;\" id=\"dialogframe\" src=\""+szUrl+"\" frameborder=\"0\" marginwidth=\"0px\" />"+
