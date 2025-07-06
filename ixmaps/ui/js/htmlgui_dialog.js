@@ -137,10 +137,23 @@ $Log: htmlgui.js,v $
 		$("#"+szElement).parent().css("z-index","10000");
 		// load content
 		if ( typeof(szUrl) == "string" && szUrl.length ){
-            $("#"+szElement)[0].innerHTML = 
-                "<div overflow=\"auto\">"+
-                "<iframe style=\"width:100%;height:"+(dialogHeight-75)+"px;\" id=\"dialogframe\" src=\""+szUrl+"\" frameborder=\"0\" marginwidth=\"0px\" />"+
-                "</div>";
+			if ( (szUrl.substr(0,4) == "http") ){
+				$("#"+szElement).load(szUrl, function (response, status, xhr) {
+					if (status == "error") {
+						var msg = "Sorry but there was an error: ";
+						$("#story").append(msg + xhr.status + "<br><br> '" + szStoryRoot + szUrl + "'<br><br> " + xhr.statusText);
+					}
+				});
+			}else
+			if ( (szUrl.substr(0,1) == ".") ){
+				$("#"+szElement)[0].innerHTML = 
+					"<div overflow=\"auto\">"+
+					"<iframe style=\"width:100%;height:"+(dialogHeight-75)+"px;\" id=\"dialogframe\" src=\""+szUrl+"\" frameborder=\"0\" marginwidth=\"0px\" />"+
+					"</div>";
+			}else{
+				$("#"+szElement)[0].innerHTML = 
+					"<div overflow=\"auto\"><span style=\"color:#888\">"+szUrl+"</span></div>";
+			}
 		}
 		return 	$("#"+szElement)[0];
 	};
