@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="ixmaps embed example">
+    <meta name="author" content="guenter richter">
+    <link rel="shortcut icon" href="https://gjrichter.github.io/ixmaps/ui/resources/images/ixmaps_logo.png">
+
+    <title>Page</title>
+</head>
+
+<body style="margin:0;padding:0;">
+
+    <!-- here goes the map -->
+    <div id="map-div"></div>
+
+    <!-- include the ixmaps API -->
+    <script src="../../ui/js/htmlgui_flat.js"></script>
+
+    <script type="text/javascript" charset="utf-8">
+        query_data_2022_2025 = function(theme, options) {
+
+            var broker = new Data.Broker()
+
+                .addSource("https://s3.tebi.io/data/elections/italy/comunali/Genova/genova_risultati_2022.csv", "csv")
+                .addSource("https://s3.tebi.io/data/elections/italy/comunali/Genova/genova_risultati_2025.csv", "csv")
+
+                .realize(
+                    function(dataA) {
+
+                        var data_2022 = dataA[0];
+                        var data_2025 = dataA[1];
+
+                        var merger = new Data.Merger()
+                            .addSource(data_2022, {
+                                lookup: "N.Sezione"
+                            })
+                            .addSource(data_2025, {
+                                lookup: "N.Sezione"
+                            })
+                            .realize(
+                                function(mergedTable) {
+                                    ixmaps.setExternalData(mergedTable, {
+                                        type: "dbtable",
+                                        name: options.name
+                                    });
+                                });
+                    });
+        };
+
+
+
+        // create and embed the map
+        // ! reference to "map-div", the hosting html div
+
+        ixmaps.embed("map-div", {
+                mapService: "leaflet_vt",
+                mapType: "Stamen - toner-lite",
+                map: "../../maps/svg/maps/generic/mercator.svg",
+                name: "map_1",
+                mode: "pan",
+                legend: "true",
+                align: "right",
+                tools: "true",
+                search: "Europe",
+                about: "test"
+            },
+            map => map
+            .options({
+                featurescaling: "true",
+                objectscaling: "true",
+                normalSizeScale: "500000",
+                flushChartDraw: "1000000",
+                flushPaintShape: "1000000",
+                basemapopacity: "0.5",
+                worksilent: "false",
+                loadsilent: "false",
+                hideOnPan: "false",
+                freezeOnPan: "false",
+            })
+            .require("https://d3js.org/d3.v3.min.js")
+            .require("../../usercharts/d3/chart.js")
+            .require("../../usercharts/d3/arrow_chart.js")
+            .require("../../ui/js/tools/tooltip_mustache.js")
+            .attribution("powered by <a href=\"http://ixmaps.com\" target=\"_blank\">iXMaps</a>")
+            .view({
+            center: {
+                lat: 44.44967492243179,
+                lng: 8.88002119660997
+                },
+            zoom: 12.290304235444887
+            })
+            .layer(ixmaps.layer("SEZIONI", layer => layer
+                .data({
+                    url: "https://s3.tebi.io/geometries/administrative_boundaries/italy/elections/genova_sezioni_elettorali.topojson",
+                    type: "topojson",
+                    name: "data_1748415984020_870",
+                    cache: "true"
+                })
+                .binding({
+                    geo: "geometry",
+                    id: "SEZIONE"
+                })
+                .type("FEATURE")
+                .style({
+                    colorscheme: [
+                        "#eeeeee"
+                    ],
+                    fillopacity: "0.1",
+                    shadow: "false",
+                    visible: "true",
+                    showdata: "true",
+                    units: "",
+                    scale: "1",
+                    sizepow: "2",
+                    linecolor: [
+                        "#ffffff"
+                    ],
+                    linewidth: "0.5",
+                    valuescale: "1"
+                })
+                .meta({
+                    title: "[title]",
+                    snippet: "",
+                    description: "",
+                    name: "data_1748415984020_870",
+                    tooltip: "{{theme.item.chart}}{{theme.item.data}}"
+                })
+            ))
+            .layer(ixmaps.layer("SEZIONI", layer => layer
+                .data({
+                    url: "https://s3.tebi.io/data/elections/italy/comunali/Genova/genova_risultati_2025.csv",
+                    type: "csv",
+                    name: "data_risultati",
+                    cache: "true"
+                })
+                .binding({
+                    geo: "N.Sezione",
+                    values: [
+                        "SALIS SILVIA",
+                        "PICIOCCHI PIETRO"
+                    ],
+                    value100: "Voti totali",
+                    title: "Desc. Sezione"
+                })
+                .type("CHOROPLETH|DOMINANT|DOPACITYMAX|SIMPLELEGEND")
+                .style({
+                    colorscheme: [
+                        "#D35F50",
+                        "#5784C5"
+                    ],
+                    label: [
+                        "SALIS SILVIA",
+                        "PICIOCCHI PIETRO"
+                    ],
+                    fillopacity: "1",
+                    units: "%",
+                    dopacitypow: 0.5,
+                    dopacityscale: 0.3,
+                    valuesupper: "1:1000000",
+                    valuedecimals: "1"
+                })
+                .meta({
+                    title: "Scrutini Comunali Genova 2025",
+                    description: "- colore: candidato in vantaggio<br><b>- intensità: densità dei votanti (totale)</b>",
+                    tooltip: "<h3 style='margin-top:0'>{{theme.title}}</h3><h4 style='margin-top:0.2em;margin-bottom:0.5em'>{{theme.item.title}}</h4>{{theme.item.chart}}"
+                })
+            ))
+            .layer(ixmaps.layer("SEZIONI", layer => layer
+                .data({
+                    query: query_data_2022_2025.toString(),
+                    type: "ext",
+                    name: "data_risultati_2022_2025",
+                    cache: "true"
+                })
+                .binding({
+                    geo: "N.Sezione.1",
+                    values: [
+                        "DELLO STROLOGO ARIEL.1",
+                        "SALIS SILVIA.2"
+                    ],
+                    value100: "Tot. validi.1|Tot. validi.2"
+                })
+                .type("CHART|USER|DIFFERENCE|SIZE|VALUES|SIMPLELEGEND|AGGREGATE|RECT|RELOCATE")
+                .style({
+                    userdraw: "arrowChart",
+                    colorscheme: [
+                        "#D35F50"
+                    ],
+                    shadow: "true",
+                    fillopacity: "0.9",
+                    shadow: "false",
+                    units: "%",
+                    normalsizevalue: "30",
+                    valuefield: "$title$",
+                    minvalue: "1",
+                    textcolor: "#666666",
+                    textscale: "1",
+                    fadenegative: 0.2,
+                    showdata: true,
+                    xxdatafields: ["Desc. Sezione.1"],
+                    linewidth: "0.5",
+                    rotation: "300",
+                    sizepow: "1",
+                    gridwidth: "50px"
+                })
+                .meta({
+                    title: "Scrutini Comunali Genova 2025 <br><small>differenza risp. al risultato del 2022</small>",
+                    description: "- colore: candidato in vantaggio<br><b>- intensità: densità dei votanti (totale)</b>",
+                    tooltip: "<h3 style='margin-top:0'>{{theme.title}}</h3><h4 style='margin-top:0.2em;margin-bottom:0.5em'>{{theme.item.title}}</h4>{{theme.item.chart}}{{theme.item.data}}"
+                })
+            ))
+            .layer(ixmaps.layer("SEZIONI", layer => layer
+                .data({
+                    query: query_data_2022_2025.toString(),
+                    type: "ext",
+                    name: "data_risultati_2022_2025",
+                    cache: "true"
+                })
+                .binding({
+                    geo: "N.Sezione.1",
+                    values: [
+                        "BUCCI MARCO.1",
+                        "PICIOCCHI PIETRO.2"
+                    ],
+                    value100: "Tot. validi.1|Tot. validi.2"
+                })
+                .type("CHART|USER|3D|DIFFERENCE|AGGREGATE|RECT|RELOCATE|SUM|VALUES|NEGATIVELIKEPOSITIVE|SIMPLELEGEND")
+                //.filter("WHERE P1.2 > 10 AND P1.1 > 10")
+                .style({
+                    userdraw: "arrowChart",
+                    sizepow: "1",
+                    rotation: "60",
+                    shadow: "true",
+                    colorscheme: [
+                        "#5784C5"
+                    ],
+                    units: "%",
+                    showdata: true,
+                    gridwidth: "50px",
+                    scale: "1",
+                    fillopacity: 1,
+                    fadenegative: 0.1,
+                    linewidth: 0.5,
+                    normalsizevalue: "30",
+                    valuescale: 1,
+                    minvaluesize: "5",
+                    rangecentervalue: "0",
+                    showdata: true,
+                    datafields: ["Desc. Sezione.1"],
+                    nodatacolor: "RGB(255,253,216)"
+                })
+                .meta({
+                    title: "Scrutini Comunali Genova 2025 <br><small>differenza risp. al risultato del 2022</small>",
+                    description: "- colore: candidato in vantaggio<br><b>- intensità: densità dei votanti (totale)</b>",
+                    tooltip: "<h3 style='margin-top:0'>{{theme.title}}</h3><h4 style='margin-top:0.2em;margin-bottom:0.5em'>{{theme.item.title}}</h4>{{theme.item.chart}}{{theme.item.data}}"
+                })
+            ))
+            .layer(ixmaps.layer("SEZIONI", layer => layer
+                .data({
+                    url: "https://s3.tebi.io/data/elections/italy/comunali/Genova/genova_risultati_2025.csv",
+                    type: "csv",
+                    name: "data_risultati",
+                    cache: "true"
+                })
+                .binding({
+                    geo: "N.Sezione",
+                    values: [
+                        "SALIS SILVIA",
+                        "PICIOCCHI PIETRO"
+                    ],
+                    value100: "Voti totali"
+                })
+                .type("CHART|USER|SIZE|3D|SHADOW|VALUES|DOMINANT|AGGREGATE|RECT|RELOCATE|SUM|SIMPLELEGEND")
+                .style({
+                    userdraw: "pinnacleChart",
+                    colorscheme: [
+                        "#D35F50",
+                        "#5784C5"
+                    ],
+                    label: [
+                        "SALIS SILVIA",
+                        "PICIOCCHI PIETRO"
+                    ],
+                    sizepow: 0.3,
+                    shadow: "false",
+                    units: "%",
+                    normalsizevalue: "120",
+                    scale: "1",
+                    rangescale: "2",
+                    valuesupper: "1:1000000",
+                    valuedecimals: "0",
+                    minvaluevalue: "50",
+                    gridwidth: "50px",
+                    showdata: "true",
+                    datafields: ["Desc. Sezione"]
+                })
+                .meta({
+                    title: "Scrutini Comunali Genova 2025<br><small>Candidato vincente con la percentuale</small>",
+                    description: "<b>- colore di fondo</b>: candidato vincente 2025<br><b>- apici</b>: percentuale del candidato vinvente<br><b>- frecce</b>: quadagni e perdite rel. a 2022 </b></br>valori per sezioni di elezione, aggregati in dipendenza allo zoom",
+                    tooltip: "<h3 style='margin-top:0'>{{theme.title}}</h3><h4 style='margin-top:0.2em;margin-bottom:0.5em'>{{theme.item.title}}</h4>{{theme.item.chart}}{{theme.item.data}}"
+                })
+            ))
+
+        );
+
+    </script>
+</body>
+
+</html>

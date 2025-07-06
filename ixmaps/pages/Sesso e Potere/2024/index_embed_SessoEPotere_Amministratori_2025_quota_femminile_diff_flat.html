@@ -1,0 +1,549 @@
+<!DOCTYPE html>
+<html>
+
+<!-- **********************************************************************
+
+index_only_map_embed.html
+
+$Comment: ixmaps map template; embedded version
+$Source : index_only_map_embed.html,v $
+
+$InitialAuthor: guenter richter $
+$InitialDate: 2017/06/22 $
+$Author: guenter richter $
+$Id:index_only_map_embed.html 1 2021-10-17 00:00:00Z Guenter Richter $
+
+licensed under CC-BY
+$Log:index_only_map_embed.html,v $
+
+********************************************************************** -->
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="ixmaps embed example">
+    <meta name="author" content="guenter richter">
+    <link rel="shortcut icon" href="https://gjrichter.github.io/ixmaps/ui/resources/images/ixmaps_logo.png">
+
+    <title>iXMaps - embeded map</title>
+
+</head>
+
+<body style="margin:0;padding:0">
+
+    <!-- here goes the map -->
+    <div id="map-div"></div>
+
+    <!--========================================================================= -->
+
+    <script src="../../../ui/js/htmlgui_flat.js"></script>
+
+    <!--========================================================================= -->
+
+    <script type="text/javascript" charset="utf-8">
+        const attribution = "dati: <a href='https://dait.interno.gov.it/elezioni/open-data/amministratori-locali-e-regionali-in-carica' target='_blank'>Ministero dell'Interno</a>, 	licenza: <a href='https://creativecommons.org/licenses/by/4.0/deed.it target='_blank'>CC-BY-4.0</a>"
+
+        const legend = "<span style='color:#888888'><h1>Sindaci in carica al<br> 17 Novembre 2024</h1><h4>fonte: <a href='https://github.com/ondata/sesso-e-potere/tree/main/dati/amministazioni-italiane' target='blank'>onData</a>, <a href='https://dait.interno.gov.it/elezioni/open-data/amministratori-locali-e-regionali-in-carica' target='_blank'>Ministero dell'Interno</a> licenza: <a href='https://www.dati.gov.it/content/italian-open-data-license-v20' target='blank'>IODL v2.0</h4></span>";
+
+        const query = function(data, options) {
+            Data.feed({
+                source: "https://s3.eu-west-1.amazonaws.com/data.ixmaps.com/Amministrazioni/sesso_e%20_potere/ammcom_24_11_17.csv.gz",
+                type: "csv"
+            }).load(function(newData) {
+                var pivot = newData.pivot({
+                    lead: "CODICE_ISTAT",
+                    columns: "sesso",
+                    keep: [
+                        "CODICE_ISTAT",
+                        "codice_regione",
+                        "codice_provincia",
+                        "denominazione_comune",
+                        "popolazione_censita_alla_data_elezione"
+                    ]
+                });
+                var iTotal = pivot.column("Total").index;
+                var iF = pivot.column("F").index;
+                pivot.addColumn({
+                    destination: "quota_femminile"
+                }, function(row) {
+                    return Math.round((row[iF] / row[iTotal]) * 10000) / 100;
+                });
+                (options.type = "jsonDB"), ixmaps.setExternalData(pivot, options);
+            });
+        };
+
+        const query_diff = function(data, options) {
+            var broker = new Data.Broker()
+                .addSource(
+                    "https://s3.eu-west-1.amazonaws.com/data.ixmaps.com/Amministrazioni/sesso_e%20_potere/ammcom_22_10_22.csv.gz",
+                    "csv"
+                )
+                .addSource(
+                    "https://s3.eu-west-1.amazonaws.com/data.ixmaps.com/Amministrazioni/sesso_e%20_potere/ammcom_24_11_17.csv.gz",
+                    "csv"
+                )
+                .realize(function(dataA) {
+                    dataA[0] = dataA[0].select("WHERE descrizione_carica like \"Sindac|Assess|Consigl\"")
+                    dataA[1] = dataA[1].select("WHERE descrizione_carica like \"Sindac|Assess|Consigl\"")
+                    var pivot_1 = dataA[0].pivot({
+                        lead: "CODICE_ISTAT",
+                        columns: "sesso",
+                        keep: [
+                            "CODICE_ISTAT",
+                            "codice_regione",
+                            "codice_provincia",
+                            "denominazione_comune",
+                            "data_elezione",
+                            "popolazione_censita"
+                        ]
+                    });
+                    var pivot_2 = dataA[1].pivot({
+                        lead: "CODICE_ISTAT",
+                        columns: "sesso",
+                        keep: [
+                            "CODICE_ISTAT",
+                            "codice_regione",
+                            "codice_provincia",
+                            "denominazione_comune",
+                            "data_elezione",
+                            "popolazione_censita_alla_data_elezione"
+                        ]
+                    });
+
+                    var iTotal = pivot_1.column("Total").index;
+                    var iF = pivot_1.column("F").index;
+                    pivot_1.addColumn({
+                        destination: "quota_femminile"
+                    }, function(row) {
+                        return Math.round((row[iF] / row[iTotal]) * 10000) / 100;
+                    });
+
+                    iTotal = pivot_2.column("Total").index;
+                    iF = pivot_2.column("F").index;
+                    pivot_2.addColumn({
+                        destination: "quota_femminile"
+                    }, function(row) {
+                        return Math.round((row[iF] / row[iTotal]) * 10000) / 100;
+                    });
+
+                    var merger = new Data.Merger();
+                    var final = merger
+                        .addSource(pivot_1, {
+                            lookup: "CODICE_ISTAT",
+                            columns: pivot_1.columnNames()
+                        })
+                        .addSource(pivot_2, {
+                            lookup: "CODICE_ISTAT",
+                            columns: pivot_2.columnNames()
+                        })
+                        .realize();
+
+                    final.column("data_elezione.1").rename("data_elezione_1");
+                    final.column("data_elezione.2").rename("data_elezione_2");
+
+                    var iQ1 = final.column("quota_femminile.1").index;
+                    var iQ2 = final.column("quota_femminile.2").index;
+                    final.addColumn({
+                        destination: "quota_femminile_diff"
+                    }, function(row) {
+                        return (row[iQ2] - row[iQ1]);
+                    });
+
+                    final = final.select("WHERE \"data_elezione_1\" NOT \"$data_elezione_2$\"");
+                    final = final.select("WHERE \"Total.1\" = \"$Total.2$\"");
+
+
+                    (options.type = "jsonDB"), ixmaps.setExternalData(final, options);
+                });
+        };
+
+        const query_extended_age = function(data, options) {
+            var broker = new Data.Broker()
+                .addSource(
+                    "https://s3.eu-west-1.amazonaws.com/data.ixmaps.com/Amministrazioni/sesso_e%20_potere/ammcom_24_11_17.csv.gz",
+                    "csv"
+                )
+                .realize(function(dataA) {
+                    ixmaps.showLoadingArrayStop();
+                    ixmaps.hideLoading();
+
+                    var ammcom = dataA[0];
+
+                    var pivot = ammcom.pivot({
+                        lead: "denominazione_comune",
+                        columns: "sesso",
+                        keep: [
+                            "CODICE_ISTAT",
+                            "codice_regione",
+                            "codice_provincia",
+                            "popolazione_censita_alla_data_elezione"
+                        ]
+                    });
+
+                    var iTotal = pivot.column("Total").index;
+                    var iF = pivot.column("F").index;
+                    pivot.addColumn({
+                            destination: "quota"
+                        },
+                        function(row) {
+                            return (row[iF] / row[iTotal]) * 100;
+                        }
+                    );
+                    var lookup = pivot.lookupArray("quota", "denominazione_comune");
+
+                    ammcom.addColumn({
+                            source: "denominazione_comune",
+                            destination: "quota"
+                        },
+                        function(value) {
+                            return lookup[value];
+                        }
+                    );
+
+                    var iProv = ammcom.column("codice_provincia").index;
+                    var iCom = ammcom.column("codice_comune").index;
+                    ammcom.addColumn({
+                        destination: "PROCOM"
+                    }, function(row) {
+                        return row[iProv] + ("000" + String(row[iCom])).slice(-3);
+                    });
+
+                    var iNat = ammcom.column("data_nascita").index;
+                    ammcom.addColumn({
+                        destination: "eta"
+                    }, function(row) {
+                        var dA = row[iNat].split("/");
+                        return (
+                            (new Date().getTime() -
+                                new Date(dA[2] + "/" + dA[1] + "/" + dA[0]).getTime()) /
+                            (1000 * 60 * 60 * 24 * 356)
+                        ).toFixed(0);
+                    });
+
+                    ammcom.addColumn({
+                            source: "eta",
+                            destination: "eta_10"
+                        },
+                        function(value) {
+                            return Math.floor(value / 10) * 10;
+                        }
+                    );
+
+                    ammcom.addColumn({
+                            source: "eta",
+                            destination: "eta_5"
+                        },
+                        function(value) {
+                            return Math.floor(value / 5) * 5;
+                        }
+                    );
+
+                    ammcom.addColumn({
+                            source: "popolazione_censita_alla_data_elezione",
+                            destination: "popolazione_log"
+                        },
+                        function(value) {
+                            return Math.log10(value);
+                        }
+                    );
+
+                    var ammcomF = ammcom.select("WHERE sesso = F");
+                    var ammcomM = ammcom.select("WHERE sesso = M");
+
+                    var pivotF = ammcomF.pivot({
+                        lead: "denominazione_comune",
+                        columns: "eta_10",
+                        keep: [
+                            "CODICE_ISTAT",
+                            "PROCOM",
+                            "codice_regione",
+                            "codice_provincia",
+                            "sigla_provincia",
+                            "popolazione_censita_alla_data_elezione"
+                        ]
+                    });
+
+                    var pivotM = ammcomM.pivot({
+                        lead: "denominazione_comune",
+                        columns: "eta_10",
+                        keep: [
+                            "CODICE_ISTAT",
+                            "PROCOM",
+                            "codice_regione",
+                            "codice_provincia",
+                            "sigla_provincia",
+                            "popolazione_censita_alla_data_elezione"
+                        ]
+                    });
+
+                    var merger1 = new Data.Merger();
+                    var final = merger1
+                        .addSource(pivotM, {
+                            lookup: "denominazione_comune",
+                            columns: pivotM.columnNames()
+                        })
+                        .addSource(pivotF, {
+                            lookup: "denominazione_comune",
+                            columns: pivotF.columnNames()
+                        })
+                        .realize();
+
+                    var iTotal1 = final.column("Total.1").index;
+                    var iTotal2 = final.column("Total.2").index;
+                    final.addColumn({
+                            destination: "Total"
+                        },
+                        function(row) {
+                            return row[iTotal1] + row[iTotal2];
+                        }
+                    );
+
+                    ixmaps.setExternalData(final, {
+                        type: "dbtable",
+                        name: options.name
+                    });
+                });
+        };
+
+        const nuts0 =
+            ixmaps.layer("nuts0", layer => layer
+                .type("FEATURES|NOLEGEND")
+                .data({
+                    url: "https://gisco-services.ec.europa.eu/distribution/v2/nuts/geojson/NUTS_RG_10M_2021_4326_LEVL_0.geojson",
+                    type: "geojson"
+                })
+                .filter("WHERE NUTS_ID = IT")
+                .style({
+                    colorscheme: [
+                        "#000000"
+                    ],
+                    fillopacity: "1",
+                    linecolor: "#ffffff",
+                    linewidth: "1",
+                    showdata: true,
+                    name: "nuts0"
+                })
+            );
+
+
+
+        const georef =
+            ixmaps.layer("ITALIA_Comuni_2022")
+            .data({
+                url: "https://s3.eu-central-1.amazonaws.com/maps.ixmaps.com/Istat/comuni_2022/Com01012022_s_WGS84.topojson.gz",
+                type: "topojson"
+            })
+            .binding({
+                id: "PRO_COM_T",
+                position: "geometry"
+            })
+            .type("FEATURES|NOLEGEND")
+            .style({
+                colorscheme: ["none"],
+                fillopacity: "1",
+                linecolor: "none",
+                linewidth: "0.1",
+                sizefield: "Shape_Area"
+            })
+            .define();
+
+        const choropleth =
+            ixmaps.layer("ITALIA_Comuni_2022")
+            .data({
+                query: query.toString(),
+                type: "ext"
+            })
+            .binding({
+                value: "quota_femminile",
+                position: "CODICE_ISTAT"
+            })
+            .type("CHOROPLETH|RANGES|DOPACITYMIN|COMPACTLEGEND")
+            .style({
+                colorscheme: [
+                    "#666666",
+                    "#666666",
+                    "#666666",
+                    "#666666"
+                ],
+                fillopacity: "1",
+                shadow: "false",
+                ranges: [
+                    "0",
+                    "25",
+                    "40",
+                    "48",
+                    "100"
+                ],
+                units: "%",
+                scale: "1",
+                titlefield: "denominazione_comune",
+                alphafield: "popolazione_censita_alla_data_elezione",
+                alphafield100: "$density$",
+                dopacitypow: "2",
+                dopacityscale: "1",
+                valuescale: "1",
+            })
+            .meta({
+                title: "Quota femminile - Amministrazioni comunali al 5 ottobre 2022",
+                tooltip: "<div style='white-space:nowrap'>{{theme.item.title}}<h2 style='margin:0'>{{theme.item.value}} %</h2></div>"
+            })
+            .define();
+
+        const chart =
+            ixmaps.layer("ITALIA_Comuni_2022")
+            .data({
+                query: query_diff.toString(),
+                type: "ext"
+            })
+            .binding({
+                value: "M.1|F.1",
+                position: "CODICE_ISTAT.1"
+            })
+            .type("CHART|PIE|GRIDSIZE|AGGREGATE|RECT|SIMPLELEGEND")
+            .style({
+                colorscheme: [
+                    "none",
+                    "#FF0069",
+                ],
+                fillopacity: "0.5",
+                shadow: "false",
+                units: "",
+                normalsizevalue: "1000",
+                minaggregation: "3",
+                //sizefield: "popolazione_censita_alla_data_elezione",
+                minvalue: "1",
+                textcolor: "#666666",
+                textscale: "3",
+                fadenegative: 0.2,
+                linewidth: "0.2",
+                titlefield: "codice_provincia.1",
+                valuescale: "1",
+                valuedecimals: "0",
+                sizepow: "2",
+                showdata: "true",
+                gridwidth: "50px",
+                datafields: ["data_elezione_2", "codice_provincia.1"],
+                chartupper: "1:10000000"
+            })
+            .meta({
+                title: "Amministratori",
+                tooltip: "<h2 style='margin:0'>{{theme.title}}</h2>{{theme.item.chart}}con l'elezione del <b><big>{{data_elezione_2}}</big><b>"
+            })
+            .define();
+
+        const chart2 =
+            ixmaps.layer("ITALIA_Comuni_2022")
+            .data({
+                query: query_diff.toString(),
+                type: "ext"
+            })
+            .binding({
+                value: "M.2|F.2",
+                position: "CODICE_ISTAT.1"
+            })
+            .type("CHART|PIE|DONUT|THIN|GRIDSIZE|AGGREGATE|RECT|SIMPLELEGEND")
+            .style({
+                colorscheme: [
+                    "none",
+                    "#FF0069",
+                ],
+                fillopacity: "1",
+                shadow: "false",
+                units: "",
+                normalsizevalue: "500",
+                minaggregation: "3",
+                //sizefield: "popolazione_censita_alla_data_elezione",
+                minvalue: "1",
+                textcolor: "#666666",
+                textscale: "3",
+                fadenegative: 0.2,
+                linecolor: "#888888",
+                linewidth: "0.2",
+                titlefield: "codice_provincia.1",
+                valuescale: "1",
+                valuedecimals: "0",
+                sizepow: "2",
+                showdata: "true",
+                gridwidth: "50px",
+                datafields: ["data_elezione_2", "codice_provincia.1"],
+                chartupper: "1:10000000"
+            })
+            .meta({
+                title: "Amministratori",
+                tooltip: "<h2 style='margin:0'>{{theme.title}}</h2>{{theme.item.chart}}con l'elezione del <b><big>{{data_elezione_2}}</big><b>"
+            })
+            .define();
+
+
+        const grid =
+            ixmaps.layer("ITALIA_Comuni_2022")
+            .data({
+                query: query.toString(),
+                type: "ext"
+            })
+            .binding({
+                value: "quota_femminile",
+                position: "CODICE_ISTAT"
+            })
+            .type("RECT|CHART|SYMBOLS|GRIDSIZE|AGGREGATE|MEAN")
+            .style({
+                colorscheme: [
+                    "none"
+                ],
+                fillopacity: "0.05",
+                shadow: "false",
+                symbols: [
+                    "square"
+                ],
+                units: "",
+                scale: "1",
+                linecolor: "#ffffff",
+                linewidth: "0.2",
+                gridwidth: "50px",
+                gridoffsety: "0",
+                title: "Quota femminile - griglia rettangolare"
+            })
+            .meta({
+                title: "Quota femminile - Amministrazioni comunali al 5 ottobre 2022"
+            })
+            .define();
+
+
+        ixmaps.embed("map-div", {
+                mapService: "leaflet_vt",
+                mapType: "black", //decodeURIComponent($(document).getUrlParam('maptype')),
+                name: "map",
+                width: "100%",
+                height: "1400px",
+                scrollsafesilent: "true",
+                legend: "true",
+                align: "center",
+                mode: "info"
+            },
+            map => map
+            .view([42.12824901518532, 13.040283203125002], 7)
+            .attribution(attribution)
+            //.require("../../ui/js/tools/tooltip_mustache.js")
+            //.require("https://d3js.org/d3.v3.min.js")
+            //.require("../../pages/Sesso e Potere/2024/arrow_chart.js")
+
+            .options({
+                scrollSafeSilent: "true",
+                objectscaling: "dynamic",
+                normalsizescale: "10000000",
+                basemapopacity: "1",
+                panhidden: "false"
+            })
+            .layer(georef)
+            .layer(nuts0)
+            //.layer(choropleth)
+            .layer(grid)         
+            .layer(chart)
+            .layer(chart2)
+        );
+
+    </script>
+</body>
+
+</html>

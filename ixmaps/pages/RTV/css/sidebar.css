@@ -1,0 +1,97 @@
+	<style>
+		.sidebar table {
+			background: #F7F6EF;
+			border-radius: 0.3em;
+			xxpadding: 0.4em 0.8em;
+		}
+
+		.sidebar td {
+			xxborder: dotted #888800 0.1px;
+		}
+
+		.sidebar button {
+            color: #444444;
+			background: none;
+			border: #dddddd solid 1px;
+			border-radius: 0.3em;
+			padding: 0.4em 0.8em;
+		}
+
+		.sidebar button:hover {
+			cursor: pointer;
+		}
+
+		.sidebar .left {
+			text-align: left;
+		}
+
+		.sidebar a {
+			text-decoration: none;
+		}
+
+	</style>
+
+	<style type="text/css">
+		.sidebar h1,
+		.sidebar h2,
+		.sidebar h3,
+		.sidebar h4,
+		.sidebar h5,
+		.sidebar h6 {
+			font-family: arial, helvetica;
+			color: #888;
+			font-weight: 300;
+		}
+
+		.sidebar p {
+			font-family: arial, helvetica;
+			color: #444;
+			font-weight: 300;
+		}
+
+		.sidebar a {
+			font-family: arial, helvetica;
+			font-weight: 100;
+			color: black;
+			text-decoration: none;
+		}
+
+		.sidebar a:hover {
+			color: #000088;
+			text-decoration: none;
+		}
+
+		.sidebar .filter-input {
+			width: 275px;
+			margin: 0;
+			float: left;
+			outline: none;
+			font-size: 1.2em;
+			border: 0;
+			margin-left: 0.2em;
+			font-family: Raleway, Arial;
+			font-weight: 300;
+			color: #444;
+		}
+
+		.sidebar .minvalue,
+		.sidebar .maxvalue {
+			margin-left: 1em;
+			margin-right: 1em;
+		}
+
+		.sidebar .slider-handle {
+			position: absolute;
+			top: 0px;
+			width: 20px;
+			height: 20px;
+			background-color: #ddd;
+			background-image: none;
+			filter: none;
+			box-shadow: rgba(255, 255, 255, 0.2) 0px 1px 0px inset, rgba(0, 0, 0, 0.05) 0px 1px 2px;
+			background-repeat: repeat-x;
+			border-width: 0px;
+			border-style: solid;
+			border-color: transparent;
+			border-image: initial;
+		}

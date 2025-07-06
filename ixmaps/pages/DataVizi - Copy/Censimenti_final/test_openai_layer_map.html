@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Simple IXMaps Map with GeoJSON</title>
+    <link rel="shortcut icon" href="https://gjrichter.github.io/ixmaps/ui/resources/images/ixmaps_logo.png">
+</head>
+<body style="margin:0;padding:0;">
+    <!-- Map container -->
+    <div id="map-div" style="width: 100%; height: 100vh;"></div>
+
+    <!-- Include ixmaps API -->
+    <script src="https://gjrichter.github.io/ixmaps_test/ui/js/htmlgui_api.js"></script>
+
+    <script type="text/javascript">
+        // Create and embed the map
+        ixmaps.embed("map-div", {
+            mapService: "leaflet_vt",    // Map service to use
+            mapType: "ArcGIS - Topo",    // Base map type
+            name: "simple_map",          // Map name
+            mode: "pan",                 // Pan mode
+            legend: "false",             // No legend
+            tools: "false",              // No tools
+            about: "Simple map example"  // About text
+        }, function(map) {
+            // This function is the callback that provides the map handle.
+
+            // Now that we have the map handle, we can set the map view
+            map.view({
+                center: {
+                    lat: "42.30234655149951",  // Latitude for map center
+                    lng: "13.987399620595363"  // Longitude for map center
+                },
+                zoom: "6"  // Zoom level
+            });
+
+            // Add the GeoJSON data layer
+            map.layer(ixmaps.layer("nuts2", layer => layer
+                .data({
+                    url: "https://gisco-services.ec.europa.eu/distribution/v2/nuts/geojson/NUTS_RG_10M_2021_4326_LEVL_2.geojson",  // GeoJSON URL
+                    type: "geojson",
+                    name: "NUTS_RG_10M_2021"  // Layer name
+                })
+                .binding({
+                    geo: "geometry",  // Bind geometry to GeoJSON geometry
+                    value: "$item$",
+                    id: "NUTS_ID"
+                })
+                .type("FEATURES|NOLEGEND")  // Specify layer type
+                .style({
+                    colorscheme: ["#d9d9d9"],  // Color for the fill
+                    fillopacity: "0.5",         // Fill opacity
+                    shadow: "false",            // No shadow
+                    visible: "true",            // Make it visible
+                    datacache: "true",          // Cache data for performance
+                    showdata: "true",           // Show data
+                    units: "",                  // No units
+                    scale: "1",                 // Scale
+                    linecolor: ["#6d6d6d"],     // Line color
+                    linewidth: "1",             // Line width
+                    title: "NUTS regions",      // Title for the layer
+                })
+            ));
+        });
+    </script>
+</body>
+</html>

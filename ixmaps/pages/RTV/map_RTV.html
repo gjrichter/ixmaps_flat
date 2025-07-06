@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="ixmaps embed example">
+    <meta name="author" content="guenter richter">
+    <link rel="shortcut icon" href="https://gjrichter.github.io/ixmaps/ui/resources/images/ixmaps_logo.png">
+
+    <title>iXMaps Composer</title>
+</head>
+
+<body style="padding:0;margin:0">
+
+    <!-- here goes the map -->
+    <div id="map-div"></div>
+
+    <!-- include the ixmaps API -->
+    <script src="http://localhost/ixmaps/deploy/flat/ixmaps/ui/js/htmlgui_flat.js"></script>
+
+    <script type="text/javascript" charset="utf-8">
+        
+		// ---------------------------------------------------
+		// t h e   d a t a 
+		// ---------------------------------------------------
+
+		const attribution =
+			"powered by <a href=\"http://ixmaps.com\" target=\"_blank\">iXMaps</a>";
+
+		process = data => {
+			data.column("n_killed").map(value => {
+				return isNaN(value)?0:value;	
+			});
+			data.column("n_wounded").map(value => {
+				return (isNaN(value))?0:value;	
+			});
+			var killed = data.column("n_killed").index;
+			var wounded = data.column("n_wounded").index;
+			data.addColumn({
+				destination: "n_victims"
+			}, (row) => {
+				return (Number(row[killed])+Number(row[wounded]));
+			});
+		};
+
+		// ---------------------------------------------------
+		// t h e   l a y e r 
+		// ---------------------------------------------------
+
+		var __eventi =
+			ixmaps.layer("Concessioni", layer => layer
+				.data({
+					url: "../../pages/RTV/2023-rtv-1990-2022_without-sources.csv",
+					type: "csv",
+					process: process.toString(),
+					name: "processed_data"
+				})
+				.type("CHART|SYMBOL|SIZE|VALUES|SEQUENCE|STAR|SORT|UP|EXPAND|AGGREGATE|RELOCATE|CATEGORICAL|SIMPLELEGEND")
+				.binding({
+					position: "location_latitude|location_longitude",
+					value: "grouped_target_group",
+					size: "n_victims"
+				})
+				.style({
+					colorscheme: [
+						"9",
+						"tableau10"
+					],
+					fillopacity: "0.9",
+					shadow: "true",
+					showdata: "true",
+					symbols: [
+						"circle"
+					],
+					units: "victims",
+					linewidth: "0.5",
+					normalsizevalue: "100",
+					gridwidthpx: "3",
+					glowlower: "1:10000",
+					name: "symbol",
+					tooltip: "<h2>{{case_id}}<br>{{location}}<br>{{affilation}}</h2>actor: {{organizational_affiliation}}, {{organizational_affiliation_2}}<br><br><b>weapon:</b> {{weapon_description}}<br><b>target:</b> {{grouped_target_group}}, {{grouped_target_group_2}}<br><br> killed: {{n_killed}} wounded: {{n_wounded}}<br><br>{{description}}{{theme.item.data}}"
+				})
+				.meta({
+					title: " ",
+					splash: "scaricando dati ..."
+				})
+			);
+
+		// ---------------------------------------------------
+		// e m b e d   t h e   m a p  
+		// ---------------------------------------------------
+
+		ixmaps.embed("map-div", {
+                mapService: "leaflet_vt",
+                mapType: "Stamen - toner-lite", //decodeURIComponent($(document).getUrlParam('maptype')),
+				name: "map",
+				mode: "pan",
+				width: "100%",
+				height: (window.innerHeight - 15) + "px",
+				legend: "true",
+				tools: "true",
+				search: "Italy",
+				about: "test"
+			},
+			map => map
+					 
+			.view([49.562497787407324, 8.857876758359065], 4.7)
+			.options({
+				featurescaling: "true",
+				objectscaling: "dynamic",
+				normalSizeScale: "50000000",
+				dynamicScalePow: "3",
+				flushChartDraw: "1000000",
+				basemapopacity: "0.8",
+				panhidden: "false"
+			})
+			.local("aggregated", "")
+			.local("loading data ...", "...")
+			.require("../../ui/js/tools/tooltip_mustache.js")
+			.attribution(attribution)
+
+			.layer(__eventi)
+		);
+
+        ixmaps.htmlgui_onZoomAndPan = () => {
+            //alert("xxxx");
+        };
+
+    </script>
+</body>
+
+</html>
