@@ -811,6 +811,10 @@ window.ixmaps.legend = window.ixmaps.legend || {};
 		//var nMax = themeObj.nMaxA[0]||themeObj.nMax;
 		var nMin = themeObj.nMin;
 		var nMax = themeObj.nMax;
+        if (themeObj.nRangesA && themeObj.nRangesA.length){
+            nMin = themeObj.nRangesA[0];
+            nMax = themeObj.nRangesA[themeObj.nRangesA.length-1];
+        }
         szHtml += "<tr class='legend-range-text' >";
         szHtml += "<td colspan='" + (span) + "' align='left'>" + ixmaps.__formatValue(nMin, nDecimals, "SPACE") + szUnit + "</td>";
         szHtml += "<td colspan='" + (nColors - span) + "' align='right'>" + ixmaps.__formatValue(nMax, nDecimals, "SPACE") + ((szUnit.length <= 3) ? szUnit : "") + "</td>";
