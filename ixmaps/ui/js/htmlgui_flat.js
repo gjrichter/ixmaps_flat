@@ -529,7 +529,7 @@ $Log: htmlgui_api.js,v $
 
         // show/hide toolsbar elements
         //__switchBannerElements();
-        setTimeout("__switchBannerElements()", 5000);
+        //setTimeout("__switchBannerElements()", 5000);
         htmlMap_enableScrollWheelZoom();
 
         // configure and style the map UI

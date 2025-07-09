@@ -137,12 +137,14 @@ $Log: htmlgui.js,v $
 		$("#"+szElement).parent().css("z-index","10000");
 		// load content
 		if ( typeof(szUrl) == "string" && szUrl.length ){
-			if ( (szUrl.substr(0,4) == "http") ){
-				$("#"+szElement).load(szUrl, function (response, status, xhr) {
-					if (status == "error") {
+			if ( 1 || (szUrl.substr(0,4) == "http") ){
+ 				$("#"+szElement).load(szUrl, function (response, status, xhr) {
+ 					if (status == "error") {
 						var msg = "Sorry but there was an error: ";
 						$("#story").append(msg + xhr.status + "<br><br> '" + szStoryRoot + szUrl + "'<br><br> " + xhr.statusText);
-					}
+					}else{
+                        console.log($("#"+szElement));
+                    }
 				});
 			}else
 			if ( (szUrl.substr(0,1) == ".") ){
@@ -306,7 +308,7 @@ $Log: htmlgui.js,v $
 	ixmaps.popupThemeEditor = function(position,szId){
 		ixmaps.editor = ixmaps.editor || {};
 		ixmaps.editor.szThemeId = szId;
-		window.idialog = this.openDialog(null,'editor',ixmaps.szResourceBase+'ui/html/tools/theme_editor.html','Theme Editor',position||'10,103',380,600);
+		window.idialog = this.openDialog(null,'editor',ixmaps.szResourceBase+'ui/html/tools/theme_editor.html','Theme Editor',position||'10,103',500,700);
 	};
 
 	ixmaps.popupProjectEditor = function(position){
