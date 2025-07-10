@@ -2750,7 +2750,7 @@ $Log: htmlgui.js,v $
 		if (!ixmaps.fSilent)
 		ixmaps.showLoadingArray(["loading data ...", " ... "]);
 		
-		$.getScript(ixmaps.szResourceBase+"../data.min.js/data.js")
+		$.getScript(ixmaps.szResourceBase+"data.min.js/data.js")
 			.done(function (script, textStatus) {
 
 				// a) data is loaded by a specific data provider function
@@ -2980,7 +2980,7 @@ $Log: htmlgui.js,v $
 					});
 				});
 			} else {
-				$.getScript("../../../data.min.js/data.js")
+				$.getScript(ixmaps.szResourceBase+"data.min.js/data.js")
 					.done(function (script, textStatus) {
 						// load the data using data.js
 						Data.object({
