@@ -200,9 +200,8 @@ badge badge-primary badge-pill pull-right
 		//
 		// ===========================================
 
-		var ixmaps = null;
+		ixmaps = window.ixmaps || null;
 		if ( window.opener ){
-			parent = window.opener;
 			ixmaps = window.opener.ixmaps;
 		}else
 		if ( parent ){
@@ -226,8 +225,8 @@ badge badge-primary badge-pill pull-right
 		};
 
 		$.when(
-			$.getScript("../../js/tools/filter.js"),
-			$.getScript("../../js/tools/format.js"),
+			$.getScript(ixmaps.szResourceBase+"ui/js/tools/filter.js"),
+			$.getScript(ixmaps.szResourceBase+"ui/js/tools/format.js"),
 			$.Deferred(function (deferred) {
 				$(deferred.resolve);
 			})
