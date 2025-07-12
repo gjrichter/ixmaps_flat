@@ -375,7 +375,11 @@ $Log: htmlgui_api.js,v $
             console.error('Error loading resources:', error);
         }
     }
-
+    
+    ixmaps.loadResources = function(urls, target, callback, opt, callback2){
+        return loadResources(urls, target, callback, opt, callback2);
+    };
+    
     /**
      * Initializes the loaded UI by parameter.
      *

@@ -154,31 +154,6 @@
 		}
 	};
 
-
-   	/**************************************************************** 
-	 *
-	 * get theme definition string and open editor
-	 *
-	 ****************************************************************/
-
-	var themes = ixmaps.getThemes();
-        
-	for ( i in themes ){
-		if ( !themes[i].szFlag.match(/FEATURE/) ){
-			ixmaps.editor.szThemeId = themes[i].szId;
-		}
-	}
-        
-    // GR 17.10.2019 new: get active legend theme
-    var themeObj = ixmaps.getThemeObj(ixmaps.editor.szThemeId);
-        
-	if(themeObj){
-		ixmaps.editorThemeId = themeObj.szId;  
-		// here we start editing !! ----------------
-		setTimeout("ixmaps.loadEditor();",5);
-		// -----------------------------------------
-	}
-		
 	var resize = function(){
 		var height = (window.parent.$("#editor").height() || ($(window.parent).height()+60) || ($(window).height()+60) );
 		$("#editor-div").css("height",(height-120)+"px");
@@ -197,6 +172,65 @@
 
 	resize();
 
+   	/**************************************************************** 
+	 *
+	 * get theme definition string and open editor
+	 * if theme definition found,
+	 * load editor resources and init editor
+	 *
+	 ****************************************************************/
+
+	var themes = ixmaps.getThemes();
+        
+	for ( i in themes ){
+		if ( !themes[i].szFlag.match(/FEATURE/) ){
+			ixmaps.editor.szThemeId = themes[i].szId;
+		}
+	}
+        
+    // GR 17.10.2019 new: get active legend theme
+    var themeObj = ixmaps.getThemeObj(ixmaps.editor.szThemeId);
+
+	if(themeObj){
+		ixmaps.editorThemeId = themeObj.szId;
+
+		// we must define the resources for this html page here because it is not loaded as iframe
+		// so we must await the loading of all necessary resources before initializing the editor
+		//  
+		const editor_fileUrls = [
+			{
+				url: 'ui/libs/jquery/ui/css/ixmaps/jquery-ui-1.8.16.custom.css',
+				type: 'css'
+			},
+			{
+				url: 'ui/css/jquery-ui.css',
+				type: 'css'
+			},
+			{
+				url: 'ui/libs/jquery/jquery-1.7.1.min.js',
+				type: 'js'
+			},
+			{
+				url: 'ui/js/tools/json_config.js',
+				type: 'js'
+			},
+			{
+				url: 'https://cdnjs.cloudflare.com/ajax/libs/ace/1.4.8/ace.js',
+				type: 'js'
+			},
+			{
+				url: 'https://cdnjs.cloudflare.com/ajax/libs/ace/1.4.8/ext-language_tools.js',
+				type: 'js'
+			}
+		];
+		// this loads the resources and calls ixmaps.loadEditor as callback
+		ixmaps.loadResources(editor_fileUrls, null, ixmaps.loadEditor);
+	}
+
+
+
+
+    
     </script>
 
  </body> 

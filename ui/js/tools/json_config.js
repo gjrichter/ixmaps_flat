@@ -11,18 +11,21 @@
 		 * @throws 
 		 * @return A new Config object
 		 */
-		function Config(definition) {
-			this.obj = null;
-			this.szConfig = null;
+        if (typeof(Config) === 'undefined'){
+            function Config(definition) {
+                this.obj = null;
+                this.szConfig = null;
 
-			if (typeof(definition) == "string") {
-				this.szConfig = definition;
-				this.parse(definition);
-			} else {
-				this.obj = definition;
-				//this.szConfig = JSON.stringify(definition);
-			}
-		}
+                if (typeof(definition) == "string") {
+                    this.szConfig = definition;
+                    this.parse(definition);
+                } else {
+                    this.obj = definition;
+                    //this.szConfig = JSON.stringify(definition);
+                }
+            }
+        }
+
 		Config.prototype.parse = function(szConfigDef) {
 			var szRaw = szConfigDef.replace(/\n\t+/g, '');
 			try {
