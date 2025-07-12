@@ -137,6 +137,8 @@
 		}else{
 			ixmaps.editor.setValue("");
 		}
+		$("#editor-apply-button").button();
+		$("#editor-div").show();
 	};
 
 	var resize = function(){
@@ -151,9 +153,6 @@
 	window.onresize=function(){
 		resize();
 	}; 
-
-	$("#editor-apply-button").button();
-	$("#editor-div").show();
 
 	resize();
 
