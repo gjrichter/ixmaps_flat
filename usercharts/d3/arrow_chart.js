@@ -178,8 +178,12 @@ window.ixmaps = window.ixmaps || {};
             var nFontSize = nHeight / 20 * (args.theme.nValueScale || 1); //Math.sqrt(nHeight)*4;
 
             // show only if fontsize is reasonable (fontsize is n * 20)
-            if (args.flag.match(/ZOOM/) || nFontSize > ((args.theme.nValueSizeMin * 20) || 60)) {
-                var szText = (nValue).toFixed(0) + (args.theme.szUnits || "");
+			if ( args.flag.match(/ZOOM/) || (
+                nValue > (args.theme.nValueValueMin || 0) && 
+                nFontSize > ((args.theme.nValueSizeMin*15)||60) )
+               ){
+                // var szText = (nValue).toFixed(0) + (args.theme.szUnits || "");
+                var szText = ixmaps.formatValue(nValue, (args.theme.nValueDecimals||0)," ") + (args.theme.szUnits||"");
                 var szTextOpacity = 1; // 0.2 + nValue/nMax;
 
                 // show the value on top of the peek
