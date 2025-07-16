@@ -17,6 +17,7 @@
     <link href="../../../ui/html/assets/css/icomoon.css" rel="stylesheet">
 
     <link href="../../../ui/css/site.min.css" rel="stylesheet">
+    <link href="../../../ui/html/assets/css/styles.css" rel="stylesheet">
 
     <style type="text/css" media="screen">
         .map-config {
@@ -50,6 +51,7 @@
         label {
             color: #dddddd;
             padding-left: 0.2em;
+            font-size: 14px;
         }
 
         #chartValueOptions option,
@@ -170,14 +172,14 @@
 
         .calendar .years .plus em,
         .calendar .years .minus em {
-            font-size: 1.1em;
+            font-size: 1.2em;
             user-select: none;
             position: relative;
             display: inline-block;
             width: 32px;
             height: 32px;
             margin-top: 2px;
-            padding-top: 0px;
+            padding-top: 4px;
             cursor: pointer;
             color: #888;
             border: 1px solid #aaa;
@@ -187,8 +189,8 @@
         }
 
         .calendar .years .minus em {
-            font-size: 1.1em;
-            padding-top: 0px;
+            font-size: 1.2em;
+            padding-top: 4px;
         }
 
         .calendar .years .plus em:active,
@@ -197,13 +199,17 @@
         .calendar .years .minus em:hover {
             border-color: #e9573f
         }
+        
+        input.form-control, select.form-control {
+            font-size: 13px;
+        }
 
         a:hover {
             cursor: pointer;
         }
 
         .checkbox {
-            margin: 1em 0;
+            margin: 1.8em 0;
 
         }
 
@@ -350,7 +356,17 @@
             border-radius: 0.5em;
             padding: 0.3em 0em;
         }
+        
+        .row {
+            width: 100%;
+        }
+        
+        .apply {
+            font-size: 0.5em;
+        }
     </style>
+    
+    
 </head>
 
 <body id="theme-editor">
@@ -524,7 +540,7 @@
                 <h3 id="chartDefinitionFieldsHeader" class="disabled">
                     <span id="chartDefinitionFields">theme</span>
                     <span>fields</span>
-                     <span class="pull-right">
+                     <span class="pull-right apply">
                         <a href='javascript:ixmaps.editor.applyChanges();'>
                             <button type="button" class="btn btn-link btn-md">
                                 apply changes <i class="icon icon-loop2" title="refresh" tabindex="-1" style="padding:0.25em"></i>
@@ -622,7 +638,7 @@
                 <!-- --------------------	-->
 
                 <h3 id="chartThemeTitle" class="disabled">type
-                    <span class="pull-right">
+                    <span class="pull-right apply">
                         <a href='javascript:ixmaps.editor.applyChanges();'>
                             <button type="button" class="btn btn-link btn-md">
                                 apply changes <i class="icon icon-loop2" title="refresh" tabindex="-1" style="padding:0.25em"></i>
@@ -641,7 +657,7 @@
                                         <input type="radio" name="game" id="Dots" checked="">
                                         <div class="rich-select-option-body">
                                             <label tabindex="-1">
-                                                <img src="./resources/images/points.png" alt="">
+                                                <img src="../../../ui/resources/images/points.png" alt="">
                                                 <div>Dots</div>
                                             </label>
                                         </div>
@@ -650,7 +666,7 @@
                                         <input type="radio" name="game" id="sized-Bubbles">
                                         <div class="rich-select-option-body">
                                             <label tabindex="-1">
-                                                <img src="./resources/images/bubbles.png" alt="">
+                                                <img src="../../../ui/resources/images/bubbles.png" alt="">
                                                 <div>sized Bubbles</div>
                                             </label>
                                         </div>
@@ -659,7 +675,7 @@
                                         <input type="radio" name="game" id="HexBin">
                                         <div class="rich-select-option-body">
                                             <label tabindex="-1">
-                                                <img src="./resources/images/hexbin.png" alt="">
+                                                <img src="../../../ui/resources/images/hexbin.png" alt="">
                                                 <div>HexBin</div>
                                             </label>
                                         </div>
@@ -668,7 +684,7 @@
                                         <input type="radio" name="game" id="HexBinSized">
                                         <div class="rich-select-option-body">
                                             <label tabindex="-1">
-                                                <img src="./resources/images/hexbin_size.png" alt="">
+                                                <img src="../../../ui/resources/images/hexbin_size.png" alt="">
                                                 <div>HexBin sized</div>
                                             </label>
                                         </div>
@@ -677,7 +693,7 @@
                                         <input type="radio" name="game" id="Waffle">
                                         <div class="rich-select-option-body">
                                             <label tabindex="-1">
-                                                <img src="./resources/images/waffle_grid.png" alt="">
+                                                <img src="../../../ui/resources/images/waffle_grid.png" alt="">
                                                 <div>Waffle Grid</div>
                                             </label>
                                         </div>
@@ -689,7 +705,7 @@
                                     <div class="rich-select-option">
                                         <div class="rich-select-option-body">
                                             <label for="Dots" tabindex="-1" onclick="document.getElementById('rich-select-dropdown-button').click();ixmaps.editor.setChartStyle('CHART|DOT|RAW|FAST')">
-                                                <img src="./resources/images/points.png" alt="">
+                                                <img src="../../../ui/resources/images/points.png" alt="">
                                                 <div>Dots</div>
                                             </label>
                                         </div>
@@ -697,7 +713,7 @@
                                     <div class="rich-select-option">
                                         <div class="rich-select-option-body">
                                             <label for="sized-Bubbles" tabindex="-1" onclick="document.getElementById('rich-select-dropdown-button').click();ixmaps.editor.setChartStyle('CHART|BUBBLE|SIZE')">
-                                                <img src="./resources/images/bubbles.png" alt="">
+                                                <img src="../../../ui/resources/images/bubbles.png" alt="">
                                                 <div>sized Bubbles</div>
                                             </label>
                                         </div>
@@ -705,7 +721,7 @@
                                     <div class="rich-select-option">
                                         <div class="rich-select-option-body">
                                             <label for="HexBin" tabindex="-1" onclick="document.getElementById('rich-select-dropdown-button').click();ixmaps.editor.setChartStyle('CHART|SYMBOL|GRIDSIZE|FAST|AGGREGATE|SUM|DOPACITY')">
-                                                <img src="./resources/images/hexbin.png" alt="">
+                                                <img src="../../../ui/resources/images/hexbin.png" alt="">
                                                 <div>HexBin</div>
                                             </label>
                                         </div>
@@ -713,7 +729,7 @@
                                     <div class="rich-select-option">
                                         <div class="rich-select-option-body">
                                             <label for="HexBinSized" tabindex="-1" onclick="document.getElementById('rich-select-dropdown-button').click();ixmaps.editor.setChartStyle('CHART|BUBBLE|SIZE|FAST|AGGREGATE|RELOCATE|SUM')">
-                                                <img src="./resources/images/hexbin_size.png" alt="">
+                                                <img src="../../../ui/resources/images/hexbin_size.png" alt="">
                                                 <div>HexBin sized</div>
                                             </label>
                                         </div>
@@ -721,7 +737,7 @@
                                     <div class="rich-select-option">
                                         <div class="rich-select-option-body">
                                             <label for="Waffle" tabindex="-1" onclick="document.getElementById('rich-select-dropdown-button').click();ixmaps.editor.setChartStyle('CHART|WAFFLE|GRIDSIZE|AGGREGATE|FAST|RECT|SUM')">
-                                                <img src="./resources/images/waffle_grid.png" alt="">
+                                                <img src="../../../ui/resources/images/waffle_grid.png" alt="">
                                                 <div>Waffle Grid</div>
                                             </label>
                                         </div>
@@ -800,7 +816,7 @@
             <div class="container" style="padding-bottom:1.5em;">
 
                 <h3 id="chartColor-title" style="color:#dddddd">color
-                    <span class="pull-right" style="vertical-align:-100%">
+                    <span class="pull-right apply" style="vertical-align:-100%">
                         <a href='javascript:ixmaps.editor.applyChanges();'>
                             <button type="button" class="btn btn-link btn-md">
                                 apply changes <i class="icon icon-loop2" title="refresh" tabindex="-1" style="padding:0.25em"></i>
@@ -893,7 +909,7 @@
             <div class="container" style="padding-bottom:1.5em;">
 
                 <h3 id="chartStyleTitle" class="disabled">style
-                    <span class="pull-right">
+                    <span class="pull-right apply">
                         <a href='javascript:ixmaps.editor.applyChanges();'>
                             <button type="button" class="btn btn-link btn-md">
                                 apply changes <i class="icon icon-loop2" title="refresh" tabindex="-1" style="padding:0.25em"></i>
@@ -1024,7 +1040,7 @@
                     <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6">
                         <div class="form-group">
                             <label for="chartValueDecimalsList">value decimals</label>
-                            <select class="form-control" id="chartValueDecimalsList" name="chartSortList">
+                            <select class="form-control" id="chartValueDecimalsList" name="chartSortList" onchange="ixmaps.editor.setValueDecimals()">
                                 <option value="0">#</option>
                                 <option value="1">#.#</option>
                                 <option value="2">#.##</option>
@@ -1056,7 +1072,7 @@
             <div class="container" id="chartSize" style="padding-bottom:1.5em;display:none">
 
                 <h3 id="chartSizeTitle" class="disabled">size
-                    <span class="pull-right">
+                    <span class="pull-right apply">
                         <a href='javascript:ixmaps.editor.applyChanges();'>
                             <button type="button" class="btn btn-link btn-md">
                                 apply changes <i class="icon icon-loop2" title="refresh" tabindex="-1" style="padding:0.25em"></i>
@@ -1166,7 +1182,7 @@
             <div class="container" style="padding-bottom:1.5em;">
 
                 <h3 id="chartOpacityTitle" class="disabled">opacity
-                    <span class="pull-right">
+                    <span class="pull-right apply">
                         <a href='javascript:ixmaps.editor.applyChanges();'>
                             <button type="button" class="btn btn-link btn-md">
                                 apply changes <i class="icon icon-loop2" title="refresh" tabindex="-1" style="padding:0.25em"></i>
@@ -1230,7 +1246,7 @@
 
             <div class="container" style="padding-bottom:1.5em;">
                 <h3 id="chartAggregationTitle" class="disabled">aggregation
-                    <span class="pull-right">
+                    <span class="pull-right apply">
                         <a href='javascript:ixmaps.editor.applyChanges();'>
                             <button type="button" class="btn btn-link btn-md">
                                 apply changes <i class="icon icon-loop2" title="refresh" tabindex="-1" style="padding:0.25em"></i>
@@ -1333,7 +1349,7 @@
             <div class="container" style="padding-bottom:1.5em;">
 
                 <h3 id="chartDefinitionTitle" class="disabled">description
-                    <span class="pull-right">
+                    <span class="pull-right apply">
                         <a href='javascript:ixmaps.editor.applyChanges();'>
                             <button type="button" class="btn btn-link btn-md">
                                 apply changes <i class="icon icon-loop2" title="refresh" tabindex="-1" style="padding:0.25em"></i>
@@ -1506,7 +1522,6 @@
         <!-- ------------------------------------------------------------------ -->
 
         <!-- Bootstrap core JS-->
-        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-LN+7fdVzj6u52u30Kp6M/trliBMCMKTyK833zpbD+pXdCLuTusPj697FH4R/5mcr" crossorigin="anonymous">
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
     
         <script src="../../../ui/libs/colpick-jQuery-Color-Picker-master/js/colpick.js"></script>
@@ -1641,7 +1656,7 @@
                 ixmaps.editorColorschemeType = "colorscheme";
 
                 ixmaps.editorColorscheme = szColorscheme;
-                ixmaps.changeThemeStyle(null, ixmaps.editor.themeId, "colorscheme:" + szColorscheme, "set");
+                ixmaps.map().changeThemeStyle(ixmaps.editor.themeId, "colorscheme:" + szColorscheme, "set");
                 ixmaps.setColors(szColorscheme);
                 //$("#color-select-div").hide();
             };
@@ -1699,17 +1714,17 @@
             function toggle_dopacity() {
                 var szThemeStyle = ixmaps.getThemeStyleString(null, ixmaps.editor.themeId);
                 if (szThemeStyle && szThemeStyle.match(/DOPACITYLOG/)) {
-                    ixmaps.changeThemeStyle(null, ixmaps.editor.themeId, 'type:DOPACITYLOG;', 'remove');
-                    ixmaps.changeThemeStyle(null, ixmaps.editor.themeId, 'type:DOPACITYMAX;dopacityscale:5;', 'toggle');
+                    ixmaps.map().changeThemeStyle(ixmaps.editor.themeId, 'type:DOPACITYLOG;', 'remove');
+                    ixmaps.map().changeThemeStyle(ixmaps.editor.themeId, 'type:DOPACITYMAX;dopacityscale:5;', 'toggle');
                 } else
                 if (szThemeStyle && szThemeStyle.match(/DOPACITYMAX/)) {
-                    ixmaps.changeThemeStyle(null, ixmaps.editor.themeId, 'type:DOPACITYMAX;', 'remove');
+                    ixmaps.map().changeThemeStyle(ixmaps.editor.themeId, 'type:DOPACITYMAX;', 'remove');
                 } else
                 if (szThemeStyle && szThemeStyle.match(/DOPACITY/)) {
-                    ixmaps.changeThemeStyle(null, ixmaps.editor.themeId, 'type:DOPACITY;', 'remove');
-                    ixmaps.changeThemeStyle(null, ixmaps.editor.themeId, 'type:DOPACITYLOG;dopacityscale:5;', 'toggle');
+                    ixmaps.map().changeThemeStyle(ixmaps.editor.themeId, 'type:DOPACITY;', 'remove');
+                    ixmaps.map().changeThemeStyle(ixmaps.editor.themeId, 'type:DOPACITYLOG;dopacityscale:5;', 'toggle');
                 } else {
-                    ixmaps.changeThemeStyle(null, ixmaps.editor.themeId, 'type:DOPACITY;dopacityscale:5;', 'toggle');
+                    ixmaps.map().changeThemeStyle(ixmaps.editor.themeId, 'type:DOPACITY;dopacityscale:5;', 'toggle');
                 }
                 setTimeout("init_theme_line()", 100);
             }
@@ -1717,52 +1732,52 @@
             function toggle_values() {
                 var szThemeStyle = ixmaps.getThemeStyleString(null, ixmaps.editor.themeId);
                 if (szThemeStyle && szThemeStyle.match(/VALUES/)) {
-                    ixmaps.changeThemeStyle(null, ixmaps.editor.themeId, 'type:VALUES;', 'remove');
+                    ixmaps.map().changeThemeStyle(ixmaps.editor.themeId, 'type:VALUES;', 'remove');
                 } else {
-                    ixmaps.changeThemeStyle(null, ixmaps.editor.themeId, 'type:VALUES;', 'add');
+                    ixmaps.map().changeThemeStyle(ixmaps.editor.themeId, 'type:VALUES;', 'add');
                 }
             }
 
             function toggle_glow() {
                 var szThemeStyle = ixmaps.getThemeStyleString(null, ixmaps.editor.themeId);
                 if (szThemeStyle && szThemeStyle.match(/GLOW/)) {
-                    ixmaps.changeThemeStyle(null, ixmaps.editor.themeId, 'type:GLOW;', 'remove');
+                    ixmaps.map().changeThemeStyle(ixmaps.editor.themeId, 'type:GLOW;', 'remove');
                 } else {
-                    ixmaps.changeThemeStyle(null, ixmaps.editor.themeId, 'type:GLOW;', 'add');
+                    ixmaps.map().changeThemeStyle(ixmaps.editor.themeId, 'type:GLOW;', 'add');
                 }
             }
 
             function toggle_aura() {
                 var szThemeStyle = ixmaps.getThemeStyleString(null, ixmaps.editor.themeId);
                 if (szThemeStyle && szThemeStyle.match(/AURA/)) {
-                    ixmaps.changeThemeStyle(null, ixmaps.editor.themeId, 'type:AURA;', 'remove');
+                    ixmaps.map().changeThemeStyle(ixmaps.editor.themeId, 'type:AURA;', 'remove');
                 } else {
-                    ixmaps.changeThemeStyle(null, ixmaps.editor.themeId, 'type:AURA;', 'add');
+                    ixmaps.map().changeThemeStyle(ixmaps.editor.themeId, 'type:AURA;', 'add');
                 }
             }
 
             function toggle_relocate() {
                 var szThemeStyle = ixmaps.getThemeStyleString(null, ixmaps.editor.themeId);
                 if (szThemeStyle && szThemeStyle.match(/RELOCATE/)) {
-                    ixmaps.changeThemeStyle(null, ixmaps.editor.themeId, 'type:RELOCATE;', 'remove');
+                    ixmaps.map().changeThemeStyle(ixmaps.editor.themeId, 'type:RELOCATE;', 'remove');
                 } else {
-                    ixmaps.changeThemeStyle(null, ixmaps.editor.themeId, 'type:RELOCATE;', 'add');
+                    ixmaps.map().changeThemeStyle(ixmaps.editor.themeId, 'type:RELOCATE;', 'add');
                 }
             }
 
             function toggle_shadow() {
-                ixmaps.changeThemeStyle(null, ixmaps.editor.themeId, 'shadow:toggle');
+                ixmaps.map().changeThemeStyle(ixmaps.editor.themeId, 'shadow:toggle');
             }
 
             function toggle_data() {
-                ixmaps.changeThemeStyle(null, ixmaps.editor.themeId, 'showdata:toggle');
+                ixmaps.map().changeThemeStyle(ixmaps.editor.themeId, 'showdata:toggle');
             }
 
             function setChartScale(nDelta) {
                 if (event.keyCode == 13) {
                     var newScale = Number($("#chartScaleValue").val());
                     if (!isNaN(newScale)) {
-                        ixmaps.changeThemeStyle(null, ixmaps.editor.themeId, 'scale:' + String(newScale), 'set');
+                        ixmaps.map().changeThemeStyle(ixmaps.editor.themeId, 'scale:' + String(newScale), 'set');
                     } else {
                         alert("Input type error: only numbers allowed!");
                     }
@@ -1777,13 +1792,13 @@
                     nScale = (nScale * 1.5).toPrecision(2);
                 }
                 $("#chartScaleValue").val(nScale)
-                ixmaps.changeThemeStyle(null, ixmaps.editor.themeId, 'scale:' + String(nScale), 'set');
+                ixmaps.map().changeThemeStyle(ixmaps.editor.themeId, 'scale:' + String(nScale), 'set');
             }
 
             function setLineColor() {
                 if (event.keyCode == 13) {
                     var newColor = String($("#chartLineColor").val());
-                    ixmaps.changeThemeStyle(null, ixmaps.editor.themeId, 'linecolor:' + newColor, 'set');
+                    ixmaps.map().changeThemeStyle(ixmaps.editor.themeId, 'linecolor:' + newColor, 'set');
                 }
             }
 
@@ -1791,7 +1806,7 @@
                 if (event.keyCode == 13) {
                     var newScale = Number($("#chartLineWidth").val());
                     if (!isNaN(newScale)) {
-                        ixmaps.changeThemeStyle(null, ixmaps.editor.themeId, 'linewidth:' + String(newScale), 'set');
+                        ixmaps.map().changeThemeStyle(ixmaps.editor.themeId, 'linewidth:' + String(newScale), 'set');
                     } else {
                         alert("Input type error: only numbers allowed!");
                     }
@@ -1806,14 +1821,14 @@
                     nScale = (nScale + 0.5).toPrecision(2);
                 }
                 $("#chartLineWidth").val(nScale)
-                ixmaps.changeThemeStyle(null, ixmaps.editor.themeId, 'linewidth:' + String(nScale), 'set');
+                ixmaps.map().changeThemeStyle(ixmaps.editor.themeId, 'linewidth:' + String(nScale), 'set');
             }
 
             function setValueScale(nDelta) {
                 if (event.keyCode == 13) {
                     var newScale = Number($("#chartValueScale").val());
                     if (!isNaN(newScale)) {
-                        ixmaps.changeThemeStyle(null, ixmaps.editor.themeId, 'valuescale:' + String(newScale), 'set');
+                        ixmaps.map().changeThemeStyle(ixmaps.editor.themeId, 'valuescale:' + String(newScale), 'set');
                     } else {
                         alert("Input type error: only numbers allowed!");
                     }
@@ -1828,7 +1843,7 @@
                     nScale = (nScale * 1.5).toPrecision(2);
                 }
                 $("#chartValueScale").val(nScale)
-                ixmaps.changeThemeStyle(null, ixmaps.editor.themeId, 'valuescale:' + String(nScale), 'set');
+                ixmaps.map().changeThemeStyle(ixmaps.editor.themeId, 'valuescale:' + String(nScale), 'set');
             }
 
             function setChartOpacity() {
@@ -1856,7 +1871,7 @@
             function setNormalSizeValue() {
                 if (event.keyCode == 13) {
                     var newValue = String($("#chartNormalSizeValue").val());
-                    ixmaps.changeThemeStyle(null, ixmaps.editor.themeId, 'normalsizevalue:' + newValue, 'set');
+                    ixmaps.map().changeThemeStyle(ixmaps.editor.themeId, 'normalsizevalue:' + newValue, 'set');
                 }
             }
 
@@ -1917,7 +1932,7 @@
             ixmaps.editorColorscheme = "#ffeeee,#dd0000,dynamic,cold";
 
             ixmaps.editor.setSelectColorScheme = function() {
-                var objTheme = ixmaps.map().getThemeObj();
+                var objTheme = ixmaps.getThemeObj(ixmaps.editor.themeId);
                 if (objTheme) {
                     var colorArgA = objTheme.origColorScheme.slice(0);
 
@@ -2248,22 +2263,26 @@
 
             ixmaps.editor.setDistribution = function() {
                 var szDistribution = $("#theme-distribution-select").val();
-                ixmaps.changeThemeStyle(null, ixmaps.editor.themeId, 'type:EQUIDISTANT;', 'remove');
-                ixmaps.changeThemeStyle(null, ixmaps.editor.themeId, 'type:QUANTILE;', 'remove');
-                ixmaps.changeThemeStyle(null, ixmaps.editor.themeId, 'type:RANGE;', 'remove');
-                ixmaps.changeThemeStyle(null, ixmaps.editor.themeId, 'type:LOG;', 'remove');
-                ixmaps.changeThemeStyle(null, ixmaps.editor.themeId, 'type:LOGARITHMICAL;', 'remove');
-                ixmaps.changeThemeStyle(null, ixmaps.editor.themeId, 'type:DOMINANT;', 'remove');
-                ixmaps.changeThemeStyle(null, ixmaps.editor.themeId, 'type:DEVIATION;', 'remove');
-                ixmaps.changeThemeStyle(null, ixmaps.editor.themeId, 'type:' + szDistribution + ';', 'add');
+                ixmaps.map().changeThemeStyle(ixmaps.editor.themeId, 'type:EQUIDISTANT;', 'remove');
+                ixmaps.map().changeThemeStyle(ixmaps.editor.themeId, 'type:QUANTILE;', 'remove');
+                ixmaps.map().changeThemeStyle(ixmaps.editor.themeId, 'type:RANGE;', 'remove');
+                ixmaps.map().changeThemeStyle(ixmaps.editor.themeId, 'type:LOG;', 'remove');
+                ixmaps.map().changeThemeStyle(ixmaps.editor.themeId, 'type:LOGARITHMICAL;', 'remove');
+                ixmaps.map().changeThemeStyle(ixmaps.editor.themeId, 'type:DOMINANT;', 'remove');
+                ixmaps.map().changeThemeStyle(ixmaps.editor.themeId, 'type:DEVIATION;', 'remove');
+                ixmaps.map().changeThemeStyle(ixmaps.editor.themeId, 'type:' + szDistribution + ';', 'add');
             };
 
             ixmaps.editor.setClasses = function() {
-                ixmaps.changeThemeStyle(null, ixmaps.editor.themeId, 'classes:"' + $("#theme-classes-select").val() + '"', 'set');
+                ixmaps.map().changeThemeStyle(ixmaps.editor.themeId, 'classes:"' + $("#theme-classes-select").val() + '"', 'set');
             };
 
             ixmaps.editor.setPosition = function() {
-                ixmaps.changeThemeStyle(null, ixmaps.editor.themeId, 'align:' + $("#chartPositionList").val() + '', 'set');
+                ixmaps.map().changeThemeStyle(ixmaps.editor.themeId, 'align:' + $("#chartPositionList").val() + '', 'set');
+            };
+
+           ixmaps.editor.setValueDecimals = function() {
+                ixmaps.map().changeThemeStyle(ixmaps.editor.themeId, 'valuedecimals:' + $("#chartValueDecimalsList").val() + '', 'set');
             };
 
             ixmaps.editor.setNewLabel = function(i) {
@@ -2500,7 +2519,7 @@
                 // ------------------------------------
 
                 var themesA = ixmaps.doQueryThemesWithSelection();
-                var szHtml = "";
+                var szHtml = "<option value=\"" + "generic" + "\">" + "generic" + "<\/option>";
                 for (i in themesA) {
                     szHtml += "<option value=\"" + themesA[i] + "\">" + themesA[i] + "<\/option>";
                 }
@@ -2529,8 +2548,8 @@
                 // if no theme given, preset with default theme values
                 // -----------------------------------------------------
                 console.log(ixmaps);
-                var objTheme = ixmaps.editor.themeObj = ixmaps.getThemeDefinitionObj(szId);
-                var objThemeObj = ixmaps.getThemeObj(szId);
+                var objTheme = ixmaps.editor.themeObj = ixmaps.getThemeDefinitionObj(ixmaps.editor.themeId);
+                var objThemeObj = ixmaps.getThemeObj(ixmaps.editor.themeId);
                 
                 console.log("********************")
                 console.log(objThemeObj);
@@ -2545,8 +2564,9 @@
                 // ------------------------------
                 // show data source
                 // ------------------------------
-                
-                 if (objTheme.style && objTheme.style.dbtableUrl && objTheme.style.dbtableUrl.length) {
+                console.log(objTheme.style);
+                if ((objTheme.style && objTheme.style.dbtableUrl && objTheme.style.dbtableUrl.length) ||
+                    (objTheme.style && objTheme.style.dbtableType && objTheme.style.dbtableType == "ext")) {
                     //ixmaps.editor.alert(
                     //	'<h3 style="margin:0">' + objTheme.style.title + '</h3><p>', 'data-alert', 'success');
 
@@ -3156,7 +3176,7 @@
 
                 // theme
                 // ------------------------------------
-                var objTheme = __map.getThemeDefinitionObj() || ixmaps.editor.themeObj;
+                var objTheme = __map.getThemeDefinitionObj(ixmaps.editor.themeId) || ixmaps.editor.themeObj;
 
                 objTheme.style.dbtableUrl = $("#define-data").val();
                 objTheme.layer = $("#map-layer-select").val();
@@ -3310,7 +3330,7 @@
 
                 // make the new theme
                 // -----------------------------
-                __map.replace(objTheme.style.name,objTheme);
+                __map.replaceTheme(objTheme.style.name,objTheme);
 
                 ixmaps.editor.alert('<b>generating theme ...</b><img src="../../../ui/resources/images/loading_blue.gif" id="load-file-spinner" style="height:48px;margin:-0.4em 0 0 0;">', "generating-on-bottom", "default");
             };
@@ -3382,7 +3402,7 @@
                 console.log("out");
             };
             ixmaps.chartClick = function(szFlag) {
-                ixmaps.changeThemeStyle(null, ixmaps.editor.themeId, 'type:' + szFlag, 'set');
+                ixmaps.map().changeThemeStyle(ixmaps.editor.themeId, 'type:' + szFlag, 'set');
             };
 
 
@@ -3402,7 +3422,7 @@
                 // create dialog
                 $("#" + szTarget).html(szHtml);
 
-                var __themeObj = ixmaps.getThemeObj(null, ixmaps.editor.themeId);
+                var __themeObj = ixmaps.getThemeObj(ixmaps.editor.themeId);
 
                 var szTypeList = szChartTypeListSingleValue;
                 if ((__themeObj.szFieldsA.length > 1) ||
@@ -3426,7 +3446,7 @@
 
                 var szTargetDiv = "chartmenu-div";
 
-                var __themeObj = ixmaps.getThemeObj(null, ixmaps.editor.themeId);
+                var __themeObj = ixmaps.getThemeObj(ixmaps.editor.themeId);
 
                 if (!__themeObj) {
                     return;
@@ -3826,9 +3846,7 @@
 
             $(document).ready(function() {
                 
-                alert("hi");
-
-                resize();
+                // resize();
                 
 	            var themes = ixmaps.getThemes();
                 for ( i in themes ){
@@ -3857,7 +3875,8 @@
 
             });
 
-        </script>
+            ixmaps.editor.loadTheme(ixmaps.editor.themeId);
+       </script>
 
 </body>
 
