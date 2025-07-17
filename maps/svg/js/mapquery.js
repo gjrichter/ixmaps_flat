@@ -22,7 +22,7 @@ $Log: mapquery.js,v $
 /* jshint funcscope:true, evil:true, eqnull:true, loopfunc:true, shadow: true, laxcomma: true, laxbreak: true, expr: true, sub: true*/
 /* globals 
 	document, window, alert, _TRACE, setTimeout,
-	Map, map, thisversion, szMapNs, SVGDocument, SVGRootElement, SVGPopupGroup, 
+	ixMap, map, thisversion, szMapNs, SVGDocument, SVGRootElement, SVGPopupGroup, 
 	point, box, getMatrix, setMapTool,
 	displayMessage, _activeTheme, _activeItem, displayInfo, displayInfoDelayed, clearThemes, highLightList
 	*/
@@ -38,27 +38,27 @@ $Log: mapquery.js,v $
  * @throws 
  * @return A new Query instance
  */
-Map.Query = function(){
+ixMap.Query = function(){
 	this.themesA     = new Array(0);
 	this.infoThemesA = new Array(0);
 	this.foundNodesA = new Array(0);
 	this.searchRecursion = 0;
 };
-Map.Query.prototype = new Map();
+ixMap.Query.prototype = new Map();
 
 // create instance on load
 if ( (typeof(thisversion) == "string") && map.checkVersion(thisversion) ){
-	map.Query = new Map.Query(); 
+	map.Query = new ixMap.Query(); 
 }
 else{
-	alert("Map.Query incompatible !");
+	alert("ixMap.Query incompatible !");
 }
 
 /**
  * get themes
  * return list with all themes within the map
  */
-Map.Query.prototype.xgetThemes = function(){
+ixMap.Query.prototype.xgetThemes = function(){
 	if (this.themesA.length === 0 && SVGDocument){
 		var mapNode   = SVGDocument.getElementById("mapzoomandpan");
 		if (mapNode){
@@ -79,7 +79,7 @@ Map.Query.prototype.xgetThemes = function(){
  * get themes
  * @return list with all themes within the map
  */
-Map.Query.prototype.getThemes = function(){
+ixMap.Query.prototype.getThemes = function(){
 	if (this.themesA.length === 0 && SVGDocument){
 		var themeNodesA = SVGDocument.getElementsByTagNameNS(szMapNs,"theme");
 		if (themeNodesA){
@@ -94,7 +94,7 @@ Map.Query.prototype.getThemes = function(){
  * get themes
  * return list with all themes within the map^which have an info attribute
  */
-Map.Query.prototype.getThemesWithInfo = function(){
+ixMap.Query.prototype.getThemesWithInfo = function(){
 	if (this.infoThemesA.length === 0 && SVGDocument){
 		var themeNodesA = SVGDocument.getElementsByTagNameNS(szMapNs,"theme");
 		if (themeNodesA){
@@ -111,7 +111,7 @@ Map.Query.prototype.getThemesWithInfo = function(){
  * get themes with selection (lookup)
  * return list with all themes within the map^which have a selection attribute
  */
-Map.Query.prototype.getThemesWithSelection = function(){
+ixMap.Query.prototype.getThemesWithSelection = function(){
 	if (this.infoThemesA.length === 0 && SVGDocument){
 		var themeNodesA = SVGDocument.getElementsByTagNameNS(szMapNs,"theme");
 		if (themeNodesA){
@@ -128,7 +128,7 @@ Map.Query.prototype.getThemesWithSelection = function(){
  * get active theme
  * return the active theme
  */
-Map.Query.prototype.getActiveTheme = function(){
+ixMap.Query.prototype.getActiveTheme = function(){
 	return _activeTheme;
 };
 /**
@@ -136,7 +136,7 @@ Map.Query.prototype.getActiveTheme = function(){
  * @param szTheme the given map theme
  * @return a list with all fields of the given map theme
  */
-Map.Query.prototype.getFieldsOfTheme = function(szTheme){
+ixMap.Query.prototype.getFieldsOfTheme = function(szTheme){
 	var fieldsA = new Array(0);
 	if (SVGDocument){
 		var themeNode   = SVGDocument.getElementById(szTheme);
@@ -162,7 +162,7 @@ Map.Query.prototype.getFieldsOfTheme = function(szTheme){
  * @param szField the given field of the map theme
  * @return a list of all (different) values found
  */
-Map.Query.prototype.getValuesOfFieldAndTheme = function(szTheme,szField,nMaxCount){
+ixMap.Query.prototype.getValuesOfFieldAndTheme = function(szTheme,szField,nMaxCount){
 	var fieldsA = new Array(0);
 	var i;
 	if ( szTheme == null || szField == null ){
@@ -255,7 +255,7 @@ Map.Query.prototype.getValuesOfFieldAndTheme = function(szTheme,szField,nMaxCoun
  * @param nMaxCount return maximal this count
  * @return a list of id's
  */
-Map.Query.prototype.getSelectionValuesOfTheme = function(szTheme,nMaxCount){
+ixMap.Query.prototype.getSelectionValuesOfTheme = function(szTheme,nMaxCount){
 	var valuesA = new Array(0);
 	var i;
 	if ( szTheme == null ){
@@ -291,7 +291,7 @@ Map.Query.prototype.getSelectionValuesOfTheme = function(szTheme,nMaxCount){
  * @param szField the given field of the map theme
  * @return the field value or null
  */
-Map.Query.prototype.getValueOfFieldAndItem = function(szId,szField){
+ixMap.Query.prototype.getValueOfFieldAndItem = function(szId,szField){
 
 	if (SVGDocument){
 		var itemNode   = SVGDocument.getElementById(szId);
@@ -332,7 +332,7 @@ Map.Query.prototype.getValueOfFieldAndItem = function(szId,szField){
  * @param szField the given field of the map theme
  * @return the field value or null
  */
-Map.Query.prototype.getClassnameOfItem = function(szId){
+ixMap.Query.prototype.getClassnameOfItem = function(szId){
 	var szClassname = null;
 	if (SVGDocument){
 		var itemNode   = SVGDocument.getElementById(szId);
@@ -377,7 +377,7 @@ Map.Query.prototype.getClassnameOfItem = function(szId){
  * @param szTheme the query relevant theme
  * @param szValue the query relevant value 
  */
-Map.Query.prototype.addFoundNode = function(nodeObj,szFeature,szItem,itemA){
+ixMap.Query.prototype.addFoundNode = function(nodeObj,szFeature,szItem,itemA){
 	var szId = map.Tiles.getMasterId(nodeObj.parentNode.getAttributeNS(null,"id"));
 	var szTheme = szId.split(':')[0];
 	if ( szTheme && szTheme.length && szId && szId.length ){
@@ -399,7 +399,7 @@ Map.Query.prototype.addFoundNode = function(nodeObj,szFeature,szItem,itemA){
  * @param szThemes restrict the search to this theme(s) 
  * @return a list with matching map shape nodes 
  */
-Map.Query.prototype.searchItem = function(szSearch,szMethod,szThemes){
+ixMap.Query.prototype.searchItem = function(szSearch,szMethod,szThemes){
 
 	_TRACE("searchItem("+szSearch+','+szMethod+','+szThemes+")");
 	var i;
@@ -490,7 +490,7 @@ Map.Query.prototype.searchItem = function(szSearch,szMethod,szThemes){
  * @param szTest the value to test
  * @return true or false 
  */
-Map.Query.prototype.isEqualA = function(szSearchA,szMethod,szTest){
+ixMap.Query.prototype.isEqualA = function(szSearchA,szMethod,szTest){
 
 	for ( var i=0; i<szSearchA.length; i++ ){
 		if ( this.isEqual(szSearchA[i],szMethod,szTest) ){
@@ -507,7 +507,7 @@ Map.Query.prototype.isEqualA = function(szSearchA,szMethod,szTest){
  * @param szTest the value to test
  * @return true or false 
  */
-Map.Query.prototype.isEqual = function(szSearch,szMethod,szTest){
+ixMap.Query.prototype.isEqual = function(szSearch,szMethod,szTest){
 
 	switch ( szMethod ){
 		case "any":
@@ -527,7 +527,7 @@ Map.Query.prototype.isEqual = function(szSearch,szMethod,szTest){
  * @param szThemes restrict the search to this theme(s) 
  * @return a list with matching map shape nodes 
  */
-Map.Query.prototype.searchItemAdvanced = function(szQuery,szTheme){
+ixMap.Query.prototype.searchItemAdvanced = function(szQuery,szTheme){
 	var i,ii;
 	var nIndex;
 
@@ -677,7 +677,7 @@ Map.Query.prototype.searchItemAdvanced = function(szQuery,szTheme){
  * @param szValue the attribute value to match
  * @return a list with matching map shape nodes 
  */
-Map.Query.prototype.searchItemByAttribute = function(szAttribute,szValue){
+ixMap.Query.prototype.searchItemByAttribute = function(szAttribute,szValue){
 	this.foundNodesA.length = 0;
 	var nodeA = new Array(0);
 
@@ -722,7 +722,7 @@ Map.Query.prototype.searchItemByAttribute = function(szAttribute,szValue){
  * @param mode   different highlight and zooming modes
  * @param newZoom predefined zoom 
  */
-Map.Query.prototype.gotoFoundItem = function(nIndex,mode,newZoom){
+ixMap.Query.prototype.gotoFoundItem = function(nIndex,mode,newZoom){
 	if (map.Query){
 		if (mode == '0'){
 			map.Query.execGotoFoundItem(nIndex,mode,newZoom);
@@ -733,7 +733,7 @@ Map.Query.prototype.gotoFoundItem = function(nIndex,mode,newZoom){
 		}
 	}
 };
-Map.Query.prototype.execGotoFoundItem = function(nIndex,mode,newZoom){
+ixMap.Query.prototype.execGotoFoundItem = function(nIndex,mode,newZoom){
 	var i;
 	var bBox;
 

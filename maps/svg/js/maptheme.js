@@ -24,7 +24,7 @@ $Log: maptheme.js,v $
 /* jshint funcscope:true, evil:true, eqnull:true, loopfunc:true, shadow: true, laxcomma: true */
 /* globals 
 	map, 
-	Map, 
+	ixMap, 
 	HTMLWindow, 
 	szMapNs, 
 	thisversion, 
@@ -324,7 +324,7 @@ function __isdef(obj) {
  * @throws 
  * @return A new Themes object
  */
-Map.Themes = function () {
+ixMap.Themes = function () {
 	/** array to hold all generated MapThemes object */
 	this.themesA = [];
 	/** array to hold all map shape nodes used; used to accellerate */
@@ -368,22 +368,22 @@ Map.Themes = function () {
 	this.themeDataCacheA = [];
 };
 
-Map.Themes.prototype = new Map();
+ixMap.Themes.prototype = new Map();
 // create instance on load
 if ((typeof (thisversion) == "string") && map.checkVersion(thisversion)) {
-	map.Themes = new Map.Themes();
+	map.Themes = new ixMap.Themes();
 	try {
 		HTMLWindow.ixmaps.htmlgui_onInitThemes();
 	} catch (e) {}
 } else {
-	alert("Map.Themes incompatible !");
+	alert("ixMap.Themes incompatible !");
 }
 
 /**
  * adds a map theme to the list
  * @parameter mapTheme the map theme object to add
  */
-Map.Themes.prototype.addTheme = function (mapTheme) {
+ixMap.Themes.prototype.addTheme = function (mapTheme) {
 	this.themesA[this.themesA.length] = mapTheme;
 	// notify HTML user about the new theme
 	if (!mapTheme.szFlag.match(/selection/i)) {
@@ -395,25 +395,25 @@ Map.Themes.prototype.addTheme = function (mapTheme) {
 /**
  * returns the number of themes in the list
  */
-Map.Themes.prototype.getThemeCount = function () {
+ixMap.Themes.prototype.getThemeCount = function () {
 	return this.themesA.length;
 };
 /**
  * returns a list of all themes
  */
-Map.Themes.prototype.getAllThemes = function () {
+ixMap.Themes.prototype.getAllThemes = function () {
 	return this.themesA;
 };
 /**
  * returns a list of all themes
  */
-Map.Themes.prototype.getThemes = function () {
+ixMap.Themes.prototype.getThemes = function () {
 	return this.themesA;
 };
 /**
  * returns true, if theme already exists
  */
-Map.Themes.prototype.isTheme = function (szIdStr) {
+ixMap.Themes.prototype.isTheme = function (szIdStr) {
 	for (var i = 0; i < this.themesA.length; i++) {
 		if (this.themesA[i].szIdStr && (this.themesA[i].szIdStr == szIdStr)) {
 			return this.themesA[i];
@@ -424,7 +424,7 @@ Map.Themes.prototype.isTheme = function (szIdStr) {
 /**
  * returns true, if all themes are realised
  */
-Map.Themes.prototype.isIdle = function () {
+ixMap.Themes.prototype.isIdle = function () {
 	for (var i = 0; i < this.themesA.length; i++) {
 		if (!this.themesA[i].fRealizeDone) {
 			return false;
@@ -442,7 +442,7 @@ Map.Themes.prototype.isIdle = function () {
  * @return true/false
  * @type boolean
  */
-Map.Themes.prototype.isArray = function (obj) {
+ixMap.Themes.prototype.isArray = function (obj) {
 	return Object.prototype.toString.call(obj) === '[object Array]';
 };
 /**
@@ -451,7 +451,7 @@ Map.Themes.prototype.isArray = function (obj) {
  * @return true/false
  * @type boolean
  */
-Map.Themes.prototype.isObject = function (obj) {
+ixMap.Themes.prototype.isObject = function (obj) {
 	return Object.prototype.toString.call(obj) === '[object Object]';
 };
 /**
@@ -460,7 +460,7 @@ Map.Themes.prototype.isObject = function (obj) {
  * @return array
  * @type array of string
  */
-Map.Themes.prototype.toArray = function (obj) {	
+ixMap.Themes.prototype.toArray = function (obj) {	
 	if (this.isObject(obj)) {
 		var array = [];
 		for ( var i in obj){
@@ -482,7 +482,7 @@ Map.Themes.prototype.toArray = function (obj) {
  * @return string or array.join('|')
  * @type string
  */
-Map.Themes.prototype.toString = function (obj) {
+ixMap.Themes.prototype.toString = function (obj) {
 	if (this.isArray(obj)) {
 		return obj.join('|');
 	} else {
@@ -506,7 +506,7 @@ Map.Themes.prototype.toString = function (obj) {
  * @parameter szStyle define the theme style
  * <br><br>szStyle is a string to define multiple properties with a syntax similar to CSS styles.<br>
  * <br>Sample: <em>'type:CHOROPLETH;classes:5;colorscheme:spectrum'</em>
- * <br><br>plesase see the documentation of Map.Api.prototype.createTheme() for more specific information.
+ * <br><br>plesase see the documentation of ixMap.Api.prototype.createTheme() for more specific information.
  * @parameter szTitle title text to be displayed in the info pane of the map theme
  * @parameter szLabel a string with label separated by '|' to define label for classes, or chart parts
  * @return A new MapTheme object
@@ -516,7 +516,7 @@ Map.Themes.prototype.toString = function (obj) {
  * <br> map.Themes.newTheme("layer","fieldA","field100","style=type:CHOROPLETH;",title="this theme"); 
  * <br><br>
  */
-Map.Themes.prototype.newTheme = function (szThemes, szFields, szField100, szStyle, szTitle, szLabel) {
+ixMap.Themes.prototype.newTheme = function (szThemes, szFields, szField100, szStyle, szTitle, szLabel) {
 
 	var styleObj = null;
 	var szStyleA = szStyle.split('style=');
@@ -561,7 +561,7 @@ Map.Themes.prototype.newTheme = function (szThemes, szFields, szField100, szStyl
  * @parameter szStyle define the theme style
  * <br><br>szStyle is a string to define multiple properties with a syntax similar to CSS styles.<br>
  * <br>Sample: <em>'type:CHOROPLETH;classes:5;colorscheme:spectrum'</em>
- * <br><br>plesase see the documentation of Map.Api.prototype.createTheme() for more specific information.
+ * <br><br>plesase see the documentation of ixMap.Api.prototype.createTheme() for more specific information.
  * @parameter szTitle title text to be displayed in the info pane of the map theme
  * @parameter szLabel a string with label separated by '|' to define label for classes, or chart parts
  * @return A new MapTheme object
@@ -571,7 +571,7 @@ Map.Themes.prototype.newTheme = function (szThemes, szFields, szField100, szStyl
  * <br> map.Themes.newTheme("layer","fieldA","field100","style=type:CHOROPLETH;",title="this theme"); 
  * <br><br>
  */
-Map.Themes.prototype.newThemeByObj = function (themeObj,szFlag) { 
+ixMap.Themes.prototype.newThemeByObj = function (themeObj,szFlag) { 
 
 	_TRACE("newThemeByObj =====>");
 
@@ -698,7 +698,7 @@ Map.Themes.prototype.newThemeByObj = function (themeObj,szFlag) {
  * complement to newThemeByObj(...)
  * @return void
  */
-Map.Themes.prototype.parseStyle = function (mapTheme, styleObj) {
+ixMap.Themes.prototype.parseStyle = function (mapTheme, styleObj) {
 
 	if (mapTheme && styleObj) {
 
@@ -1398,7 +1398,7 @@ Map.Themes.prototype.parseStyle = function (mapTheme, styleObj) {
  * @return array of theme definition strings
  * @type array of string
  */
-Map.Themes.prototype.getAllThemeDefinitionStrings = function () {
+ixMap.Themes.prototype.getAllThemeDefinitionStrings = function () {
 	var szDefA = [];
 	for (var i = 0; i < this.themesA.length; i++) {
 		szDefA.push(this.getThemeDefinitionString(this.themesA[i]));
@@ -1449,7 +1449,7 @@ var __scanScaleValue = function (szScale) {
  * @return the cleared theme object
  * @type string
  */
-Map.Themes.prototype.cleanUpThemeObj = function (themeObj,origObj) {
+ixMap.Themes.prototype.cleanUpThemeObj = function (themeObj,origObj) {
 	
 	// GR 09.01.2022 get original values to save or share theme
 	themeObj.field 			= origObj.field;
@@ -1528,7 +1528,7 @@ Map.Themes.prototype.cleanUpThemeObj = function (themeObj,origObj) {
  * @return the theme definition string
  * @type string
  */
-Map.Themes.prototype.getThemeDefinitionString = function (themeObj) {
+ixMap.Themes.prototype.getThemeDefinitionString = function (themeObj) {
 
 	var szTheme = "map.Api.newMapTheme" +
 		"(\"" + themeObj.szThemes + "\",\"" + (themeObj.szFields || "") + "\",\"" + (themeObj.szField100 || "") + "\"" +
@@ -1542,7 +1542,7 @@ Map.Themes.prototype.getThemeDefinitionString = function (themeObj) {
  * @return the theme style string
  * @type string
  */
-Map.Themes.prototype.getMapThemeStyleString = function (szId) {
+ixMap.Themes.prototype.getMapThemeStyleString = function (szId) {
 	var themeObj = this.getTheme(szId) || this.activeTheme;
 	if (themeObj && themeObj.colorScheme) {
 		return "type:" + themeObj.szFlag + ";" + "colorscheme:" + themeObj.colorScheme + ";" + __maptheme_getStyleString(themeObj) + "";
@@ -1556,7 +1556,7 @@ Map.Themes.prototype.getMapThemeStyleString = function (szId) {
  * @return the theme definition object
  * @type object
  */
-Map.Themes.prototype.getMapThemeDefinitionObj = function (szId) {
+ixMap.Themes.prototype.getMapThemeDefinitionObj = function (szId) {
 	var themeObj = this.getTheme(szId) || this.activeTheme;
 	var newObj = {};
 	newObj.layer = themeObj.szThemes;
@@ -1603,7 +1603,7 @@ Map.Themes.prototype.getMapThemeDefinitionObj = function (szId) {
  * retrieve a MapTheme object from the list 
  * @parameter szId the id of the map theme to retrieve
  */
-Map.Themes.prototype.getTheme = function (szId) {
+ixMap.Themes.prototype.getTheme = function (szId) {
 	if (!szId || (typeof(szId) != 'string') ){
 		return this.activeTheme;
 	}
@@ -1625,7 +1625,7 @@ Map.Themes.prototype.getTheme = function (szId) {
 /**
  * returns the index of a themes in the list
  */
-Map.Themes.prototype.getThemeIndex = function (szId) {
+ixMap.Themes.prototype.getThemeIndex = function (szId) {
 	for (var i = 0; i < this.themesA.length; i++) {
 		if (this.themesA[i].szId == szId) {
 			return i;
@@ -1636,7 +1636,7 @@ Map.Themes.prototype.getThemeIndex = function (szId) {
  * refresh a MapTheme 
  * @parameter szId the id of the theme
  */
-Map.Themes.prototype.refreshTheme = function (szId) {
+ixMap.Themes.prototype.refreshTheme = function (szId) {
 
 	var mapTheme = this.getTheme(szId);
 
@@ -1675,7 +1675,7 @@ Map.Themes.prototype.refreshTheme = function (szId) {
  * reset a MapTheme 
  * @parameter szId the id of the theme
  */
-Map.Themes.prototype.resetTheme = function (szId) {
+ixMap.Themes.prototype.resetTheme = function (szId) {
     
     var theme = map.Themes.getTheme(szId);
     if (theme){
@@ -1693,7 +1693,7 @@ Map.Themes.prototype.resetTheme = function (szId) {
  * show next frame of a MapTheme type clip
  * @parameter szId the id of the theme
  */
-Map.Themes.prototype.nextClipFrame = function (szId) {
+ixMap.Themes.prototype.nextClipFrame = function (szId) {
 	var mapTheme = this.getTheme(szId);
 	if (mapTheme) {
 		mapTheme.realizeNextClipFrame();
@@ -1703,7 +1703,7 @@ Map.Themes.prototype.nextClipFrame = function (szId) {
  * show a specifiv frame of a MapTheme type clip
  * @parameter szId the id of the theme
  */
-Map.Themes.prototype.setClipFrame = function (szId, n) {
+ixMap.Themes.prototype.setClipFrame = function (szId, n) {
 	var mapTheme = szId ? (this.getTheme(szId)) : this.activeTheme;
 	if (mapTheme) {
 		mapTheme.setClipFrame(n);
@@ -1713,7 +1713,7 @@ Map.Themes.prototype.setClipFrame = function (szId, n) {
  * pause a MapTheme type clip
  * @parameter szId the id of the theme
  */
-Map.Themes.prototype.pauseClip = function (szId) {
+ixMap.Themes.prototype.pauseClip = function (szId) {
 	var mapTheme = this.getTheme(szId);
 	if (mapTheme) {
 		mapTheme.pauseClip();
@@ -1723,7 +1723,7 @@ Map.Themes.prototype.pauseClip = function (szId) {
  * restart a MapTheme type clip
  * @parameter szId the id of the theme
  */
-Map.Themes.prototype.startClip = function (szId) {
+ixMap.Themes.prototype.startClip = function (szId) {
 	var mapTheme = this.getTheme(szId);
 	if (mapTheme) {
 		mapTheme.startClip();
@@ -1735,7 +1735,7 @@ Map.Themes.prototype.startClip = function (szId) {
  * @parameter szData the name of the external data; either equal theme or cotable
  * @parameter fRefresh flag, whether thedata should be reloaded if already present
  */
-Map.Themes.prototype.loadExternalData = function (szData, fRefresh, themeObj) {
+ixMap.Themes.prototype.loadExternalData = function (szData, fRefresh, themeObj) {
 
 	// if not exists, create global array to preserve resolved external data script paths
 	if (!this.coTableExt) {
@@ -1839,7 +1839,7 @@ Map.Themes.prototype.loadExternalData = function (szData, fRefresh, themeObj) {
 		}
 	}
 };
-Map.Themes.prototype.loadExternalDataZipped = function (szData, fRefresh, szMessage) {
+ixMap.Themes.prototype.loadExternalDataZipped = function (szData, fRefresh, szMessage) {
 	this.fWaitforData = true;
 	displayMessage(map.Dictionary.getLocalText("... loading data ..."));
 	_TRACE("... loading data ...");
@@ -1849,7 +1849,7 @@ Map.Themes.prototype.loadExternalDataZipped = function (szData, fRefresh, szMess
 	jsLoader.szMessage = map.Dictionary.getLocalText("... loading data ...");
 	jsLoader.loadScript(map.mapRoot + szData + ".js.gz", fRefresh);
 };
-Map.Themes.prototype.loadExternalDataDefault = function (szData, fRefresh, szMessage) {
+ixMap.Themes.prototype.loadExternalDataDefault = function (szData, fRefresh, szMessage) {
 	this.fWaitforData = true;
 	displayMessage(map.Dictionary.getLocalText("... loading data ..."));
 	_TRACE("... loading data ...");
@@ -1860,7 +1860,7 @@ Map.Themes.prototype.loadExternalDataDefault = function (szData, fRefresh, szMes
 	jsLoader.szMessage = map.Dictionary.getLocalText("... loading data ...");
 	jsLoader.loadScript(map.mapRoot + szData + ".js", fRefresh);
 };
-Map.Themes.prototype.loadExternalDataFinish = function (szMessage) {
+ixMap.Themes.prototype.loadExternalDataFinish = function (szMessage) {
 	this.fWaitforData = false;
 	executeWithMessage('map.Themes.execute()', szMessage);
 };
@@ -1873,7 +1873,7 @@ Map.Themes.prototype.loadExternalDataFinish = function (szMessage) {
  * @parameter dataObj loadad data in an internal (jsonDB) data table format
  * @parameter szDataName the name of the data object to create
  */
-Map.Themes.prototype.setExternalData = function (szThemeId, dataObj, szDataName) {
+ixMap.Themes.prototype.setExternalData = function (szThemeId, dataObj, szDataName) {
 	// create the data object with the desired name, must be identical to style ...
 	// export argument dataObj, necessary for javascript compressin by Google Code Compiler 
 	if (dataObj) {
@@ -1897,7 +1897,7 @@ Map.Themes.prototype.setExternalData = function (szThemeId, dataObj, szDataName)
  * @parameter evt the event
  * @parameter szId the id of the theme
  */
-Map.Themes.prototype.activateTheme = function (evt, szId) {
+ixMap.Themes.prototype.activateTheme = function (evt, szId) {
 	var mapTheme = this.getTheme(szId);
 	if (mapTheme) {
 		mapTheme.fRedraw = true;
@@ -1911,7 +1911,7 @@ Map.Themes.prototype.activateTheme = function (evt, szId) {
  * @parameter evt the event
  * @parameter szId the id of the theme
  */
-Map.Themes.prototype.showTheme = function (evt, szId) {
+ixMap.Themes.prototype.showTheme = function (evt, szId) {
 	var mapTheme = this.getTheme(szId);
 	if (mapTheme) {
 		mapTheme.fShow = true;
@@ -1927,7 +1927,7 @@ Map.Themes.prototype.showTheme = function (evt, szId) {
  * @parameter evt the event
  * @parameter szId the id of the theme
  */
-Map.Themes.prototype.hideTheme = function (evt, szId) {
+ixMap.Themes.prototype.hideTheme = function (evt, szId) {
 	var mapTheme = this.getTheme(szId);
 	if (mapTheme) {
 		mapTheme.fHide = true;
@@ -1943,7 +1943,7 @@ Map.Themes.prototype.hideTheme = function (evt, szId) {
  * @parameter evt the event
  * @parameter szId the id of the theme
  */
-Map.Themes.prototype.toggleTheme = function (evt, szId) {
+ixMap.Themes.prototype.toggleTheme = function (evt, szId) {
 	var mapTheme = this.getTheme(szId);
 	if (mapTheme) {
 		mapTheme.fToggle = true;
@@ -1959,7 +1959,7 @@ Map.Themes.prototype.toggleTheme = function (evt, szId) {
  * @parameter evt the event
  * @parameter szId the id of the theme
  */
-Map.Themes.prototype.removeTheme = function (evt, szId) {
+ixMap.Themes.prototype.removeTheme = function (evt, szId) {
 	for (var i = 0; i < this.themesA.length; i++) {
 		if ( (this.themesA[i].szId == szId) || (this.themesA[i].szName == szId) ){
 			var mapTheme = this.themesA[i];
@@ -1982,7 +1982,7 @@ Map.Themes.prototype.removeTheme = function (evt, szId) {
  * remove all map themes
  * @parameter evt the event
  */
-Map.Themes.prototype.removeAll = function (evt) {
+ixMap.Themes.prototype.removeAll = function (evt) {
 	for (var i = 0; i < this.themesA.length; i++) {
 		if (!this.themesA[i].szFlag.match(/LOCKED/)) {
 			this.themesA[i].fRemove = !this.themesA[i].fRealize || this.themesA[i].fOutOfScale;
@@ -2000,7 +2000,7 @@ Map.Themes.prototype.removeAll = function (evt) {
  * remove all map themes
  * @parameter evt the event
  */
-Map.Themes.prototype.removeAllCharts = function (evt) {
+ixMap.Themes.prototype.removeAllCharts = function (evt) {
 	for (var i = 0; i < this.themesA.length; i++) {
 		if (this.themesA[i].szFlag.match(/CHART/) && !this.themesA[i].szFlag.match(/LOCKED/)) {
 			this.themesA[i].fRemove = true;
@@ -2018,7 +2018,7 @@ Map.Themes.prototype.removeAllCharts = function (evt) {
  * remove all map themes
  * @parameter evt the event
  */
-Map.Themes.prototype.removeAllChoropleth = function (evt) {
+ixMap.Themes.prototype.removeAllChoropleth = function (evt) {
 	for (var i = 0; i < this.themesA.length; i++) {
 		if (this.themesA[i].szFlag.match(/CHOROPLETH/) && !this.themesA[i].szFlag.match(/LOCKED/)) {
 			this.themesA[i].fRemove = !this.themesA[i].fRealize;
@@ -2035,7 +2035,7 @@ Map.Themes.prototype.removeAllChoropleth = function (evt) {
  * remove all map themes
  * @parameter evt the event
  */
-Map.Themes.prototype.removeAllSelections = function (evt) {
+ixMap.Themes.prototype.removeAllSelections = function (evt) {
 	for (var i = 0; i < this.themesA.length; i++) {
 		if (this.themesA[i].szFlag.match(/SELECTION/)) {
 			this.themesA[i].fRemove = true;
@@ -2051,7 +2051,7 @@ Map.Themes.prototype.removeAllSelections = function (evt) {
  * refresh all map theme info displays
  * @parameter evt the event
  */
-Map.Themes.prototype.redrawInfoAll = function (evt) {
+ixMap.Themes.prototype.redrawInfoAll = function (evt) {
 	for (var i = 0; i < this.themesA.length; i++) {
 		this.themesA[i].fRedrawInfo = true;
 	}
@@ -2066,7 +2066,7 @@ Map.Themes.prototype.redrawInfoAll = function (evt) {
  * reformat themes display on map resize
  * @parameter evt the event
  */
-Map.Themes.prototype.reformat = function (evt) {
+ixMap.Themes.prototype.reformat = function (evt) {
 
 	this.minX = 0;
 	this.minY = 0;
@@ -2085,9 +2085,9 @@ Map.Themes.prototype.reformat = function (evt) {
 /**
  * execute the various actions on the MapTheme, which have been programmized by flags 
  */
-Map.Themes.prototype.execute = function () {
+ixMap.Themes.prototype.execute = function () {
 
-	_TRACE("Map.Themes.execute() =====>");
+	_TRACE("ixMap.Themes.execute() =====>");
 
 	var szDisableType = null;
 	var szDisableThemes = null;
@@ -2305,12 +2305,12 @@ Map.Themes.prototype.execute = function () {
 	
 	clearMessage();
 	clearMessage(1000);
-	_TRACE("== Map.Themes.execute done");
+	_TRACE("== ixMap.Themes.execute done");
 };
 /**
  * continue to execute the various actions on the MapTheme, which have been programmized by flags 
  */
-Map.Themes.prototype.executeContinue = function () {
+ixMap.Themes.prototype.executeContinue = function () {
 	for (var i = 0; i < this.themesA.length; i++) {
 		if (this.themesA[i].fAnalyze) {
 			this.themesA[i].fAnalyze = false;
@@ -2333,7 +2333,7 @@ Map.Themes.prototype.executeContinue = function () {
 /**
  * a theme reports end of realization
  */
-Map.Themes.prototype.realizeDone = function (mapTheme) {
+ixMap.Themes.prototype.realizeDone = function (mapTheme) {
 
 	for (var i = 0; i < this.themesA.length; i++) {
 		if (this.themesA[i].szFlag.match(/SELECTION/)) {
@@ -2381,14 +2381,14 @@ Map.Themes.prototype.realizeDone = function (mapTheme) {
 /**
  * show progress bar while drawing 
  */
-Map.Themes.prototype.showProgressBar = function () {
+ixMap.Themes.prototype.showProgressBar = function () {
 	for (var i = 0; i < this.themesA.length; i++) {
 		if ((this.themesA[i].fRealize || this.themesA[i].fContinue || this.themesA[i].fAnalyze || this.themesA[i].fDraw) &&
 			this.themesA[i].nCount / this.themesA[i].nDoneCount > 2 &&
 			this.themesA[i].mapSleep) {
 			this.themesA[i].mapSleep.fShowProgressBar = true;
 		} else if (this.themesA[i].fRealize || this.themesA[i].fContinue || this.themesA[i].fAnalyze || this.themesA[i].fDraw) {
-			//this.themesA[i].mapSleep = new Map.Sleep("map.Themes.executeContinue",25,map.Dictionary.getLocalText("do selection"));
+			//this.themesA[i].mapSleep = new ixMap.Sleep("map.Themes.executeContinue",25,map.Dictionary.getLocalText("do selection"));
 			//this.themesA[i].mapSleep.nCount = this.themesA[i].nCount;
 			//this.themesA[i].mapSleep.szCancel = "map.Themes.cancelExecute()";
 			setTimeout(function(){map.Themes.showProgressBar();}, 1000);
@@ -2400,7 +2400,7 @@ Map.Themes.prototype.showProgressBar = function () {
  * remove one MapTheme object from the list 
  * @parameter mapTheme the map theme object, to remove
  */
-Map.Themes.prototype.remove = function (mapTheme) {
+ixMap.Themes.prototype.remove = function (mapTheme) {
 	if (mapTheme == this.activeTheme) {
 		this.activeTheme = null;
 	}
@@ -2421,20 +2421,20 @@ Map.Themes.prototype.remove = function (mapTheme) {
 /**
  * cancel execution of map themes
  */
-Map.Themes.prototype.cancelExecute = function () {
+ixMap.Themes.prototype.cancelExecute = function () {
 	this.activeTheme.fCancel = true;
 };
 /**
  * play a sequence of map themes
  */
-Map.Themes.prototype.sequence = function () {
+ixMap.Themes.prototype.sequence = function () {
 	this.sequenceNr = 0;
 	this.sequenceNext();
 };
 /**
  * activate the next theme in sequence
  */
-Map.Themes.prototype.sequenceNext = function () {
+ixMap.Themes.prototype.sequenceNext = function () {
 	if (this.sequenceNr < this.themesA.length) {
 		this.themesA[this.sequenceNr].fRedraw = true;
 		map.Themes.executeCallback = "setTimeout('map.Themes.sequenceNext()',500)";
@@ -2445,7 +2445,7 @@ Map.Themes.prototype.sequenceNext = function () {
 /**
  * activate the next theme in sequence
  */
-Map.Themes.prototype.activateNextPaint = function (mapTheme) {
+ixMap.Themes.prototype.activateNextPaint = function (mapTheme) {
 	var iStart = this.getThemeIndex(mapTheme.szId);
 	for (var i = iStart - 1; i != iStart; i--) {
 		if (i < 0) {
@@ -2467,7 +2467,7 @@ Map.Themes.prototype.activateNextPaint = function (mapTheme) {
  * @param evt the event
  * @param fFlag the change flag 
  */
-Map.Themes.prototype.toggleThemeValues = function (evt, fFlag) {
+ixMap.Themes.prototype.toggleThemeValues = function (evt, fFlag) {
 	// this.allwaysShowValues = !this.activeTheme.szFlag.match(/VALUES/);
 	this.toggleValueDisplay(evt, this.activeTheme.szId, !this.activeTheme.szFlag.match(/VALUES/));
 	/** all othes themes; not active; deactivated
@@ -2481,14 +2481,14 @@ Map.Themes.prototype.toggleThemeValues = function (evt, fFlag) {
  * @param evt the event
  * @param fFlag the change flag 
  */
-Map.Themes.prototype.toggleThemeLegends = function (evt, fFlag) {
+ixMap.Themes.prototype.toggleThemeLegends = function (evt, fFlag) {
 	SVGThemeGroup.style.setProperty("display", fFlag ? "inline" : "none", "");
 };
 /**
  * minimize the legend display of all themes
  * @param evt the event
  */
-Map.Themes.prototype.minimizeThemeLegends = function (evt) {
+ixMap.Themes.prototype.minimizeThemeLegends = function (evt) {
 	this.fMinimizedLegends = true;
 	for (var i = 0; i < this.themesA.length; i++) {
 		this.minimizeInfo(evt, this.themesA[i].szId);
@@ -2499,7 +2499,7 @@ Map.Themes.prototype.minimizeThemeLegends = function (evt) {
  * @param evt the event
  * @param nDelta the scaling factor 
  */
-Map.Themes.prototype.changeAllChartScaling = function (evt, nDelta) {
+ixMap.Themes.prototype.changeAllChartScaling = function (evt, nDelta) {
 	for (var i = 0; i < this.themesA.length; i++) {
 		this.themesA[i].fResize = 999;
 		executeWithMessage("map.Themes.execute()", "... processing ...");
@@ -2513,7 +2513,7 @@ Map.Themes.prototype.changeAllChartScaling = function (evt, nDelta) {
  * @param szId the id of the chart group 
  * @param nDelta the scaling factor 
  */
-Map.Themes.prototype.changeChartScaling = function (evt, szId, nDelta) {
+ixMap.Themes.prototype.changeChartScaling = function (evt, szId, nDelta) {
 	var mapTheme = this.getTheme(szId);
 	if (mapTheme) {
 		mapTheme.fResize = nDelta;
@@ -2528,7 +2528,7 @@ Map.Themes.prototype.changeChartScaling = function (evt, szId, nDelta) {
  * @param szId the id of the chart group 
  * @param nDelta the opacity factor 
  */
-Map.Themes.prototype.changeChartOpacity = function (evt, szId, nDelta) {
+ixMap.Themes.prototype.changeChartOpacity = function (evt, szId, nDelta) {
 	var mapTheme = this.getTheme(szId);
 	if (mapTheme) {
 		mapTheme.fOpacity = nDelta;
@@ -2543,7 +2543,7 @@ Map.Themes.prototype.changeChartOpacity = function (evt, szId, nDelta) {
  * @param szId the id of the chart group 
  * @param szLeadId the id of the lead chart (who's position has been changed) 
  */
-Map.Themes.prototype.changeChartOffset = function (evt, szId, szLeadId) {
+ixMap.Themes.prototype.changeChartOffset = function (evt, szId, szLeadId) {
 	var mapTheme = this.getTheme(szId);
 	if (mapTheme) {
 		if (mapTheme.leadOffset) {
@@ -2570,14 +2570,14 @@ Map.Themes.prototype.changeChartOffset = function (evt, szId, szLeadId) {
  * @param szId the id of the chart group 
  * @param szLeadId the id of the lead chart (who's position has been changed) 
  */
-Map.Themes.prototype.tellChartOffset = function (evt, szId, szLeadId) {
+ixMap.Themes.prototype.tellChartOffset = function (evt, szId, szLeadId) {
 	var mapTheme = this.getTheme(szId);
 	if (mapTheme && !mapTheme.leadOffset && this.enableChartOffset) {
 		var leadObj = SVGDocument.getElementById(szLeadId);
 		if (leadObj) {
 			leadObj.fu = new Methods(leadObj);
 			mapTheme.leadOffset = leadObj.fu.getPosition();
-			_TRACE("Map.Themes.tellChartOffset((): " + mapTheme.leadOffset.x + ',' + mapTheme.leadOffset.y);
+			_TRACE("ixMap.Themes.tellChartOffset((): " + mapTheme.leadOffset.x + ',' + mapTheme.leadOffset.y);
 		}
 	}
 };
@@ -2587,7 +2587,7 @@ Map.Themes.prototype.tellChartOffset = function (evt, szId, szLeadId) {
  * @param szId the id of the chart group 
  * @param szLeadId the id of the lead chart (who's position has been changed) 
  */
-Map.Themes.prototype.initChartOffset = function (evt, szId, szLeadId) {
+ixMap.Themes.prototype.initChartOffset = function (evt, szId, szLeadId) {
 	var mapTheme = this.getTheme(szId);
 	if (mapTheme) {
 		var leadObj = SVGDocument.getElementById(szLeadId);
@@ -2609,7 +2609,7 @@ Map.Themes.prototype.initChartOffset = function (evt, szId, szLeadId) {
  * @param szId the id of the chart group 
  * @param szLeadId the id of the lead chart (who's position has been changed) 
  */
-Map.Themes.prototype.endChartOffset = function (evt, szId, szLeadId) {
+ixMap.Themes.prototype.endChartOffset = function (evt, szId, szLeadId) {
 	var mapTheme = this.getTheme(szId);
 	if (mapTheme) {
 		var leadObj = SVGDocument.getElementById(szLeadId);
@@ -2622,7 +2622,7 @@ Map.Themes.prototype.endChartOffset = function (evt, szId, szLeadId) {
 /**
  * create the pointing edge from offset to position
  */
-Map.Themes.prototype.makeChartOffsetPointer = function (node, nScale) {
+ixMap.Themes.prototype.makeChartOffsetPointer = function (node, nScale) {
 
 	nScale = nScale || 1;
 
@@ -2695,7 +2695,7 @@ Map.Themes.prototype.makeChartOffsetPointer = function (node, nScale) {
  * @param evt the event
  * @param szId the id of the chart group 
   */
-Map.Themes.prototype.animateChartPosition = function (evt, szId) {
+ixMap.Themes.prototype.animateChartPosition = function (evt, szId) {
 	var mapTheme = this.getTheme(szId);
 	if (mapTheme) {
 		var nodesA = mapTheme.chartGroup.childNodes;
@@ -2897,7 +2897,7 @@ MapTheme.prototype.animateCharts = function (szMode) {
  * @param szId the id of the chart group 
  * @param fFlag true or false 
  */
-Map.Themes.prototype.toggleValueDisplay = function (evt, szId, fFlag) {
+ixMap.Themes.prototype.toggleValueDisplay = function (evt, szId, fFlag) {
 	var mapTheme = this.getTheme(szId);
 	if (mapTheme) {
 		var szNewStyle = "";
@@ -2924,7 +2924,7 @@ Map.Themes.prototype.toggleValueDisplay = function (evt, szId, fFlag) {
  * @param szId the id of the chart group 
  * @param fFlag true or false 
  */
-Map.Themes.prototype.toggleDopacity = function (evt, szId, fFlag) {
+ixMap.Themes.prototype.toggleDopacity = function (evt, szId, fFlag) {
 	var mapTheme = this.getTheme(szId);
 	if (mapTheme) {
 		var szNewStyle = "";
@@ -2951,7 +2951,7 @@ Map.Themes.prototype.toggleDopacity = function (evt, szId, fFlag) {
  * @param szId the id of the chart group 
  * @param fFlag true or false 
  */
-Map.Themes.prototype.changeDopacityAlphaRamp = function (evt, szId, nFactor) {
+ixMap.Themes.prototype.changeDopacityAlphaRamp = function (evt, szId, nFactor) {
 	var mapTheme = this.getTheme(szId);
 	if (mapTheme) {
 		var szNewStyle = mapTheme.szFlag;
@@ -2974,7 +2974,7 @@ Map.Themes.prototype.changeDopacityAlphaRamp = function (evt, szId, nFactor) {
  * @param szId the id of the chart group 
  * @param fFlag true or false 
  */
-Map.Themes.prototype.toggleChartDisplay = function (evt, szId, fFlag) {
+ixMap.Themes.prototype.toggleChartDisplay = function (evt, szId, fFlag) {
 
 	var mapTheme = this.getTheme(szId);
 	if (mapTheme) {
@@ -2990,7 +2990,7 @@ Map.Themes.prototype.toggleChartDisplay = function (evt, szId, fFlag) {
  * @param evt the event
  * @param szId the theme id 
  */
-Map.Themes.prototype.zoomTo = function (evt, szId) {
+ixMap.Themes.prototype.zoomTo = function (evt, szId) {
 	var mapTheme = this.getTheme(szId) || this.activeTheme;
 	if (mapTheme) {
 		mapTheme.zoomTo();
@@ -3002,7 +3002,7 @@ Map.Themes.prototype.zoomTo = function (evt, szId) {
  * @param szId the id of the chart group 
  * @param szClass the class number
  */
-Map.Themes.prototype.zoomToClass = function (evt, szId, szClass, szStep) {
+ixMap.Themes.prototype.zoomToClass = function (evt, szId, szClass, szStep) {
 	setTimeout(function(){map.Themes.doZoomToClass(szId,szClass,szStep);}, 100);
 };
 /**
@@ -3011,7 +3011,7 @@ Map.Themes.prototype.zoomToClass = function (evt, szId, szClass, szStep) {
  * @param szId the id of the chart group 
  * @param szClass the class number
  */
-Map.Themes.prototype.markClass = function (evt, szId, szClass, szStep) {
+ixMap.Themes.prototype.markClass = function (evt, szId, szClass, szStep) {
 	var mapTheme = this.getTheme(szId);
 	if (mapTheme && mapTheme.isVisible && !mapTheme.showInfoMore) {
 
@@ -3039,7 +3039,7 @@ Map.Themes.prototype.markClass = function (evt, szId, szClass, szStep) {
  * @param evt the event
  * @param szId the id of the chart group 
  */
-Map.Themes.prototype.unmarkClass = function (evt, szId, szClass) {
+ixMap.Themes.prototype.unmarkClass = function (evt, szId, szClass) {
 
 	var mapTheme = this.getTheme(szId);
 	if (mapTheme && mapTheme.isVisible && !mapTheme.showInfoMore) {
@@ -3055,7 +3055,7 @@ Map.Themes.prototype.unmarkClass = function (evt, szId, szClass) {
  * @param szId the id of the chart group 
  * @param szClass the class number
  */
-Map.Themes.prototype.doZoomToClass = function (szId, szClass, szStep) {
+ixMap.Themes.prototype.doZoomToClass = function (szId, szClass, szStep) {
 	var mapTheme = this.getTheme(szId);
 	if (mapTheme) {
 		mapTheme.zoomToClass(Number(szClass), Number(szStep));
@@ -3066,7 +3066,7 @@ Map.Themes.prototype.doZoomToClass = function (szId, szClass, szStep) {
  * @param szId the id of the chart group 
  * @param szClass the class number
  */
-Map.Themes.prototype.doMarkClass = function (szId, szClass, szStep) {
+ixMap.Themes.prototype.doMarkClass = function (szId, szClass, szStep) {
 	var mapTheme = this.getTheme(szId);
 	if (mapTheme) {
 		mapTheme.markedClass = szClass;
@@ -3092,7 +3092,7 @@ Map.Themes.prototype.doMarkClass = function (szId, szClass, szStep) {
  * unmark the shapes of a selected class
  * @param szId the id of the chart group 
  */
-Map.Themes.prototype.doUnmarkClass = function (szId, szClass) {
+ixMap.Themes.prototype.doUnmarkClass = function (szId, szClass) {
 	var mapTheme = this.getTheme(szId);
 	if (mapTheme) {
 		mapTheme.markedClass = null;
@@ -3133,7 +3133,7 @@ Map.Themes.prototype.doUnmarkClass = function (szId, szClass) {
  * @param szId the id of the chart group 
  * @param szClass the class number
  */
-Map.Themes.prototype.hideClass = function (evt, szId, szClass, szStep) {
+ixMap.Themes.prototype.hideClass = function (evt, szId, szClass, szStep) {
 	var mapTheme = this.getTheme(szId);
 	if (mapTheme && mapTheme.isVisible) {
 		mapTheme.showClass(Number(szClass), Number(szStep), false);
@@ -3145,7 +3145,7 @@ Map.Themes.prototype.hideClass = function (evt, szId, szClass, szStep) {
  * @param szId the id of the chart group 
  * @param szClass the class number
  */
-Map.Themes.prototype.showClass = function (evt, szId, szClass, szStep) {
+ixMap.Themes.prototype.showClass = function (evt, szId, szClass, szStep) {
 	var mapTheme = this.getTheme(szId);
 	if (mapTheme && mapTheme.isVisible) {
 		mapTheme.showClass(Number(szClass), Number(szStep), true);
@@ -3156,7 +3156,7 @@ Map.Themes.prototype.showClass = function (evt, szId, szClass, szStep) {
  * @param evt the event
  * @param szId the id of the chart group 
  */
-Map.Themes.prototype.classesToRanges = function (evt, szId) {
+ixMap.Themes.prototype.classesToRanges = function (evt, szId) {
 	var mapTheme = this.getTheme(szId);
 	if (mapTheme && mapTheme.isVisible) {
 		mapTheme.classesToRanges();
@@ -3169,7 +3169,7 @@ Map.Themes.prototype.classesToRanges = function (evt, szId) {
  * @param szFilter the filter string
  * @param mode the filer mode (tbd)
  */
-Map.Themes.prototype.filterItems = function (evt, szId, szFilter, opt) {
+ixMap.Themes.prototype.filterItems = function (evt, szId, szFilter, opt) {
 	var mapTheme = szId ? this.getTheme(szId) : this.activeTheme;
 	if (mapTheme && mapTheme.isVisible && !mapTheme.showInfoMore) {
 		mapTheme.fMarkEnable = true;
@@ -3190,7 +3190,7 @@ Map.Themes.prototype.filterItems = function (evt, szId, szFilter, opt) {
  * @param szFilter the filter string
  * @param mode the filer mode (tbd)
  */
-Map.Themes.prototype.doFilterItems = function (szId, szFilter) {
+ixMap.Themes.prototype.doFilterItems = function (szId, szFilter) {
 	executeWithMessage("map.Themes.doFilterItemsGo('" + szId + "','" + szFilter + "')", "applying filter ...");
 };
 /**
@@ -3199,7 +3199,7 @@ Map.Themes.prototype.doFilterItems = function (szId, szFilter) {
  * @param szFilter the filter string
  * @param mode the filer mode (tbd)
  */
-Map.Themes.prototype.doFilterItemsGo = function (szId, szFilter) {
+ixMap.Themes.prototype.doFilterItemsGo = function (szId, szFilter) {
 	clearMessage();
 	var mapTheme = this.getTheme(szId ? (szId) : null);
 	if (mapTheme) {
@@ -3213,7 +3213,7 @@ Map.Themes.prototype.doFilterItemsGo = function (szId, szFilter) {
  * @param evt the event
  * @param szId the id of the theme 
  */
-Map.Themes.prototype.selectFilterItems = function (evt, szId) {
+ixMap.Themes.prototype.selectFilterItems = function (evt, szId) {
 	var mapTheme = this.getTheme(szId);
 	if (mapTheme) {
 		mapTheme.selectFilterItems();
@@ -3226,7 +3226,7 @@ Map.Themes.prototype.selectFilterItems = function (evt, szId) {
  * @param szId the id of the theme 
  * @param szItems items array (string, separated by ",")
  */
-Map.Themes.prototype.highlightItems = function (evt, szId, szItems, szSeparator) {
+ixMap.Themes.prototype.highlightItems = function (evt, szId, szItems, szSeparator) {
 	var mapTheme = szId ? this.getTheme(szId) : this.activeTheme;
 	if (mapTheme && mapTheme.isVisible) {
 		if (this.highlightTimeout) {
@@ -3241,7 +3241,7 @@ Map.Themes.prototype.highlightItems = function (evt, szId, szItems, szSeparator)
  * @param szFilter the filter string
  * @param mode the filer mode (tbd)
  */
-Map.Themes.prototype.doHighlightItems = function (szId, szItems, szSeparator) {
+ixMap.Themes.prototype.doHighlightItems = function (szId, szItems, szSeparator) {
 	var mapTheme = szId ? this.getTheme(szId) : this.activeTheme;
 	if (mapTheme) {
 		mapTheme.highlightItems(szItems, szSeparator);
@@ -3252,7 +3252,7 @@ Map.Themes.prototype.doHighlightItems = function (szId, szItems, szSeparator) {
  * @param evt the event
  * @param szId the id of the theme 
  */
-Map.Themes.prototype.clearHighlightItems = function (evt, szId) {
+ixMap.Themes.prototype.clearHighlightItems = function (evt, szId) {
 	var mapTheme = szId ? this.getTheme(szId) : this.activeTheme;
 	if (mapTheme && mapTheme.isVisible) {
 		if (this.highlightTimeout) {
@@ -3268,7 +3268,7 @@ Map.Themes.prototype.clearHighlightItems = function (evt, szId) {
  * @param nUMin the minimum time (utime ms)
  * @param nUMax the maximum time (utime ms)
  */
-Map.Themes.prototype.setTimeFrame = function (evt, szId, nUMin, nUMax) {
+ixMap.Themes.prototype.setTimeFrame = function (evt, szId, nUMin, nUMax) {
 	var mapTheme = this.getTheme(szId);
 	if (mapTheme && mapTheme.isVisible && !mapTheme.showInfoMore) {
 
@@ -3288,7 +3288,7 @@ Map.Themes.prototype.setTimeFrame = function (evt, szId, nUMin, nUMax) {
  * @param nUMin the minimum time (utime ms)
  * @param nUMax the maximum time (utime ms)
  */
-Map.Themes.prototype.doSetTimeFrame = function (szId, nUMin, nUMax) {
+ixMap.Themes.prototype.doSetTimeFrame = function (szId, nUMin, nUMax) {
 	
 	// GR 25/08/2023 if no specific theme id given, then loop over all themes
 	if (szId == null) {
@@ -3310,7 +3310,7 @@ Map.Themes.prototype.doSetTimeFrame = function (szId, nUMin, nUMax) {
  * @param szId the id of the chart group 
  * @param szStyle the new style
  */
-Map.Themes.prototype.changeThemeStyle = function (evt, szId, szStyle, szFlag) {
+ixMap.Themes.prototype.changeThemeStyle = function (evt, szId, szStyle, szFlag) {
 	
 	// GR 30.07.2023 null -> all themes
 	if ( szId == null){
@@ -3397,7 +3397,7 @@ function __calcFactor(value, number, szFlag) {
  * CHOROPLETH type can be changed only to BUBBLE type.<br>
  * CHART type can be changed into DOMINANT type.<br>
  */
-Map.Themes.prototype.doChangeThemeStyle = function (szId, szStyle, szFlag) {
+ixMap.Themes.prototype.doChangeThemeStyle = function (szId, szStyle, szFlag) {
 	var mapTheme = this.getTheme(szId);
 	if (mapTheme) {
 		var styleObj = __getStyleObj(szStyle);
@@ -4188,7 +4188,7 @@ Map.Themes.prototype.doChangeThemeStyle = function (szId, szStyle, szFlag) {
  * build a list of all themed layer
  * @return a list of layer
  */
-Map.Themes.prototype.getThemeLayerList = function () {
+ixMap.Themes.prototype.getThemeLayerList = function () {
 
 	var szThemeA = [];
 	var a;
@@ -4207,7 +4207,7 @@ Map.Themes.prototype.getThemeLayerList = function () {
  * @param szLayer the layer to check
  * @return true or false
  */
-Map.Themes.prototype.isThemeLayerUsed = function (szLayer) {
+ixMap.Themes.prototype.isThemeLayerUsed = function (szLayer) {
 	var szThemeLayerA = this.getThemeLayerList();
 	for (var l = 0; l < szThemeLayerA.length; l++) {
 		if (szLayer == szThemeLayerA[l]) {
@@ -4221,7 +4221,7 @@ Map.Themes.prototype.isThemeLayerUsed = function (szLayer) {
  * @param objNode the SVG node to check
  * @return true or false
  */
-Map.Themes.prototype.isNodePartOfAnyTheme = function (objNode) {
+ixMap.Themes.prototype.isNodePartOfAnyTheme = function (objNode) {
 
 	var layerItem = map.Layer.getLayerObjOfNode(objNode);
 	if (layerItem) {
@@ -4238,7 +4238,7 @@ Map.Themes.prototype.isNodePartOfAnyTheme = function (objNode) {
  * discard cache of theme nodes (see .getItemNodes() )
  * @return ---
  */
-Map.Themes.prototype.resetThemeNodesCache = function () {
+ixMap.Themes.prototype.resetThemeNodesCache = function () {
 	this.themeNodesA = [];
 	this.themeNodes = 0;
 };
@@ -4246,7 +4246,7 @@ Map.Themes.prototype.resetThemeNodesCache = function () {
  * build cache of theme nodes (see .getItemNodes() )
  * @return ---
  */
-Map.Themes.prototype.addToThemeNodesCache = function (sourceGroup) {
+ixMap.Themes.prototype.addToThemeNodesCache = function (sourceGroup) {
 
 	// build node cache --------------------------------------
 	var count = 0;
@@ -4269,7 +4269,7 @@ Map.Themes.prototype.addToThemeNodesCache = function (sourceGroup) {
  * discard theme nodes from cache 
  * @return ---
  */
-Map.Themes.prototype.removeFromThemeNodesCache = function (sourceGroup) {
+ixMap.Themes.prototype.removeFromThemeNodesCache = function (sourceGroup) {
 
 	// remove from node cache --------------------------------------
 	var count = 0;
@@ -4292,7 +4292,7 @@ Map.Themes.prototype.removeFromThemeNodesCache = function (sourceGroup) {
  * set this theme as active
  * @param themeObj the theme to set active
  */
-Map.Themes.prototype.setActive = function (themeObj) {
+ixMap.Themes.prototype.setActive = function (themeObj) {
 	this.activeTheme = themeObj;
 };
 /**
@@ -4300,7 +4300,7 @@ Map.Themes.prototype.setActive = function (themeObj) {
  * @parameter evt the event
  * @parameter szId the id of the theme
  */
-Map.Themes.prototype.minimizeInfo = function (evt, szId) {
+ixMap.Themes.prototype.minimizeInfo = function (evt, szId) {
 	var mapTheme = this.getTheme(szId);
 	if (mapTheme) {
 		var infoNode = mapTheme.widgetNode.firstChild;
@@ -4342,7 +4342,7 @@ Map.Themes.prototype.minimizeInfo = function (evt, szId) {
  * @parameter evt the event
  * @parameter szId the id of the theme
  */
-Map.Themes.prototype.maximizeInfo = function (evt, szId) {
+ixMap.Themes.prototype.maximizeInfo = function (evt, szId) {
 	var mapTheme = this.getTheme(szId);
 	if (mapTheme) {
 		var infoNode = mapTheme.widgetNode.firstChild;
@@ -4379,7 +4379,7 @@ Map.Themes.prototype.maximizeInfo = function (evt, szId) {
  * @param targetGroup the target SVG group for the chart to create
  * @return the chart node
  */
-Map.Themes.prototype.getChartAll = function (szId, targetGroup, szFlag) {
+ixMap.Themes.prototype.getChartAll = function (szId, targetGroup, szFlag) {
 	var szBaseId = targetGroup.getAttributeNS(null, "id");
 	var nChartOffY = 0;
 	for (var i = 0; i < this.themesA.length; i++) {
@@ -4412,7 +4412,7 @@ Map.Themes.prototype.getChartAll = function (szId, targetGroup, szFlag) {
  * @param targetGroup the target SVG group for the chart to create
  * @return the chart node
  */
-Map.Themes.prototype.getChart = function (szId, targetGroup, szFlag, mapTheme) {
+ixMap.Themes.prototype.getChart = function (szId, targetGroup, szFlag, mapTheme) {
 
 	if (!mapTheme) {
 		//		return this.getChartAll(szId,targetGroup,szFlag);
@@ -4573,7 +4573,7 @@ Map.Themes.prototype.getChart = function (szId, targetGroup, szFlag, mapTheme) {
  * @return the summary text
  * @type string
  */
-Map.Themes.prototype.getSummary = function (szId, mapTheme) {
+ixMap.Themes.prototype.getSummary = function (szId, mapTheme) {
 	if (!mapTheme) {
 		mapTheme = this.activeTheme;
 	}
@@ -4640,7 +4640,7 @@ Map.Themes.prototype.getSummary = function (szId, mapTheme) {
  * @return the summary text
  * @type string
  */
-Map.Themes.prototype.getValueComment = function (szId, mapTheme) {
+ixMap.Themes.prototype.getValueComment = function (szId, mapTheme) {
 	if (!mapTheme) {
 		mapTheme = this.activeTheme;
 	}
@@ -4681,7 +4681,7 @@ Map.Themes.prototype.getValueComment = function (szId, mapTheme) {
  * @return the title of the chart
  * @type string
  */
-Map.Themes.prototype.getTitle = function (szId, mapTheme) {
+ixMap.Themes.prototype.getTitle = function (szId, mapTheme) {
 
 	if (!mapTheme) {
 		mapTheme = this.activeTheme;
@@ -4712,7 +4712,7 @@ Map.Themes.prototype.getTitle = function (szId, mapTheme) {
  * @return the summary text
  * @type string
  */
-Map.Themes.prototype.getLabel = function (szId, mapTheme) {
+ixMap.Themes.prototype.getLabel = function (szId, mapTheme) {
 	if (!mapTheme) {
 		mapTheme = this.activeTheme;
 	}
@@ -4736,7 +4736,7 @@ Map.Themes.prototype.getLabel = function (szId, mapTheme) {
  * @return an array with the nodes
  * @type Array
  */
-Map.Themes.prototype.getTextObjects = function () {
+ixMap.Themes.prototype.getTextObjects = function () {
 	var allNodes = [];
 	for (var i = 0; i < this.themesA.length; i++) {
 
@@ -4776,7 +4776,7 @@ Map.Themes.prototype.getTextObjects = function () {
  * @return the max value
  * @type number
  */
-Map.Themes.prototype.getMaxValue = function (szId, mapTheme) {
+ixMap.Themes.prototype.getMaxValue = function (szId, mapTheme) {
 
 	if (!mapTheme) {
 		mapTheme = this.activeTheme;
@@ -4800,7 +4800,7 @@ Map.Themes.prototype.getMaxValue = function (szId, mapTheme) {
  * @return the data value array
  * @type array of string
  */
-Map.Themes.prototype.getDataRow = function (szId, mapTheme) {
+ixMap.Themes.prototype.getDataRow = function (szId, mapTheme) {
 	if (!mapTheme) {
 		mapTheme = this.activeTheme;
 	}
@@ -4907,7 +4907,7 @@ Map.Themes.prototype.getDataRow = function (szId, mapTheme) {
  * @return the index array
  * @type array of numbers
  */
-Map.Themes.prototype.getFieldIndexArray = function (mapTheme) {
+ixMap.Themes.prototype.getFieldIndexArray = function (mapTheme) {
 	if (!mapTheme) {
 		mapTheme = this.activeTheme;
 	}
@@ -4935,7 +4935,7 @@ Map.Themes.prototype.getFieldIndexArray = function (mapTheme) {
  * @return an array with the distribution
  * @type array
  */
-Map.Themes.prototype.getScatterArray = function (mapTheme, nTicks, szFlag) {
+ixMap.Themes.prototype.getScatterArray = function (mapTheme, nTicks, szFlag) {
 	if (!mapTheme) {
 		mapTheme = this.activeTheme;
 	}
@@ -4996,7 +4996,7 @@ Map.Themes.prototype.getScatterArray = function (mapTheme, nTicks, szFlag) {
  * @type number
  * @return quality index
  */
-Map.Themes.prototype.getResolutionQualityOfArray = function (nPopA) {
+ixMap.Themes.prototype.getResolutionQualityOfArray = function (nPopA) {
 
 	var nTicks = nPopA.length;
 	var nCountMax = -1000000;
@@ -5022,7 +5022,7 @@ Map.Themes.prototype.getResolutionQualityOfArray = function (nPopA) {
  * @type number
  * @return the standard deviation
  */
-Map.Themes.prototype.getDeviationOfArray = function (nPopA) {
+ixMap.Themes.prototype.getDeviationOfArray = function (nPopA) {
 
 	_TRACE("getDeviationOfArray --->");
 
@@ -5067,7 +5067,7 @@ Map.Themes.prototype.getDeviationOfArray = function (nPopA) {
  * @return the histogram node
  * @type object
  */
-Map.Themes.prototype.getHistogram = function (szId, targetGroup, szFlag, mapTheme) {
+ixMap.Themes.prototype.getHistogram = function (szId, targetGroup, szFlag, mapTheme) {
 
 	_TRACE("map.Themes.getHistogram --->");
 
@@ -5120,7 +5120,7 @@ Map.Themes.prototype.getHistogram = function (szId, targetGroup, szFlag, mapThem
  * @return the histogram group node (SVG)
  * @type object
  */
-Map.Themes.prototype.makeHistogram = function (szId) {
+ixMap.Themes.prototype.makeHistogram = function (szId) {
 
 	_TRACE("map.Themes.makeHistogram --->");
 
@@ -5228,7 +5228,7 @@ Map.Themes.prototype.makeHistogram = function (szId) {
 		nX = -20;
 		nY = 0;
 
-		mapTheme.histogram = new Map.Histogram(mapTheme);
+		mapTheme.histogram = new ixMap.Histogram(mapTheme);
 		mapTheme.histogram.fDoLog = fDoLog;
 		mapTheme.histogram.dValue = dValue;
 		mapTheme.histogram.nWidth = nWidth;
@@ -5492,7 +5492,7 @@ Map.Themes.prototype.makeHistogram = function (szId) {
 // histogram class
 // .............................................................................
 
-Map.Histogram = function (mapTheme) {
+ixMap.Histogram = function (mapTheme) {
 	this.mapTheme = mapTheme;
 	this.fDoLog = false;
 	this.dValue = 0;
@@ -5501,19 +5501,19 @@ Map.Histogram = function (mapTheme) {
 	this.classRectWidthA = [];
 	this.classRectMaxA = [];
 };
-Map.Histogram.prototype = new Map();
+ixMap.Histogram.prototype = new Map();
 
-Map.Histogram.prototype.onMouseOver = function (evt, szId, slider) {
+ixMap.Histogram.prototype.onMouseOver = function (evt, szId, slider) {
 	if (slider.textObj) {
 		slider.textObj.style.setProperty("display", "inline", "");
 	}
 };
-Map.Histogram.prototype.onMouseOut = function (evt, szId, slider) {
+ixMap.Histogram.prototype.onMouseOut = function (evt, szId, slider) {
 	if (slider.textObj) {
 		slider.textObj.style.setProperty("display", "none", "");
 	}
 };
-Map.Histogram.prototype.onMouseMove = function (evt, szId, slider) {
+ixMap.Histogram.prototype.onMouseMove = function (evt, szId, slider) {
 	_TRACE(szId + ' - ' + slider.value.x);
 	var classRect = this.classRectA[Number(szId)];
 	if (classRect) {
@@ -5534,7 +5534,7 @@ Map.Histogram.prototype.onMouseMove = function (evt, szId, slider) {
 		slider.textObj.firstChild.nodeValue = __formatValue(nNewValue, 1);
 	}
 };
-Map.Histogram.prototype.onMouseUp = function (evt, szId, slider) {
+ixMap.Histogram.prototype.onMouseUp = function (evt, szId, slider) {
 	var classRect = this.classRectA[Number(szId) - 1];
 	if (classRect) {
 		this.classRectWidthA[Number(szId) - 1] = classRect.getAttributeNS(null, "width");
@@ -5554,7 +5554,7 @@ Map.Histogram.prototype.onMouseUp = function (evt, szId, slider) {
  * @parameter evt the event
  * @parameter szId the id of the theme
  */
-Map.Themes.prototype.showErrorInfo = function (evt, szId) {
+ixMap.Themes.prototype.showErrorInfo = function (evt, szId) {
 	var mapTheme = this.getTheme(szId);
 	if (mapTheme) {
 		mapTheme.showErrorInfo();
@@ -5565,14 +5565,14 @@ Map.Themes.prototype.showErrorInfo = function (evt, szId) {
  * keep old redraw function for compatibility reason 
  * @parameter nZoomChangeFactor 1 if zoom not! changed
  */
-Map.Themes.prototype.redraw = function (nZoomChangeFactor) {
+ixMap.Themes.prototype.redraw = function (nZoomChangeFactor) {
 	return this.actualize(nZoomChangeFactor);
 };
 /**
  * keep old actualize function for compatibility reason 
  * @parameter nZoomChangeFactor 1 if zoom not! changed
  */
-Map.Themes.prototype.actualizeActiveTheme = function (nZoomChangeFactor) {
+ixMap.Themes.prototype.actualizeActiveTheme = function (nZoomChangeFactor) {
 	return this.actualize(nZoomChangeFactor);
 };
 
@@ -5580,7 +5580,7 @@ Map.Themes.prototype.actualizeActiveTheme = function (nZoomChangeFactor) {
  * redraw themes ( may be necessary after zoom )
  * @parameter nZoomChangeFactor 1 if zoom not! changed
  */
-Map.Themes.prototype.actualize = function (nZoomChangeFactor) {
+ixMap.Themes.prototype.actualize = function (nZoomChangeFactor) {
 	
 	_TRACE("A C T U A L I Z E");
 
@@ -5728,7 +5728,7 @@ Map.Themes.prototype.actualize = function (nZoomChangeFactor) {
  * resort all chart themes
  * @parameter evt the event
  */
-Map.Themes.prototype.resortCharts = function (evt) {
+ixMap.Themes.prototype.resortCharts = function (evt) {
 
 	var fToDo = false;
 	if (this.themesA.length) {
@@ -5750,7 +5750,7 @@ Map.Themes.prototype.resortCharts = function (evt) {
 /**
  * clear the map theme list 
  */
-Map.Themes.prototype.clear = function () {
+ixMap.Themes.prototype.clear = function () {
 	this.themesA.length = 0;
 };
 
@@ -6804,7 +6804,7 @@ MapTheme.prototype.realize = function () {
 		
 		if ( !this.chartGroup ){
 			this.chartGroup = map.Dom.newGroup(map.Layer.layerNode, this.szThemesA[0]);
-			map.Layer.listA[this.szThemesA[0]] = new Map.Layer.Item(null);
+			map.Layer.listA[this.szThemesA[0]] = new ixMap.Layer.Item(null);
 			map.Layer.listA[this.szThemesA[0]].szName = this.szThemesA[0];
 			this.fDone = true;
 			this.isChecked = true;
@@ -7032,7 +7032,7 @@ MapTheme.prototype.realize_draw = function () {
 	// make the theme creation 'multitasking'
 	// -------------------------------------
 
-	this.mapSleep = new Map.Sleep("map.Themes.executeContinue", this.nflushPaintShape, map.Dictionary.getLocalText(szDrawing));
+	this.mapSleep = new ixMap.Sleep("map.Themes.executeContinue", this.nflushPaintShape, map.Dictionary.getLocalText(szDrawing));
 	this.mapSleep.nCount = this.nCount;
 	this.mapSleep.szCancel = "map.Themes.cancelExecute()";
 	if (this.szFlag.match(/\bCLIP\b/)) {
@@ -13813,7 +13813,7 @@ MapTheme.prototype.createChartGroup = function (objectGroup) {
 	if (this.szFlag.match(/FEATURE/)) {
 		this.chartGroup = map.Dom.newGroup(map.Layer.layerNode, this.szThemesA[0]);
 						  map.Dom.newGroup(map.Layer.layerNode, this.szThemesA[0] + ":label");
-		map.Layer.listA[this.szThemesA[0]] = new Map.Layer.Item(null);
+		map.Layer.listA[this.szThemesA[0]] = new ixMap.Layer.Item(null);
 		map.Layer.listA[this.szThemesA[0]].szName = this.szThemesA[0];
 		map.Layer.listA[this.szThemesA[0]].szHighlight = 
 			"fill:url(#DiagUp200000000);stroke:black;stroke-width:3;stroke-linecap:round;stroke-linejoin:round;";
@@ -15610,7 +15610,7 @@ MapTheme.prototype.chartMap = function (startIndex) {
 			if (this.szFlag.match(/TEXTONLY/) && fCheckLabelOverlap) {
 				var text = SVGDocument.getElementById(this.szId + ":" + a + ":text");
 				if (text) {
-					var cItem = new Map.Label.Item(text);
+					var cItem = new ixMap.Label.Item(text);
 					// GR 23.06.2016 better not to clear chart label to avoid flicker
 					//cItem.setDisplay("none");
 				}
@@ -15948,6 +15948,23 @@ MapTheme.prototype.chartMap = function (startIndex) {
 		this.animateCharts("fire");
 	}
 	
+	if (this.szFlag.match(/\bUSER\b/)) {
+		try {
+			var opt = {
+				target: this.chartGroup,
+				theme: this
+			};
+			
+			if ( this.userDraw ){
+				this.opt = opt;
+				eval("HTMLWindow.ixmaps."+this.userDraw+"_finish(SVGDocument,this.opt);");
+				delete this.opt;
+			}
+			
+		} catch (e) {
+			//displayMessage("'"+(this.userDraw||"USER chart")+"' undefined!",5000);
+        }
+	}
 	
 	
 };
@@ -20034,7 +20051,7 @@ MapTheme.prototype.drawChart = function (chartGroup, a, nChartSize, szFlag, nMar
 				var newShape = map.Dom.newShape('circle', shapeGroup, 0, 0, nRadius, "");
 				if (this.szFlag.match(/VALUE/)) {
 					var szTextStyle = "font-family:arial;font-size:" + (map.Scale.normalX(30)) + "px;fill:#222222;fill-opacity:1;stroke:white;stroke-opacity:0.2;stroke-dasharray:none;pointer-events:none;";
-					var newText = map.Dom.newText(shapeGroup, nRadius - map.Scale.normalX(20), 0, szTextStyle, Map.Scale.prototype.formatDistanceString(this.nBufferSize));
+					var newText = map.Dom.newText(shapeGroup, nRadius - map.Scale.normalX(20), 0, szTextStyle, ixMap.Scale.prototype.formatDistanceString(this.nBufferSize));
 				}
 				this.nRealizedCount++;
 			} else {
@@ -22232,7 +22249,7 @@ MapTheme.prototype.getOverviewChart = function (targetGroup, szDisplayId) {
 			map.Dom.newShape('line', maxGroup, 0, map.Scale.normalY(-2), 0, map.Scale.normalY(2.5), szLineStyle);
 			map.Dom.newShape('line', maxGroup, nMaxRadius, 0, nMaxRadius + map.Scale.normalX(-3), map.Scale.normalY(-3), szLineStyle);
 			map.Dom.newShape('line', maxGroup, nMaxRadius, 0, nMaxRadius + map.Scale.normalX(-3), map.Scale.normalY(3), szLineStyle);
-			map.Dom.newText(maxGroup, nMaxRadius * 1.1 + map.Scale.normalX(2), map.Scale.normalX(-10), "font-family:arial;font-size:" + map.Scale.normalX(10) + "px;text-anchor:left;baseline-shift:-10%;fill:black;stroke:none;pointer-events:none", Map.Scale.prototype.formatDistanceString(this.nBufferSize * this.nScale));
+			map.Dom.newText(maxGroup, nMaxRadius * 1.1 + map.Scale.normalX(2), map.Scale.normalX(-10), "font-family:arial;font-size:" + map.Scale.normalX(10) + "px;text-anchor:left;baseline-shift:-10%;fill:black;stroke:none;pointer-events:none", ixMap.Scale.prototype.formatDistanceString(this.nBufferSize * this.nScale));
 			maxGroup.fu.setPosition(map.Scale.normalX(nChartSize / 2 + classOffset), map.Scale.normalY(nChartSize / 2));
 			var chartButtonObj = new Button(targetGroup.parentNode, szDisplayId + ":bufferselectbutton", "BUTTON", '#bufferselect_button', "map.Selections.newSelection('activeLayer','activeBuffer','type:BUFFER;buffersize:200','test');", "", "select active layer with this buffer");
 			chartButtonObj.setPosition(map.Scale.normalX(nChartSize + classOffset + 10), map.Scale.normalY(nChartSize));

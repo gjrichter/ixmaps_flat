@@ -31,7 +31,7 @@ $Log: mapapi.js,v $
 	window, alert, setTimeout,
 	szMapNs, Methods, MapObject,
 	SVGDocument, HTMLWindow, getMatrix, setMatrix, SVGPopupGroup, SVGToolsGroup, SVGFixedGroup, SVGMessageGroup,
-	Map, map, thisversion, box, point, Button, MapTool, setMapTool, szMapToolType, InfoContainer, mapToolList, highLightList, 
+	ixMap, map, thisversion, box, point, Button, MapTool, setMapTool, szMapToolType, InfoContainer, mapToolList, highLightList, 
 	displayMessage, displayInfoDelayed, displayScale, createTextGrid,
 	loadSVGIncludes, bookmarkList, fInitLegendOff, fPreserveMapRatio, fPendingNewGeoBounds, fFroozeDynamicContent, zoomAndPanHistory,
 	nNormalFontSize, htmlgui_prettyPrintXML, __doGetPolygonSurface
@@ -39,24 +39,24 @@ $Log: mapapi.js,v $
 	*/
 
 /**
- * Create a new Map.Api instance.  
+ * Create a new ixMap.Api instance.  
  * @class It provides methods to call map functions
  * @constructor
- * @return A new Map.Api instance
+ * @return A new ixMap.Api instance
  */
-Map.Api = function(map){
+ixMap.Api = function(map){
 	/** tell the api calls to use pushAction; needed for execBookmark */
 	this.executeWithPush = false;
 	this.map = map;
 };
-Map.Api.prototype = new Map();
+ixMap.Api.prototype = new Map();
 
 // create instance here
 if ( (typeof(thisversion) == "string") && map.checkVersion(thisversion) ){
-	map.Api = new Map.Api(map);
+	map.Api = new ixMap.Api(map);
 }
 else{
-	alert("Map.Api incompatible !");
+	alert("ixMap.Api incompatible !");
 }
 
 /**
@@ -89,7 +89,7 @@ else{
  * <tr><td>"delayed"</td><td> - the appropriate feature will be called with a little timeout; faster map rendering  but shows transitory map states</td></tr>
  *  </table>
 */
-Map.Api.prototype.setMapFeatures = function(szFeatures){
+ixMap.Api.prototype.setMapFeatures = function(szFeatures){
 	this.map.setFeatures(szFeatures);
 };
 
@@ -98,7 +98,7 @@ Map.Api.prototype.setMapFeatures = function(szFeatures){
  * @type string
  * @return features string as given by .setMapFeatures(szFeatures) 
  */
-Map.Api.prototype.getMapFeatures = function(){
+ixMap.Api.prototype.getMapFeatures = function(){
 	return this.map.getFeatures();
 };
 
@@ -107,7 +107,7 @@ Map.Api.prototype.getMapFeatures = function(){
  * @param szPath the path from where to load the localization
  * @param szFiles one or more filnames (e.g. maplocal.svg)
  */
-Map.Api.prototype.setMapLocal = function(szPath,szFiles){
+ixMap.Api.prototype.setMapLocal = function(szPath,szFiles){
 	var szFileA = szFiles.split('|');
 	for ( var i=0; i<szFileA.length; i++ ){
 		loadSVGIncludes(null,szPath,szFileA[i]);
@@ -118,7 +118,7 @@ Map.Api.prototype.setMapLocal = function(szPath,szFiles){
  * @param szOrig the string ti transtale
  * @param szLocal the local translation
  */
-Map.Api.prototype.setLocalString = function(szOrig,szLocal){
+ixMap.Api.prototype.setLocalString = function(szOrig,szLocal){
 	this.map.Dictionary.replace(szOrig,szLocal);
 };
 /**
@@ -126,14 +126,14 @@ Map.Api.prototype.setLocalString = function(szOrig,szLocal){
  * @param szOrig the string to transtale
  * @return the translated string 
  */
-Map.Api.prototype.getLocalString = function(szOrig){
+ixMap.Api.prototype.getLocalString = function(szOrig){
 	this.map.Dictionary.getLocalText(szOrig);
 };
 /**
  * set layer state
  * @param layerSwitchObject defines the layer and sublayer to switch
  */
-Map.Api.prototype.setMapLayer = function(szLayerObj){
+ixMap.Api.prototype.setMapLayer = function(szLayerObj){
 	if ( map.fInitializing || map.isLoading() ){
 		this.map.pushAction("map.Api.setMapLayer(\""+szLayerObj+"\"");
 		return;
@@ -169,7 +169,7 @@ Map.Api.prototype.setMapLayer = function(szLayerObj){
  * load a new map 
  * @param szUrl the map url
  */
-Map.Api.prototype.loadMap = function(szUrl){
+ixMap.Api.prototype.loadMap = function(szUrl){
 	if ( map.fInitializing || map.isLoading() ){
 		this.map.pushAction("map.Api.loadMap(\""+szUrl+"\"");
 		return;
@@ -185,7 +185,7 @@ Map.Api.prototype.loadMap = function(szUrl){
 /**
  * set a bookmark to the actual zoom and pan
  */
-Map.Api.prototype.setBookmark = function(){
+ixMap.Api.prototype.setBookmark = function(){
 	try{
 		var rectArea = this.map.Zoom.getBox();
 		var pt1 = this.map.Scale.getMapCoordinate(rectArea.x,rectArea.y);
@@ -201,7 +201,7 @@ Map.Api.prototype.setBookmark = function(){
  * go to bookmark.
  * @param szName the name of the bookmark
  */
-Map.Api.prototype.gotoBookmark = function(szName){
+ixMap.Api.prototype.gotoBookmark = function(szName){
 	try{
 		bookmarkList.exec(szName);
 	}
@@ -212,7 +212,7 @@ Map.Api.prototype.gotoBookmark = function(szName){
 /**
  * clear all bookmarks.
  */
-Map.Api.prototype.clearBookmarks = function(){
+ixMap.Api.prototype.clearBookmarks = function(){
 	try{
 		bookmarkList.clear();
 	}
@@ -225,7 +225,7 @@ Map.Api.prototype.clearBookmarks = function(){
  * get map posituion and size in screen coordinates
  * @return new box object with map size
  */
-Map.Api.prototype.getMapBox = function(){
+ixMap.Api.prototype.getMapBox = function(){
 	return new box(
 		 this.map.Scale.mapPosition.x / this.map.Scale.normalX(1)
 		,this.map.Scale.mapPosition.y / this.map.Scale.normalX(1)
@@ -240,7 +240,7 @@ Map.Api.prototype.getMapBox = function(){
  * @param width position 
  * @param height position 
  */
-Map.Api.prototype.resizeCanvas = function(x,y,width,height,szMethod){
+ixMap.Api.prototype.resizeCanvas = function(x,y,width,height,szMethod){
 	return this.map.Scale.resizeCanvas(x,y,width,height,szMethod);
 };
 
@@ -251,7 +251,7 @@ Map.Api.prototype.resizeCanvas = function(x,y,width,height,szMethod){
 /**
  * reset map zooming 
  */
-Map.Api.prototype.doZoomMapToFullExtend = function(){
+ixMap.Api.prototype.doZoomMapToFullExtend = function(){
 	this.map.Zoom.doZoomMapToLayer('maplayer');
 };
 /**
@@ -260,7 +260,7 @@ Map.Api.prototype.doZoomMapToFullExtend = function(){
  * @param szMode 'absolute', 'byscale' or 'relative'
  * @return new map scale ( for sample 25000 which means 1:25000 )
  */
-Map.Api.prototype.doZoomMap = function(nFactor,szMode){
+ixMap.Api.prototype.doZoomMap = function(nFactor,szMode){
 	return this.map.Zoom.doZoomMap(nFactor,szMode);
 };
 /**
@@ -268,14 +268,14 @@ Map.Api.prototype.doZoomMap = function(nFactor,szMode){
  * @param nDeltaX the x panning amount (in client screen pixel)
  * @param nDeltaY the y panning amount (in client screen pixel)
  */
-Map.Api.prototype.doPanMap = function (nDeltaX,nDeltaY){
+ixMap.Api.prototype.doPanMap = function (nDeltaX,nDeltaY){
 	this.map.Zoom.setNewPan(nDeltaX,nDeltaY);
 };
 /**
  * zoom the map to a rectangular area given in widget coodinates (= screen pixel coordinates relative to the upper left corner of the SVG canvas)
  * @param rectArea the new area to zoom to
  */
-Map.Api.prototype.doZoomMapToWidgetRect = function(rectArea){
+ixMap.Api.prototype.doZoomMapToWidgetRect = function(rectArea){
 	this.map.Zoom.doZoomMapToWidgetRect(rectArea);
 };
 /**
@@ -283,7 +283,7 @@ Map.Api.prototype.doZoomMapToWidgetRect = function(rectArea){
  * @param lat the latitude  of the new position
  * @param lon the longitude of the new position
  */
-Map.Api.prototype.doCenterMapToGeoPosition = function(lat,lon){
+ixMap.Api.prototype.doCenterMapToGeoPosition = function(lat,lon){
 	this.map.Zoom.doCenterMapToGeoPosition(lat,lon);
 };
 /**
@@ -293,7 +293,7 @@ Map.Api.prototype.doCenterMapToGeoPosition = function(lat,lon){
  * @param latNE the latitude  of the South West point
  * @param lonNE the longitude of the North East point
  */
-Map.Api.prototype.doCenterMapToGeoBounds = function(latSW,lonSW,latNE,lonNE){
+ixMap.Api.prototype.doCenterMapToGeoBounds = function(latSW,lonSW,latNE,lonNE){
 	this.map.Zoom.doCenterMapToGeoBounds(latSW,lonSW,latNE,lonNE);
 };
 /**
@@ -304,7 +304,7 @@ Map.Api.prototype.doCenterMapToGeoBounds = function(latSW,lonSW,latNE,lonNE){
  * @param latNE the latitude  of the South West point
  * @param lonNE the longitude of the North East point
  */
-Map.Api.prototype.doZoomMapToGeoBounds = function(latSW,lonSW,latNE,lonNE){
+ixMap.Api.prototype.doZoomMapToGeoBounds = function(latSW,lonSW,latNE,lonNE){
 	this.map.Zoom.doZoomMapToGeoBounds(latSW,lonSW,latNE,lonNE);
 };
 /**
@@ -314,7 +314,7 @@ Map.Api.prototype.doZoomMapToGeoBounds = function(latSW,lonSW,latNE,lonNE){
  * @param latNE the latitude  of the South West point
  * @param lonNE the longitude of the North East point
  */
-Map.Api.prototype.doSetMapToGeoBounds = function(latSW,lonSW,latNE,lonNE){
+ixMap.Api.prototype.doSetMapToGeoBounds = function(latSW,lonSW,latNE,lonNE){
 	if ( (lonNE-lonSW) < 180){
 		fPreserveMapRatio = false;
 	}
@@ -326,13 +326,13 @@ Map.Api.prototype.doSetMapToGeoBounds = function(latSW,lonSW,latNE,lonNE){
  * (zomm executed by hosting map application) 
  * @param center array with latitude,longitude
  */
-Map.Api.prototype.doZoomMapToView = function(center,zoom){
+ixMap.Api.prototype.doZoomMapToView = function(center,zoom){
 	this.map.Zoom.doZoomMapToView(center,zoom);
 };
 /**
  * gets the map center in geo coodinates 
  */
-Map.Api.prototype.getCenterOfMapInGeoPosition = function(){
+ixMap.Api.prototype.getCenterOfMapInGeoPosition = function(){
 	return this.map.Zoom.getCenterOfMapInGeoPosition();
 };
 /**
@@ -340,7 +340,7 @@ Map.Api.prototype.getCenterOfMapInGeoPosition = function(){
  * @type array
  * @return an array of 2 points (SouthWest and NorthEast ) 
  */
-Map.Api.prototype.getBoundsOfMapInGeoBounds = function(){
+ixMap.Api.prototype.getBoundsOfMapInGeoBounds = function(){
 	return this.map.Zoom.getBoundsOfMapInGeoBounds();
 };
 /**
@@ -348,7 +348,7 @@ Map.Api.prototype.getBoundsOfMapInGeoBounds = function(){
  * @type array
  * @return an array of 2 points (SouthWest and NorthEast ) 
  */
-Map.Api.prototype.getMapScale = function(){
+ixMap.Api.prototype.getMapScale = function(){
 	return String(Math.floor(map.Scale.nTrueMapScale*map.Scale.nZoomScale));
 };
 /**
@@ -356,14 +356,14 @@ Map.Api.prototype.getMapScale = function(){
  * @type boolean
  * @return true/false 
  */
-Map.Api.prototype.pendingNewGeoBounds = function(){
+ixMap.Api.prototype.pendingNewGeoBounds = function(){
 	return fPendingNewGeoBounds;
 };
 /**
  * set the visibility of the map layer
  * @fFlag true or false
  */
-Map.Api.prototype.setVisibility = function(fFlag){
+ixMap.Api.prototype.setVisibility = function(fFlag){
 	var mapTool = new MapTool(null,"nothing");
 	if ( fFlag == "invisible" ){
 		mapTool.hideLayer(null);
@@ -374,37 +374,37 @@ Map.Api.prototype.setVisibility = function(fFlag){
 /**
  * hide the overview map
  */
-Map.Api.prototype.hideOverviewMap = function(){
+ixMap.Api.prototype.hideOverviewMap = function(){
 	//this.map.Zoom.hideOverviewMap();
 };
 /**
  * show the overview map (if defined)
  */
-Map.Api.prototype.showOverviewMap = function(){
+ixMap.Api.prototype.showOverviewMap = function(){
 	//this.map.Zoom.showOverviewMap();
 };
 /**
  * hide the north harrow
  */
-Map.Api.prototype.hideNorthArrow = function(){
+ixMap.Api.prototype.hideNorthArrow = function(){
 	this.map.Viewport.hideNorthArrow();
 };
 /**
  * show the north harrow (if defined)
  */
-Map.Api.prototype.showNorthArrow = function(){
+ixMap.Api.prototype.showNorthArrow = function(){
 	this.map.Viewport.showNorthArrow();
 };
 /**
  * go one step back in zoom and pan history
  */
-Map.Api.prototype.backwards = function(){
+ixMap.Api.prototype.backwards = function(){
 	zoomAndPanHistory.backwards();
 };
 /**
  * go one step forwards in zoom and pan history
  */
-Map.Api.prototype.forwards = function(){
+ixMap.Api.prototype.forwards = function(){
 	zoomAndPanHistory.forwards();
 };
 
@@ -412,7 +412,7 @@ Map.Api.prototype.forwards = function(){
  * change the value displays of all present themes
  * @param fFlag true or false or null
  */
-Map.Api.prototype.toggleThemeValues = function(fFlag){
+ixMap.Api.prototype.toggleThemeValues = function(fFlag){
 	try	{
 		this.map.Themes.toggleThemeValues(null,fFlag);
 	}catch (e){}
@@ -421,7 +421,7 @@ Map.Api.prototype.toggleThemeValues = function(fFlag){
  * change the legend displays of all present themes
  * @param fFlag true or false or null
  */
-Map.Api.prototype.toggleThemeLegends = function(fFlag){
+ixMap.Api.prototype.toggleThemeLegends = function(fFlag){
 	try	{
 		this.map.Themes.toggleThemeLegends(null,fFlag);
 	}catch (e){}
@@ -430,7 +430,7 @@ Map.Api.prototype.toggleThemeLegends = function(fFlag){
  * change the legend displays of all present themes
  * @param fFlag true or false or null
  */
-Map.Api.prototype.minimizeThemeLegends = function(){
+ixMap.Api.prototype.minimizeThemeLegends = function(){
 	try	{
 		this.map.Themes.minimizeThemeLegends(null);
 	}catch (e){}
@@ -439,86 +439,86 @@ Map.Api.prototype.minimizeThemeLegends = function(){
  * change the scaling of elements within the object layer
  * @param nDelta the scaling factor
  */
-Map.Api.prototype.changeObjectScaling = function(nDelta){
+ixMap.Api.prototype.changeObjectScaling = function(nDelta){
 	this.map.Layer.changeObjectScaling(null,nDelta);
 };
 /**
  * change the scaling of label 
  * @param nDelta the scaling factor
  */
-Map.Api.prototype.changeLabelScaling = function(nDelta){
+ixMap.Api.prototype.changeLabelScaling = function(nDelta){
 	this.map.Layer.changeLabelScaling(null,nDelta);
 };
 /**
  * change the scaling of lines 
  * @param nDelta the scaling factor
  */
-Map.Api.prototype.changeLineScaling = function(nDelta){
+ixMap.Api.prototype.changeLineScaling = function(nDelta){
 	this.map.Layer.changeLineScaling(null,nDelta);
 };
 /**
  * get scale parameter
  */
-Map.Api.prototype.getScaleParam = function(){
+ixMap.Api.prototype.getScaleParam = function(){
 	return this.map.Scale.getScaleParam();
 };
 /**
  * set scale parameter
  * @param obj javascript object containing the parameter to set
  */
-Map.Api.prototype.setScaleParam = function(obj){
+ixMap.Api.prototype.setScaleParam = function(obj){
 	this.map.Scale.setScaleParam(obj);
 };
 /**
  * change the rotation of the map canvas 
  * @param nDelta the rotation change amount (clockwise)
  */
-Map.Api.prototype.changeRotation = function(nDelta){
+ixMap.Api.prototype.changeRotation = function(nDelta){
 	this.map.Scale.changeRotation(null,nDelta);
 };
 /**
  * set the rotation of the map canvas
  * @param nDelta the new rotation angle (clockwise)
  */
-Map.Api.prototype.setRotation = function(nAngle){
+ixMap.Api.prototype.setRotation = function(nAngle){
 	this.map.Scale.setRotation(null,nAngle);
 };
 /**
  * set the map background color
  * @param szColor the new background color
  */
-Map.Api.prototype.setMapBackgroundColor = function(szColor){
+ixMap.Api.prototype.setMapBackgroundColor = function(szColor){
 	this.map.Viewport.setBackgroundColor(szColor);
 };
 /**
  * switch the border to pan the map 
  */
-Map.Api.prototype.togglePanBorder = function(){
+ixMap.Api.prototype.togglePanBorder = function(){
 	this.map.Viewport.togglePanBorder();
 };
 /**
  * display printer friendly 
  */
-Map.Api.prototype.setPrintScaling = function(){
+ixMap.Api.prototype.setPrintScaling = function(){
 	this.map.Event.doPrintZoom();
 };
 /**
  * inhibit dynamic content and scaling  (deprecated!)
  */
-Map.Api.prototype.froozeMap = function(flag){
+ixMap.Api.prototype.froozeMap = function(flag){
 	fFroozeDynamicContent = flag;
 };
 /**
  * inhibit dynamic content and scaling  
  */
-Map.Api.prototype.freezeMap = function(flag){
+ixMap.Api.prototype.freezeMap = function(flag){
 	this.map.Event.fFreezeDynamicContent = flag;
 };
 /**
  * set a clipping width for the map
  * @param nWidth the new map width
  */
-Map.Api.prototype.setMapClip = function(nWidth){
+ixMap.Api.prototype.setMapClip = function(nWidth){
 	this.map.Viewport.clipMap(nWidth);
 };
 /**
@@ -526,7 +526,7 @@ Map.Api.prototype.setMapClip = function(nWidth){
  * @param szName the name of the layer to clip
  * @param nWidth the new map width
  */
-Map.Api.prototype.setLayerClip = function(szName,nWidth){
+ixMap.Api.prototype.setLayerClip = function(szName,nWidth){
 	this.map.Viewport.clipLayer(szName,nWidth);
 };
 /**
@@ -534,25 +534,25 @@ Map.Api.prototype.setLayerClip = function(szName,nWidth){
  * @param szName the name of the layer to clip
  * @param nWidth the new map width
  */
-Map.Api.prototype.switchLayer = function(szName,nState){
+ixMap.Api.prototype.switchLayer = function(szName,nState){
 	this.map.Layer.switchLayer(null,szName,null,nState);
 };
 /**
  * get layer object array
  */
-Map.Api.prototype.getLayer = function(){
+ixMap.Api.prototype.getLayer = function(){
 	return this.map.Layer.listA;
 };
 /**
  * get layer dependency array
  */
-Map.Api.prototype.getLayerDependency = function(){
+ixMap.Api.prototype.getLayerDependency = function(){
 	return this.map.Layer.depListA;
 };
 /**
  * get tile info
  */
-Map.Api.prototype.getTileInfo = function(){
+ixMap.Api.prototype.getTileInfo = function(){
 	return this.map.Tiles;
 };
 	
@@ -576,7 +576,7 @@ Map.Api.prototype.getTileInfo = function(){
  *  <tr><td>polygon</td><td>create polygon on mouse positions; calculate and show surface</td><td>on mouse click</td></tr>
  *  </table>
  */
-Map.Api.prototype.setMapTool = function(szType){
+ixMap.Api.prototype.setMapTool = function(szType){
 	setMapTool(szType);
 };
 /**
@@ -584,7 +584,7 @@ Map.Api.prototype.setMapTool = function(szType){
  * @type string
  * @return the map tool name
  */
-Map.Api.prototype.getMapTool = function(){
+ixMap.Api.prototype.getMapTool = function(){
 	return szMapToolType;
 };
 /**
@@ -592,7 +592,7 @@ Map.Api.prototype.getMapTool = function(){
  * @param szType string that describes the tool type ( "zoomarea",...)
  * @return 'yes' or 'no'
  */
-Map.Api.prototype.isMapTool = function(szType){
+ixMap.Api.prototype.isMapTool = function(szType){
 	if ( szMapToolType == szType ){
 		return 'yes';
 	}
@@ -603,7 +603,7 @@ Map.Api.prototype.isMapTool = function(szType){
  * @param szType string that describes the tool type ( "zoomarea",...)
  * @return 'yes' or 'no'
  */
-Map.Api.prototype.isNotMapTool = function(szType){
+ixMap.Api.prototype.isNotMapTool = function(szType){
 	if ( this.isMapTool(szType) == 'no' ){
 		return 'yes';
 	}
@@ -614,7 +614,7 @@ Map.Api.prototype.isNotMapTool = function(szType){
  * @param szTheme the name (id) of the theme (layer)
  * @param szState the desired state ( "off" or "on" )
  */
-Map.Api.prototype.switchMapTheme = function(szTheme,szState){
+ixMap.Api.prototype.switchMapTheme = function(szTheme,szState){
 	if (szTheme){
 
 		szState = szState || (this.map.Layer.isLayerOn(szTheme)?"off":"on");
@@ -650,7 +650,7 @@ Map.Api.prototype.switchMapTheme = function(szTheme,szState){
  * @param szId the name of the theme
  * @return a layer object (or null)
  */
-Map.Api.prototype.getMapTheme = function(szId){
+ixMap.Api.prototype.getMapTheme = function(szId){
 	var szTheme = szId.split('#')[0].split(':')[0];
 	if ( szTheme == 'legend' ){
 		szTheme = szId.split(':')[2];
@@ -663,7 +663,7 @@ Map.Api.prototype.getMapTheme = function(szId){
  * @param szId the name of the theme
  * @return a string with the field name (or null)
  */
-Map.Api.prototype.getMapThemeRendererField = function(szId){
+ixMap.Api.prototype.getMapThemeRendererField = function(szId){
 	var themeObj = this.getMapTheme(szId);
 	if (themeObj){
 		return themeObj.szRenderer;
@@ -675,7 +675,7 @@ Map.Api.prototype.getMapThemeRendererField = function(szId){
  * @param szId the name of the theme
  * @return a string with the field name (or null)
  */
-Map.Api.prototype.getMapThemeDataRow = function(szId,szItemId){
+ixMap.Api.prototype.getMapThemeDataRow = function(szId,szItemId){
 	var themeObj = map.Themes.getTheme(szId);
 	if (themeObj){
 		return map.Themes.getDataRow(szItemId,themeObj);
@@ -687,7 +687,7 @@ Map.Api.prototype.getMapThemeDataRow = function(szId,szItemId){
  * @param szId the name of the theme
  * @return a string with the field name (or null)
  */
-Map.Api.prototype.getMapThemeItemPosition = function(szId,szItemId){
+ixMap.Api.prototype.getMapThemeItemPosition = function(szId,szItemId){
 	var themeObj = map.Themes.getTheme(szId);
 	if (themeObj){
 		var nodeA = themeObj.getItemNodes(szItemId);
@@ -701,7 +701,7 @@ Map.Api.prototype.getMapThemeItemPosition = function(szId,szItemId){
  * @param szItemId the id of the map item
  * @void
  */
-Map.Api.prototype.zoomMapToItem = function(szItemId){
+ixMap.Api.prototype.zoomMapToItem = function(szItemId){
 	this.map.Zoom.doZoomMapToItem(szItemId);
 };
 /**
@@ -709,7 +709,7 @@ Map.Api.prototype.zoomMapToItem = function(szItemId){
  * @param szId the name of the theme
  * @return a string with the field name (or null)
  */
-Map.Api.prototype.getMapThemeChart = function(szId,szItemId,targetGroup,szFlag){
+ixMap.Api.prototype.getMapThemeChart = function(szId,szItemId,targetGroup,szFlag){
 	var themeObj = map.Themes.getTheme(szId);
 	if (themeObj){
 		return map.Themes.getChart(szItemId,targetGroup,szFlag,themeObj);
@@ -722,7 +722,7 @@ Map.Api.prototype.getMapThemeChart = function(szId,szItemId,targetGroup,szFlag){
  * @param szId the name of the theme
  * @return a string with the field name (or null)
  */
-Map.Api.prototype.getMapThemeHistogram = function(szId,szItemId,targetGroup,szFlag){
+ixMap.Api.prototype.getMapThemeHistogram = function(szId,szItemId,targetGroup,szFlag){
 	var themeObj = map.Themes.getTheme(szId);
 	if (themeObj){
 		return map.Themes.getHistogram(szId,targetGroup,szFlag,themeObj);
@@ -735,7 +735,7 @@ Map.Api.prototype.getMapThemeHistogram = function(szId,szItemId,targetGroup,szFl
  * @param szText the message text
  * @param nTimeout if set, the message will disappear after nTimeout seconds
  */
-Map.Api.prototype.executeJavascriptWithMessage = function(szJS,szText,nTimeout){
+ixMap.Api.prototype.executeJavascriptWithMessage = function(szJS,szText,nTimeout){
 	// GR 16.07.2011 replace all " with \" in szJS string and call via pushAction
 	if ( szJS && typeof(szJS != "undefined" ) ){
 		this.map.pushAction("map.Api.executeWithPush = true;");
@@ -750,13 +750,13 @@ Map.Api.prototype.executeJavascriptWithMessage = function(szJS,szText,nTimeout){
  * @param szText the message text
  * @param nTimeout if set, the message will disappear after nTimeout seconds
  */
-Map.Api.prototype.displayMessage = function(szText,nTimeout,szFlag){
+ixMap.Api.prototype.displayMessage = function(szText,nTimeout,szFlag){
 	displayMessage(szText,nTimeout,szFlag);
 };
 /**
  * change horizontal position of map and legend (if the legend has been on the left, it will be on the right and viceversa)  
  */
-Map.Api.prototype.flipLegend = function(){
+ixMap.Api.prototype.flipLegend = function(){
 	// flip map
 	var matrixA = getMatrix(this.map.Scale.offsetNode);
 	if ( matrixA[4] === 0 ){
@@ -766,8 +766,8 @@ Map.Api.prototype.flipLegend = function(){
 		matrixA[4] = this.map.Scale.viewBox.width-(this.map.Scale.mapPosition.x+this.map.Scale.bBox.width);
 	}
 	setMatrix(this.map.Scale.offsetNode,matrixA);
-	this.map.Scale	 = new Map.Scale();
-	this.map.Viewport = new Map.Viewport();
+	this.map.Scale	 = new ixMap.Scale();
+	this.map.Viewport = new ixMap.Viewport();
 	// flip legend
 	var SVGDoc = SVGDocument;
 	var legendGroup  = SVGDoc.getElementById("legend:group");
@@ -789,7 +789,7 @@ Map.Api.prototype.flipLegend = function(){
  * change horizontal position of map and take the original legend width  
  */
 var __nLegendSpace = 0;
-Map.Api.prototype.extendMap = function(){
+ixMap.Api.prototype.extendMap = function(){
 	// extend map
 	var matrixA = getMatrix(this.map.Scale.offsetNode);
 	__nLegendSpace = matrixA[4];
@@ -816,7 +816,7 @@ Map.Api.prototype.extendMap = function(){
 /**
  * change horizontal position of map and take the original legend width  
  */
-Map.Api.prototype.normalMap = function(){
+ixMap.Api.prototype.normalMap = function(){
 	if ( __nLegendSpace <= 0 ){
 		return;
 	}
@@ -841,7 +841,7 @@ Map.Api.prototype.normalMap = function(){
 /**
  * hide the map legend
  */
-Map.Api.prototype.hideLegend = function(){
+ixMap.Api.prototype.hideLegend = function(){
 	var SVGDoc = SVGDocument;
 	var legendGroup  = SVGDoc.getElementById("legend:group");
 	if ( legendGroup ){
@@ -851,7 +851,7 @@ Map.Api.prototype.hideLegend = function(){
 /**
  * show the map legend
  */
-Map.Api.prototype.showLegend = function(){
+ixMap.Api.prototype.showLegend = function(){
 	var SVGDoc = SVGDocument;
 	var legendGroup  = SVGDoc.getElementById("legend:group");
 	if ( legendGroup ){
@@ -861,13 +861,13 @@ Map.Api.prototype.showLegend = function(){
 /**
  * clear all map tools, highlights, themes, selections etc.
  */
-Map.Api.prototype.clearAll = function(){
+ixMap.Api.prototype.clearAll = function(){
 	this.map.clearAll();
 };
 /**
  * clear all chart themes
  */
-Map.Api.prototype.clearAllCharts = function(){
+ixMap.Api.prototype.clearAllCharts = function(){
 	if ( this.map.Themes ){
 		this.map.Themes.removeAllCharts();
 	}
@@ -875,7 +875,7 @@ Map.Api.prototype.clearAllCharts = function(){
 /**
  * clear all chart themes
  */
-Map.Api.prototype.clearAllChoropleth = function(){
+ixMap.Api.prototype.clearAllChoropleth = function(){
 	if ( this.map.Themes ){
 		this.map.Themes.removeAllChoropleth();
 	}
@@ -883,7 +883,7 @@ Map.Api.prototype.clearAllChoropleth = function(){
 /**
  * clear all overlays (info, message, ...)
  */
-Map.Api.prototype.clearAllOverlays = function(){
+ixMap.Api.prototype.clearAllOverlays = function(){
 
 	if(SVGPopupGroup){
 		SVGToolsGroup.fu.clear();
@@ -905,21 +905,21 @@ Map.Api.prototype.clearAllOverlays = function(){
  * get the actual envelope as a string
  * @return a string of the type "MinBoundX='1234.123 ..."
  */
-Map.Api.prototype.getActualEnvelopeString = function(){
+ixMap.Api.prototype.getActualEnvelopeString = function(){
 	return this.map.Zoom.getEnvelopeString();
 };
 /**
  * get the actual envelope as a set of coordinates
  * @return an array with 2 point objects
  */
-Map.Api.prototype.getActualEnvelopeCoordinates = function(){
+ixMap.Api.prototype.getActualEnvelopeCoordinates = function(){
 	return this.map.Zoom.getEnvelope();
 };
 /**
  * generate the actual zoom and pan as ARCXML &lt;ENVELOPE&gt; element<br>
  * (may be called by context menu to create information for building project XML code)
  */
-Map.Api.prototype.printActualEnvelope = function(){
+ixMap.Api.prototype.printActualEnvelope = function(){
 	var rectArea = this.map.Zoom.getBox();
 	var pt1 = this.map.Scale.getMapCoordinate(rectArea.x,rectArea.y);
 	var pt2 = this.map.Scale.getMapCoordinate(rectArea.x+rectArea.width,rectArea.y+rectArea.height);
@@ -941,7 +941,7 @@ Map.Api.prototype.printActualEnvelope = function(){
  * @param szLink the link to set: if "javascript:..."  set event handler to call this function
  * @return the created SVG object
  */
-Map.Api.prototype.createTextLink = function(targetNode,szText,szLink){
+ixMap.Api.prototype.createTextLink = function(targetNode,szText,szLink){
 	var linkNode = this.map.Dom.newGroup(targetNode);
 	var aGroup = null;
 	if ( szLink.match(/javascript/)){
@@ -968,7 +968,7 @@ Map.Api.prototype.createTextLink = function(targetNode,szText,szLink){
  * @param nColumns number of columns for grid formtting
  * @return the created SVG object
  */
-Map.Api.prototype.createInfoBubble = function(objNode,szTextA,nColumns){
+ixMap.Api.prototype.createInfoBubble = function(objNode,szTextA,nColumns){
 	if ( objNode && szTextA ){
 		if ( !nColumns ){
 			nColumns = 1;
@@ -1082,7 +1082,7 @@ Map.Api.prototype.createInfoBubble = function(objNode,szTextA,nColumns){
  * @param nColumns number of columns for grid formtting
  * @return the created SVG object
  */
-Map.Api.prototype.createInfoContainer = function(szId,szTextA,nColumns,xPos,yPos,szMode){
+ixMap.Api.prototype.createInfoContainer = function(szId,szTextA,nColumns,xPos,yPos,szMode){
 	if ( szId && szTextA ){
 		if ( !szMode ){szMode = "fix";}
 		var position = new point(xPos,yPos);
@@ -1101,14 +1101,14 @@ Map.Api.prototype.createInfoContainer = function(szId,szTextA,nColumns,xPos,yPos
  * get the target or the context menu (returns a SVG DOM element; may be called by context menu to get the assoziated object)
  * @return a SVG DOM element (or null)
  */
-Map.Api.prototype.getContextMenuTarget = function(){
+ixMap.Api.prototype.getContextMenuTarget = function(){
 	return this.map.Event.contextMenuObj;
 };
 /**
  * get the shape of the actual map tool (= shape created by the map tool; actually polyline or polygon; both SVG path elements)
  * @return a SVG DOM element (or null)
  */
-Map.Api.prototype.getMapToolShape = function(){
+ixMap.Api.prototype.getMapToolShape = function(){
 	return mapToolList.toolShape;
 };
 /**
@@ -1116,7 +1116,7 @@ Map.Api.prototype.getMapToolShape = function(){
  * @param objNode the map shape which coordinates are requested
  * @return an array with point objects; every point has the properties .x and .y)
  */
-Map.Api.prototype.getShapePoints = function(objNode){
+ixMap.Api.prototype.getShapePoints = function(objNode){
 	// actually supports only path
 	if ( objNode.nodeName == 'path' ){
 		var ptList = new Array(0);
@@ -1151,7 +1151,7 @@ Map.Api.prototype.getShapePoints = function(objNode){
  * @param objNode the map shape which coordinates are requested
  * @return an array with point objects; every point has the properties .x and .y)
  */
-Map.Api.prototype.getShapeCoordinates = function(objNode){
+ixMap.Api.prototype.getShapeCoordinates = function(objNode){
 	// actually supports only path
 	if ( objNode.nodeName == 'path' ){
 		var ptPointA = this.getShapePoints(objNode);
@@ -1176,7 +1176,7 @@ Map.Api.prototype.getShapeCoordinates = function(objNode){
  * @param szFlag possible modifier
  * @return a string with the field name (or null)
  */
-Map.Api.prototype.getShape = function(szId,targetGroup,szFlag){
+ixMap.Api.prototype.getShape = function(szId,targetGroup,szFlag){
     // all possible tile nodes
     var szTilesIdA  = []; //map.Tiles.getTileNodeIds(szId);
     // ad id for untiled item
@@ -1213,7 +1213,7 @@ Map.Api.prototype.getShape = function(szId,targetGroup,szFlag){
  * @param objNode the map shape to calculate its surface 
  * @return the calculated surface
 */
-Map.Api.prototype.getSurface = function(objNode){
+ixMap.Api.prototype.getSurface = function(objNode){
 	if ( objNode ){
 		// try to get stored area, if present, take this;
 		// why: due to resolution reduction of the SVG, the stored area may be exacter
@@ -1235,7 +1235,7 @@ Map.Api.prototype.getSurface = function(objNode){
  * @param objNode the map shape 
  * @return the created SVG object to show the surface
  */
-Map.Api.prototype.printSurface = function(objNode){
+ixMap.Api.prototype.printSurface = function(objNode){
 	if ( objNode ){
 		var nArea = this.getSurface(objNode);
 		if ( nArea ){
@@ -1249,7 +1249,7 @@ Map.Api.prototype.printSurface = function(objNode){
 /**
  * may be called by context menu to show the info of the context map object
  */
-Map.Api.prototype.displayContextMenuTargetInfo = function(){
+ixMap.Api.prototype.displayContextMenuTargetInfo = function(){
 	var contextMenuObj = this.map.Event.contextMenuObj;
 	if ( contextMenuObj ){
 		displayInfoDelayed(null,contextMenuObj,10);
@@ -1259,7 +1259,7 @@ Map.Api.prototype.displayContextMenuTargetInfo = function(){
 /**
  * may be called by context menu to remove the context map object
  */
-Map.Api.prototype.removeContextMenuTarget = function(){
+ixMap.Api.prototype.removeContextMenuTarget = function(){
 	var contextMenuObj = this.map.Event.contextMenuObj;
 	if ( contextMenuObj ){
 		this.map.Dom.clearGroup(SVGToolsGroup);
@@ -1269,7 +1269,7 @@ Map.Api.prototype.removeContextMenuTarget = function(){
 /**
  * may be called by context menu to remove the context map object, if it is part of a map tool (p.e. a polyline point).
  */
-Map.Api.prototype.removeContextMapTool = function(){
+ixMap.Api.prototype.removeContextMapTool = function(){
 	var contextMenuObj = this.map.Event.contextMenuObj;
 	if ( contextMenuObj ){
 		for ( ;  contextMenuObj;  contextMenuObj = contextMenuObj.parentNode){
@@ -1283,7 +1283,7 @@ Map.Api.prototype.removeContextMapTool = function(){
 /**
  * may be called by context menu to create a buffer for the context map object
  */
-Map.Api.prototype.createContextMenuTargetBuffer = function(){
+ixMap.Api.prototype.createContextMenuTargetBuffer = function(){
 	var contextMenuObj = this.map.Event.contextMenuObj;
 	if ( contextMenuObj ){
 		var contextObj = new MapObject(contextMenuObj);
@@ -1308,7 +1308,7 @@ Map.Api.prototype.createContextMenuTargetBuffer = function(){
  * @param szLabelA an array of texts to define label for classes, or chart parts
  * @return A new MapTheme object
  */
-Map.Api.prototype.createTheme = function(szThemes,szFields,szField100,szFlag,colorScheme,szTitle,szLabelA){
+ixMap.Api.prototype.createTheme = function(szThemes,szFields,szField100,szFlag,colorScheme,szTitle,szLabelA){
 	return this.map.Themes.newTheme(szThemes,szFields,szField100,szFlag,colorScheme,szTitle,szLabelA);
 };
 /**
@@ -1416,7 +1416,7 @@ Map.Api.prototype.createTheme = function(szThemes,szFields,szField100,szFlag,col
  * <br> this.map.Api.newMapTheme("layer","fieldA","field100","style=type:CHOROPLETH;",title="this theme"); 
  * <br><br>
 */
-Map.Api.prototype.newMapTheme = function(szThemes,szFields,szField100,szStyle,szTitle,szLabel){
+ixMap.Api.prototype.newMapTheme = function(szThemes,szFields,szField100,szStyle,szTitle,szLabel){
 	if ( this.map.Zoom.fExternalZoom ){
 		this.map.pushAction("map.Api.newMapTheme(\""+szThemes+"\",\""+szFields+"\",\""+szField100+"\",\""+szStyle.replace(/\\/gi,"\\\\").replace(/\"/gi,"\\\"")+"\",\""+szTitle+"\",\""+szLabel+"\")");
 		return;
@@ -1428,15 +1428,15 @@ Map.Api.prototype.newMapTheme = function(szThemes,szFields,szField100,szStyle,sz
 	}
 };
 
-Map.Api.prototype.newMapThemeByObj = function(themeObj,fFlag){
+ixMap.Api.prototype.newMapThemeByObj = function(themeObj,fFlag){
 	return this.map.Themes.newThemeByObj(themeObj,fFlag);
 };
 
-Map.Api.prototype.refreshTheme = function(szId){
+ixMap.Api.prototype.refreshTheme = function(szId){
 	this.map.Themes.refreshTheme(szId);
 };
 
-Map.Api.prototype.resetTheme = function(szId){
+ixMap.Api.prototype.resetTheme = function(szId){
 	this.map.Themes.resetTheme(szId);
 };
 
@@ -1467,130 +1467,130 @@ Map.Api.prototype.resetTheme = function(szId){
  * CHOROPLETH type can be changed only to BUBBLE type.<br>
  * CHART type can be changed into DOMINANT type.<br>
  */
-Map.Api.prototype.changeContextThemeStyle = function(contextNode,szStyle){
+ixMap.Api.prototype.changeContextThemeStyle = function(contextNode,szStyle){
 	var widgetObj = new MapObject(contextNode);
 	this.map.Themes.changeThemeStyle(null,widgetObj.szId,szStyle);
 };
 
-Map.Api.prototype.changeThemeStyle = function(szId,szStyle,szFlag){
+ixMap.Api.prototype.changeThemeStyle = function(szId,szStyle,szFlag){
 	this.map.Themes.changeThemeStyle(null,szId,szStyle,szFlag);
 };
-Map.Api.prototype.showThemeClass = function(szId,nIndex,nStep){
+ixMap.Api.prototype.showThemeClass = function(szId,nIndex,nStep){
 	this.map.Themes.showClass(null,szId,nIndex,nStep);
 };
-Map.Api.prototype.hideThemeClass = function(szId,nIndex,nStep){
+ixMap.Api.prototype.hideThemeClass = function(szId,nIndex,nStep){
 	this.map.Themes.hideClass(null,szId,nIndex,nStep);
 };
-Map.Api.prototype.markThemeClass = function(szId,nIndex,nStep){
+ixMap.Api.prototype.markThemeClass = function(szId,nIndex,nStep){
 	this.map.Themes.markClass(null,szId,nIndex,nStep);
 };
-Map.Api.prototype.unmarkThemeClass = function(szId,nIndex,nStep){
+ixMap.Api.prototype.unmarkThemeClass = function(szId,nIndex,nStep){
 	this.map.Themes.unmarkClass(null,szId,nIndex,nStep);
 };
-Map.Api.prototype.setThemeTimeFrame = function(szId,nUMin,nUMax){
+ixMap.Api.prototype.setThemeTimeFrame = function(szId,nUMin,nUMax){
 	this.map.Themes.setTimeFrame(null,szId,nUMin,nUMax);
 };
-Map.Api.prototype.filterThemeItems = function(szId,szFilter,mode){
+ixMap.Api.prototype.filterThemeItems = function(szId,szFilter,mode){
 	this.map.Themes.filterItems(null,szId,szFilter,mode);
 };
-Map.Api.prototype.selectFilterItems = function(szId){
+ixMap.Api.prototype.selectFilterItems = function(szId){
 	this.map.Themes.selectFilterItems(null,szId);
 };
-Map.Api.prototype.popupThemeStyleMenu = function(szId){
+ixMap.Api.prototype.popupThemeStyleMenu = function(szId){
 	this.map.Themes.chartTypeMenu(null,szId);
 };
-Map.Api.prototype.highlightThemeItems = function(szId,szItems,szSeparator){
+ixMap.Api.prototype.highlightThemeItems = function(szId,szItems,szSeparator){
 	this.map.Themes.doHighlightItems(szId,szItems,szSeparator);
 	//this.map.Themes.highlightItems(null,szId,szItems,szSeparator);
 };
-Map.Api.prototype.clearHighlightThemeItems = function(szId){
+ixMap.Api.prototype.clearHighlightThemeItems = function(szId){
 	this.map.Themes.clearHighlightItems(null,szId);
 };
-Map.Api.prototype.zoomToTheme = function(szId){
+ixMap.Api.prototype.zoomToTheme = function(szId){
 	this.map.Themes.zoomTo(null,szId);
 };
 
 /**
  * wrapper for theme clips (theme with a number of frames, like a video clip)
  */
-Map.Api.prototype.nextClipFrame = function(szId){
+ixMap.Api.prototype.nextClipFrame = function(szId){
 	this.map.Themes.nextClipFrame(szId);
 };
-Map.Api.prototype.setClipFrame = function(szId,n){
+ixMap.Api.prototype.setClipFrame = function(szId,n){
 	this.map.Themes.setClipFrame(szId,n);
 };
-Map.Api.prototype.pauseClip = function(szId){
+ixMap.Api.prototype.pauseClip = function(szId){
 	this.map.Themes.pauseClip(szId);
 };
-Map.Api.prototype.startClip = function(szId,n){
+ixMap.Api.prototype.startClip = function(szId,n){
 	this.map.Themes.startClip(szId,n);
 };
 
 /**
  * wrapper, to get a theme
  */
-Map.Api.prototype.getTheme = function(szId){
+ixMap.Api.prototype.getTheme = function(szId){
 	return this.map.Themes.getTheme(szId);
 };
 /**
  * wrapper, to get all active Themes
  */
-Map.Api.prototype.getAllThemes = function(){
+ixMap.Api.prototype.getAllThemes = function(){
 	return this.map.Themes.getAllThemes();
 };
 /**
  * wrapper, to get the definitions of all actual map Themes
  */
-Map.Api.prototype.getMapThemeDefinitionStrings = function(){
+ixMap.Api.prototype.getMapThemeDefinitionStrings = function(){
 	return this.map.Themes.getAllThemeDefinitionStrings();
 };
 /**
  * wrapper, to get the definitions of one map Theme
  */
-Map.Api.prototype.getMapThemeStyleString = function(szId){
+ixMap.Api.prototype.getMapThemeStyleString = function(szId){
 	return this.map.Themes.getMapThemeStyleString(szId);
 };
 /**
  * wrapper, to get the definition object of one map Theme
  */
-Map.Api.prototype.getMapThemeDefinitionObj = function(szId){
+ixMap.Api.prototype.getMapThemeDefinitionObj = function(szId){
 	return this.map.Themes.getMapThemeDefinitionObj(szId);
 };
 /**
  * wrapper, to show one theme
  */
-Map.Api.prototype.showTheme = function(szId){
+ixMap.Api.prototype.showTheme = function(szId){
 	this.map.Themes.showTheme(null,szId);
 };
 /**
  * wrapper, to hide one theme
  */
-Map.Api.prototype.hideTheme = function(szId){
+ixMap.Api.prototype.hideTheme = function(szId){
 	this.map.Themes.hideTheme(null,szId);
 };
 /**
  * wrapper, to toggle one theme
  */
-Map.Api.prototype.toggleTheme = function(szId){
+ixMap.Api.prototype.toggleTheme = function(szId){
 	this.map.Themes.toggleTheme(null,szId);
 };
 /**
  * wrapper, to remove one theme
  */
-Map.Api.prototype.removeTheme = function(szId){
+ixMap.Api.prototype.removeTheme = function(szId){
 	this.map.Themes.removeTheme(null,szId);
 };
 /**
  * wrapper, to remove all created themes
  */
-Map.Api.prototype.removeAllThemes = function(){
+ixMap.Api.prototype.removeAllThemes = function(){
 	this.map.Themes.removeAll();
 };
 /**
  * get the id of a map theme; needed bcause szId may be obfuscated
  * @param objNode an arbitrary map node
  */
-Map.Api.prototype.getThemeId = function(themeNode){
+ixMap.Api.prototype.getThemeId = function(themeNode){
 	if (themeNode){
 		return themeNode.szId;
 	}
@@ -1602,7 +1602,7 @@ Map.Api.prototype.getThemeId = function(themeNode){
  * @param dataObj the object containing the data to set
  * @param szDataName the nane of the future data object
  */
-Map.Api.prototype.setThemeExternalData = function(szThemeId,dataObj,szDataName){
+ixMap.Api.prototype.setThemeExternalData = function(szThemeId,dataObj,szDataName){
 	this.map.Themes.setExternalData(szThemeId,dataObj,szDataName);
 };
 
@@ -1610,7 +1610,7 @@ Map.Api.prototype.setThemeExternalData = function(szThemeId,dataObj,szDataName){
  * remove a DOM element given by its id
  * @param szId the id of the object (shape,group,...) to remove
  */
-Map.Api.prototype.removeElementById = function(szId){
+ixMap.Api.prototype.removeElementById = function(szId){
 	var objNode = SVGDocument.getElementById(szId);
 	if (objNode && objNode.parentNode ){
 		objNode.parentNode.removeChild(objNode);
@@ -1620,7 +1620,7 @@ Map.Api.prototype.removeElementById = function(szId){
  * get the id of a map object; bubbles up the DOM until an id is found
  * @param objNode an arbitrary map node
  */
-Map.Api.prototype.getShapeId = function(objNode){
+ixMap.Api.prototype.getShapeId = function(objNode){
 	var mapObj = new MapObject(objNode);
 	if (mapObj){
 		return mapObj.szId;
@@ -1631,7 +1631,7 @@ Map.Api.prototype.getShapeId = function(objNode){
  * get the layer obj a map node
  * @param objNode an arbitrary map node
  */
-Map.Api.prototype.getShapeLayerObj = function(objNode){
+ixMap.Api.prototype.getShapeLayerObj = function(objNode){
 	var layerObj = this.map.Layer.getLayerObjOfNode(objNode);
 	if (layerObj){
 		return layerObj;
@@ -1644,7 +1644,7 @@ Map.Api.prototype.getShapeLayerObj = function(objNode){
  * @type string	
  * @return the layer name or null
  */
-Map.Api.prototype.getShapeLayerName = function(objNode){
+ixMap.Api.prototype.getShapeLayerName = function(objNode){
 	var layerObj = this.map.Layer.getLayerObjOfNode(objNode);
 	if (layerObj){
 		return layerObj.szName;
@@ -1655,7 +1655,7 @@ Map.Api.prototype.getShapeLayerName = function(objNode){
  * get a named array of metadata of a map shape
  * @param objNode an arbitrary map node
  */
-Map.Api.prototype.getShapeMetadataArray = function(objNode){
+ixMap.Api.prototype.getShapeMetadataArray = function(objNode){
 	var szData   = this.map.Dom.getAttributeByNodeOrParents(objNode,szMapNs,"info");
 	var szTitles = "";
 	var mapObj = new MapObject(objNode);
@@ -1677,7 +1677,7 @@ Map.Api.prototype.getShapeMetadataArray = function(objNode){
 };
 
 
-Map.Api.prototype.highlightItem = function(szId){
+ixMap.Api.prototype.highlightItem = function(szId){
 	var objNode = SVGDocument.getElementById(szId);
 
 	if ( szId.match(/:chart/)){
@@ -1706,7 +1706,7 @@ Map.Api.prototype.highlightItem = function(szId){
 	}
 	highLightList.lock();
 };
-Map.Api.prototype.clearHighlight = function(){
+ixMap.Api.prototype.clearHighlight = function(){
 	highLightList.unlock();
 	highLightList.removeAll();
 };
@@ -1715,7 +1715,7 @@ Map.Api.prototype.clearHighlight = function(){
  * generate ARCXML code from a map shape<br>
  * (may be called by context menu and generates than the ARCXML code of the context menu mouse object)
  */
-Map.Api.prototype.getLayerLegendSVG= function(layerName){
+ixMap.Api.prototype.getLayerLegendSVG= function(layerName){
 	alert(layerName);
 };			
 
@@ -1727,7 +1727,7 @@ Map.Api.prototype.getLayerLegendSVG= function(layerName){
  * @param {String} szTitle an optional title 
  * @return void
  */
-Map.Api.prototype.newMapSelection = function(szThemes,szSelectShape,szStyle,szTitle){
+ixMap.Api.prototype.newMapSelection = function(szThemes,szSelectShape,szStyle,szTitle){
 	map.Selections.newSelection(szThemes,szSelectShape,szStyle,szTitle);
 };
 
@@ -1738,7 +1738,7 @@ Map.Api.prototype.newMapSelection = function(szThemes,szSelectShape,szStyle,szTi
  * @param {String} pos position in x, y coordinates
  * @return {String} item id
  */
-Map.Api.prototype.selectItemByPosition = function(szThemes,pos){
+ixMap.Api.prototype.selectItemByPosition = function(szThemes,pos){
 	return map.Selections.selectItemByPosition(szThemes,pos);
 };
 
@@ -1748,7 +1748,7 @@ Map.Api.prototype.selectItemByPosition = function(szThemes,pos){
  * @param {box} boundingBox definition of a bounding box by to points Nord,East and South,West
  * @return {string} item id
  */
-Map.Api.prototype.selectItemByBoundingBox = function (szThemes,box) {
+ixMap.Api.prototype.selectItemByBoundingBox = function (szThemes,box) {
 	return map.Selections.selectItemByBoundingBox(szThemes,box);
 };
 

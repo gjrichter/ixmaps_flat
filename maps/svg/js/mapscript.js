@@ -225,13 +225,13 @@ var highLightList = null;
  * ...................................................................*/
 
 /**
- * Create a new Map instance.  
+ * Create a new ixMap instance.  
  * @class the main namespace for all map properties and methods.
  * @constructor
  * @throws 
- * @return A new Map
+ * @return A new ixMap
  */
-var Map = function () {
+var ixMap = function () {
 	/** flag: initialization in progress */
 	this.fInitializing = false;
 	/** holds the subclass for event handling */
@@ -318,7 +318,7 @@ var Map = function () {
  * <tr><td>"delayed"</td><td> the appropriate feature will be called with a little timeout; this enables faster map rendering, but shows transitory map states</td></tr>
  *  </table>
  */
-Map.prototype.setFeatures = function (szFeatures) {
+ixMap.prototype.setFeatures = function (szFeatures) {
 	// save for bookmark creation
 	// --------------------------
 	this.szFeatures = (this.szFeatures || "") + ";" + szFeatures;
@@ -590,7 +590,7 @@ Map.prototype.setFeatures = function (szFeatures) {
  * @type string
  * @return the feature definition string
  */
-Map.prototype.getFeatures = function () {
+ixMap.prototype.getFeatures = function () {
 	var szFeatures = this.szFeatures;
 	this.szFeatures += ";mapopacity:" + String(this.nOpacity || 1);
 	this.szFeatures += ";flushChartDraw:" + String(this.Themes.nflushChartDraw || 100000);
@@ -600,7 +600,7 @@ Map.prototype.getFeatures = function () {
  * checks if any loading is in process (HTTLXMLRequest)
  * @return true or false
  */
-Map.prototype.isLoading = function () {
+ixMap.prototype.isLoading = function () {
 	if ((this.Loader && this.Loader.isWaiting()) ||
 		(this.mapLoader && this.mapLoader.isWaiting()) ||
 		(map.Tiles && map.Tiles.isLoading()) ||
@@ -613,7 +613,7 @@ Map.prototype.isLoading = function () {
  * checks if an initializing (legend,toolbar,...) is in process 
  * @return true or false
  */
-Map.prototype.isInitializing = function () {
+ixMap.prototype.isInitializing = function () {
 	if (this.fInitializing || (this.Legend && this.Legend.fInitializing) || !this.Scale) {
 		return true;
 	}
@@ -623,7 +623,7 @@ Map.prototype.isInitializing = function () {
  * checks if no javascript is in process or planned 
  * @return true or false
  */
-Map.prototype.isIdle = function () {
+ixMap.prototype.isIdle = function () {
 	if (!this.isInitializing() && !this.isLoading() && (this.actionA.length === 0) && (this.initActionA.length === 0)) {
 		return true;
 	}
@@ -635,7 +635,7 @@ Map.prototype.isIdle = function () {
  * a setTimeout("map.popAction()") is done to check this condition.
  * @param szAction the (JavaScript) action to be stored  
  */
-Map.prototype.pushAction = function (szAction, szMessage) {
+ixMap.prototype.pushAction = function (szAction, szMessage) {
 
 	// GR 18.02.2014 prevent obsolet zoom and pan on initializing
 	if (szAction.match(/geobounds/i)) {
@@ -674,7 +674,7 @@ Map.prototype.pushAction = function (szAction, szMessage) {
  * a setTimeout("map.popAction()") is done to check this condition.
  * @param szAction the (JavaScript) action to be stored  
  */
-Map.prototype.pushInitAction = function (szAction, szMessage) {
+ixMap.prototype.pushInitAction = function (szAction, szMessage) {
 	_TRACE("--- map.pushInitAction(" + szAction + ")");
 	this.initActionA.push(szAction);
 	this.initMessageA.push(szMessage);
@@ -687,7 +687,7 @@ Map.prototype.pushInitAction = function (szAction, szMessage) {
  * if this condition is given, the action is executed by eval(szAction);
  * if not, a setTimeout("map.popAction()") is done to recheck later
  */
-Map.prototype.popAction = function () {
+ixMap.prototype.popAction = function () {
 	_TRACE("--- map.popAction() " + this.actionA.length + " [" + this.actionA[0] + "]");
 	if (this.actionA.length === 0) {
 		//clearMessage();
@@ -734,7 +734,7 @@ Map.prototype.popAction = function () {
  * if this condition is given, the action is executed by eval(szAction);
  * if not, a setTimeout("map.popAction()") is done to recheck later
  */
-Map.prototype.popInitAction = function () {
+ixMap.prototype.popInitAction = function () {
 	_TRACE("--- map.popInitAction()");
 	if (this.initActionA.length === 0) {
 		map.npopActionWaitInit = 0;
@@ -762,7 +762,7 @@ Map.prototype.popInitAction = function () {
  * @type boolean
  * @return true, if version is ok
  */
-Map.prototype.checkVersion = function (szVersion) {
+ixMap.prototype.checkVersion = function (szVersion) {
 	if (szVersion === null || szVersion != this.version) {
 		return false;
 	}
@@ -771,7 +771,7 @@ Map.prototype.checkVersion = function (szVersion) {
 /**
  * Is called by initAll with delay, to switch off the svggis logo
  */
-Map.prototype.fadeLogo = function () {
+ixMap.prototype.fadeLogo = function () {
 	var logoNode = SVGDocument.getElementById("mapbackground:logo");
 	if (logoNode) {
 		logoNode.parentNode.removeChild(logoNode);
@@ -783,7 +783,7 @@ Map.prototype.fadeLogo = function () {
 /**
  * Is called by initAll to hide map and legend during initialization
  */
-Map.prototype.hideAll = function () {
+ixMap.prototype.hideAll = function () {
 	var canvasNode = SVGDocument.getElementById("mapcanvas");
 	if (canvasNode) {
 		canvasNode.style.setProperty("display", "none", "");
@@ -792,7 +792,7 @@ Map.prototype.hideAll = function () {
 /**
  * Is called by initAll to show map and legend
  */
-Map.prototype.showAll = function () {
+ixMap.prototype.showAll = function () {
 	var canvasNode = SVGDocument.getElementById("mapcanvas");
 	if (canvasNode) {
 		canvasNode.style.setProperty("display", "inline", "");
@@ -801,7 +801,7 @@ Map.prototype.showAll = function () {
 /**
  * hide all map shapes
  */
-Map.prototype.hideMap = function () {
+ixMap.prototype.hideMap = function () {
 	if (this.fHidden) {
 		return;
 	}
@@ -818,7 +818,7 @@ Map.prototype.hideMap = function () {
 /**
  * show all map shapes
  */
-Map.prototype.showMap = function () {
+ixMap.prototype.showMap = function () {
 	if (!this.fHidden) {
 		return;
 	}
@@ -835,7 +835,7 @@ Map.prototype.showMap = function () {
 /**
  * set opacity of map shapes
  */
-Map.prototype.setOpacity = function (nValue, szMode) {
+ixMap.prototype.setOpacity = function (nValue, szMode) {
 	var canvasNode = SVGDocument.getElementById("maplayer");
 	if (canvasNode) {
 		if (szMode == "absolute") {
@@ -857,7 +857,7 @@ Map.prototype.setOpacity = function (nValue, szMode) {
 /**
  * toggle opacity of map shapes
  */
-Map.prototype.toggleOpacity = function () {
+ixMap.prototype.toggleOpacity = function () {
 	var canvasNode = SVGDocument.getElementById("maplayer");
 	if (canvasNode) {
 		var szOpacity = canvasNode.style.getPropertyValue("opacity");
@@ -872,7 +872,7 @@ Map.prototype.toggleOpacity = function () {
 /**
  * claer all highlights, themes, selections ...
  */
-Map.prototype.clearAll = function () {
+ixMap.prototype.clearAll = function () {
 	map.Dom.clearGroup(SVGToolsGroup);
 	map.Dom.clearGroup(SVGFixedGroup);
 	map.removeAllHighlights();
@@ -886,7 +886,7 @@ Map.prototype.clearAll = function () {
  * @param szUrl the map Url
  * @type void
  */
-Map.prototype.loadMap = function (szUrl) {
+ixMap.prototype.loadMap = function (szUrl) {
 	if (!this.mapLoader) {
 		this.mapLoader = new SVGLoaderMap();
 	}
@@ -903,14 +903,14 @@ Map.prototype.loadMap = function (szUrl) {
 			this.mapRoot = "";
 		}
 		this.clearAll();
-		//map.Themes = new Map.Themes();
+		//map.Themes = new ixMap.Themes();
 		map.Dom.clearGroup(map.Layer.objectGroup);
 	}
 };
 
 // create instance here 
 var thisversion = "0.93";
-map = new Map();
+map = new ixMap();
 map.version = thisversion;
 
 /* ...................................................................* 
@@ -953,7 +953,7 @@ function delayedInitAll(evt, embedName) {
 	map.hideAll();
 
 	// create the dom manipulating object                                    
-	map.Dom = new Map.Dom(evt);
+	map.Dom = new ixMap.Dom(evt);
 
 	// get root element                                     
 	SVGRootElement = SVGDocument;
@@ -993,7 +993,7 @@ function delayedInitAll(evt, embedName) {
 	SVGViewBox[3] = Number(SVGViewBox[3]);
 
 	// create the scaling object                                    
-	map.Scale = new Map.Scale();
+	map.Scale = new ixMap.Scale();
 	if (!map.Scale.scaleNode || !map.Scale.extentNode) {
 		alert("SVG source not valid SVGGIS map !");
 		return;
@@ -1004,7 +1004,7 @@ function delayedInitAll(evt, embedName) {
 		map.Scale.createWidgetStyles();
 		map.Scale.normalizeSymbols(SVGDocument.getElementById("symbolstore"));
 		map.Scale.normalizeButtons(SVGDocument.getElementById("widgetstore"));
-		map.Event = new Map.Event();
+		map.Event = new ixMap.Event();
 		map.Event.initUseNodes(SVGDocument.getElementById("widgetstore"));
 	} else {
 		map.pushAction('map.Scale.createWidgetStyles()');
@@ -1017,6 +1017,11 @@ function delayedInitAll(evt, embedName) {
 				// 1. load from referenced include path                                    
 				if (typeof (HTMLWindow.ixmaps.SVGResources_includePath) != 'undefined') {
 					map.Loader.importSVGFile(HTMLWindow.ixmaps.SVGResources_includePath + "/maplocal.svg", SVGDocument, SVGTempGroup, null);
+				}
+				// 2. load from resource base 
+                else
+				if (typeof (ixmaps.szResourceBase) != 'undefined') {
+					map.Loader.importSVGFile(ixmaps.szResourceBase + "/maps/svg/resources/svg/maplocal.svg", SVGDocument, SVGTempGroup, null);
 				}
 				// if not defined, try this                                    
 				else {
@@ -1102,7 +1107,7 @@ function doInitAll_2(evt) {
 	}
 
 	// create the event object                                    
-	map.Event = new Map.Event();
+	map.Event = new ixMap.Event();
 
 	// set basic actionhandler                                     
 	SVGRootElement.setAttribute("onmouseover", "map.Event.defaultMouseOver(evt)");
@@ -1125,7 +1130,7 @@ function doInitAll_2(evt) {
 	}
 
 	// create the layer object                                    
-	map.Layer = new Map.Layer(evt);
+	map.Layer = new ixMap.Layer(evt);
 
 	// initialize anti zoom and pan                                   
 	antiZoomAndPanList = new AntiZoomAndPan(evt);
@@ -1136,19 +1141,19 @@ function doInitAll_2(evt) {
 	map.Layer.initPatternScaling(evt, null);
 
 	// initialize zooming                                    
-	map.Zoom = new Map.Zoom(map.Scale.initScale);
+	map.Zoom = new ixMap.Zoom(map.Scale.initScale);
 	_TRACE("--- map.Zoom --- OK");
 
 	// initialize tile processing                                   
-	map.Tiles = new Map.Tiles();
+	map.Tiles = new ixMap.Tiles();
 	_TRACE("--- map.Tiles --- OK");
 
 	// initialize label processing                                   
-	map.Label = new Map.Label();
+	map.Label = new ixMap.Label();
 	_TRACE("--- map.Label --- OK");
 
 	// initialize map viewport
-	map.Viewport = new Map.Viewport(evt);
+	map.Viewport = new ixMap.Viewport(evt);
 	_TRACE("--- map.Viewport --- OK");
 
 	//setTimeout("displayScale(null,'bottom')",100);
@@ -1344,13 +1349,13 @@ function __doExecuteMethodLater() {
 // .............................................................................
 
 /**
- * Create a new Map.Dom instance.  
+ * Create a new ixMap.Dom instance.  
  * @class It links to the DOM of the SVG document and defines methods to query and change it
  * @constructor
  * @throws 
- * @return A new Map.Dom
+ * @return A new ixMap.Dom
  */
-Map.Dom = function (evt) {
+ixMap.Dom = function (evt) {
 	/** holds the main SVG document */
 	this.targetDocument = window.document;
 	if (evt) {
@@ -1363,13 +1368,13 @@ Map.Dom = function (evt) {
 	/** array that holds objects by random names created by pushObject; usefull to find DOM objects by a generated name on events */
 	this.objStackA = new Array(0);
 };
-Map.Dom.prototype = new Map();
+ixMap.Dom.prototype = new ixMap();
 
 /**
- * sets a new target document for all MapDom methods 
+ * sets a new target document for all ixMapDom methods 
  * @param targetDocument the new target document to set
  */
-Map.Dom.prototype.setTargetDocument = function (targetDocument) {
+ixMap.Dom.prototype.setTargetDocument = function (targetDocument) {
 	if (targetDocument) {
 		this.targetDocument = targetDocument;
 	}
@@ -1379,7 +1384,7 @@ Map.Dom.prototype.setTargetDocument = function (targetDocument) {
  * New elements will be created within this group
  * @param targetGroup the new target group to set
  */
-Map.Dom.prototype.setTargetGroup = function (targetGroup) {
+ixMap.Dom.prototype.setTargetGroup = function (targetGroup) {
 	if (targetGroup) {
 		this.targetGroup = targetGroup;
 	}
@@ -1390,7 +1395,7 @@ Map.Dom.prototype.setTargetGroup = function (targetGroup) {
  * @param targetGroup [optional] the target group to create the new node within 
  * @return the created element
  */
-Map.Dom.prototype.newNode = function (tagName, targetGroup) {
+ixMap.Dom.prototype.newNode = function (tagName, targetGroup) {
 	var newNode = this.targetDocument.createElementNS(szSVG, tagName);
 	(targetGroup || this.targetGroup).appendChild(newNode);
 	return newNode;
@@ -1401,7 +1406,7 @@ Map.Dom.prototype.newNode = function (tagName, targetGroup) {
  * @param szId  [optional] the id to be set for the created grouph
  * @return the created group element
  */
-Map.Dom.prototype.newGroup = function (targetGroup, szId) {
+ixMap.Dom.prototype.newGroup = function (targetGroup, szId) {
 	var newNode = this.newNode('g', targetGroup);
 	if (newNode) {
 		if (szId) {
@@ -1417,7 +1422,7 @@ Map.Dom.prototype.newGroup = function (targetGroup, szId) {
  * @param targetGroup [optional] the target group to create the new node within 
  * @return the created element
  */
-Map.Dom.prototype.newObject = function (tagName, targetGroup) {
+ixMap.Dom.prototype.newObject = function (tagName, targetGroup) {
 	var newNode = this.newNode(tagName, targetGroup);
 	if (newNode) {
 		newNode.fu = new Methods(newNode);
@@ -1429,7 +1434,7 @@ Map.Dom.prototype.newObject = function (tagName, targetGroup) {
  * @param szId the id of the DOM node to fetch 
  * @return the enhanced element or null
  */
-Map.Dom.prototype.getObjectById = function (szId) {
+ixMap.Dom.prototype.getObjectById = function (szId) {
 	var nNode = this.targetDocument.getElementById(szId);
 	if (nNode) {
 		nNode.fu = new Methods(nNode);
@@ -1440,7 +1445,7 @@ Map.Dom.prototype.getObjectById = function (szId) {
  * removes all child elements from the given SVG group <g>
  * @param nodeGroup the node of the group to clear 
  */
-Map.Dom.prototype.clearGroup = function (nodeGroup) {
+ixMap.Dom.prototype.clearGroup = function (nodeGroup) {
 	if (nodeGroup && nodeGroup.hasChildNodes()) {
 		var childNodes = nodeGroup.childNodes;
 		for (var i = childNodes.length - 1; i >= 0; i--) {
@@ -1452,7 +1457,7 @@ Map.Dom.prototype.clearGroup = function (nodeGroup) {
  * remove a DOM element given by its id
  * @param szId the id of the object (shape,group,...) to remove
  */
-Map.Dom.prototype.removeElementById = function (szId) {
+ixMap.Dom.prototype.removeElementById = function (szId) {
 	var objNode = SVGDocument.getElementById(szId);
 	if (objNode && objNode.parentNode) {
 		objNode.parentNode.removeChild(objNode);
@@ -1465,7 +1470,7 @@ Map.Dom.prototype.removeElementById = function (szId) {
  * @param attributes an array with the attributes to set after node creation; e.g. {x:200,y:200,width:234 ... }
  * @return the created node
  */
-Map.Dom.prototype.constructNode = function (tagName, targetGroup, attributes) {
+ixMap.Dom.prototype.constructNode = function (tagName, targetGroup, attributes) {
 	var newElement = this.newObject(tagName, targetGroup);
 	var a;
 	for (a in attributes) {
@@ -1482,7 +1487,7 @@ Map.Dom.prototype.constructNode = function (tagName, targetGroup, attributes) {
  * this is usefull, to retrieve the object later by this random name on events (text names can be passed to eventhandler)  
  * @return the generated random name to later retrieve the object
  */
-Map.Dom.prototype.pushObj = function (objNode) {
+ixMap.Dom.prototype.pushObj = function (objNode) {
 	var szId = "stackedObject" + String(Math.random());
 	this.objStackA[szId] = objNode;
 	return szId;
@@ -1491,7 +1496,7 @@ Map.Dom.prototype.pushObj = function (objNode) {
  * helper to retrieve a stored a DOM object handle with its assoziated generated random name   
  * @return the stored object handle
  */
-Map.Dom.prototype.popObj = function (szId) {
+ixMap.Dom.prototype.popObj = function (szId) {
 	return this.objStackA[szId];
 };
 
@@ -1516,7 +1521,7 @@ Map.Dom.prototype.popObj = function (szId) {
  * @param a,b,c,... CSV of attributes 
  * @return the created shape node or null
  */
-Map.Dom.prototype.newShape = function (szShape, targetGroup, a, b, c, d, e, f, g, h, i, j, k) {
+ixMap.Dom.prototype.newShape = function (szShape, targetGroup, a, b, c, d, e, f, g, h, i, j, k) {
 	var attributeA = null;
 	switch (szShape) {
 		case 'rect':
@@ -1572,7 +1577,7 @@ Map.Dom.prototype.newShape = function (szShape, targetGroup, a, b, c, d, e, f, g
  * @param szText text itself 
  * @return the created text element
  */
-Map.Dom.prototype.newText = function (targetGroup, x, y, s, szText) {
+ixMap.Dom.prototype.newText = function (targetGroup, x, y, s, szText) {
 	if (!(isFinite(x) && isFinite(y))) {
 		return null;
 	}
@@ -1604,7 +1609,7 @@ Map.Dom.prototype.newText = function (targetGroup, x, y, s, szText) {
  * @param szText text itself 
  * @return the created tspan element
  */
-Map.Dom.prototype.newTSpan = function (targetGroup, s, szText) {
+ixMap.Dom.prototype.newTSpan = function (targetGroup, s, szText) {
 	if (targetGroup.nodeName != "text") {
 		return null;
 	}
@@ -1627,7 +1632,7 @@ Map.Dom.prototype.newTSpan = function (targetGroup, s, szText) {
  * @param offset an offset of the text resp. the start of the path 
  * @return the created text element
  */
-Map.Dom.prototype.newTextOnPath = function (targetGroup, szPathId, szText, s, offset) {
+ixMap.Dom.prototype.newTextOnPath = function (targetGroup, szPathId, szText, s, offset) {
 	if (!szText || (typeof (szText) == "undefined")) {
 		szText = "(undefined)";
 	}
@@ -1656,7 +1661,7 @@ Map.Dom.prototype.newTextOnPath = function (targetGroup, szPathId, szText, s, of
  * @param szLink [optional] a link different from the text can be defined here 
  * @return the created text link element
  */
-Map.Dom.prototype.newTextLink = function (targetGroup, x, y, s, szText, szLink) {
+ixMap.Dom.prototype.newTextLink = function (targetGroup, x, y, s, szText, szLink) {
 	var nL = this.constructNode('a', targetGroup);
 	nL.setAttributeNS(szXlink, "xlink:href", (szLink ? szLink : szText));
 	nL.setAttributeNS(null, "target", szLinkTarget);
@@ -1680,7 +1685,7 @@ Map.Dom.prototype.newTextLink = function (targetGroup, x, y, s, szText, szLink) 
  * @param nMaxWidth the maximal block width
  * @return number of rows
  */
-Map.Dom.prototype.wrapText = function (textNode, nMaxWidth) {
+ixMap.Dom.prototype.wrapText = function (textNode, nMaxWidth) {
 
 	var text = textNode.firstChild.data;
 	var fontsize = textNode.style.getPropertyValue("font-size");
@@ -1718,7 +1723,7 @@ Map.Dom.prototype.wrapText = function (textNode, nMaxWidth) {
  * @type array
  * @return an array with the found nodes
  */
-Map.Dom.prototype.getAllIds = function (objNode, nRecursion) {
+ixMap.Dom.prototype.getAllIds = function (objNode, nRecursion) {
 	if (nRecursion === null) {
 		this.idList.length = 0;
 	}
@@ -1742,7 +1747,7 @@ Map.Dom.prototype.getAllIds = function (objNode, nRecursion) {
  * @param objNode the node to start looking for ids to extend 
  * @param szExtend the string to add to all id found 
  */
-Map.Dom.prototype.extendAllIds = function (objNode, szExtend) {
+ixMap.Dom.prototype.extendAllIds = function (objNode, szExtend) {
 	if (objNode && objNode.nodeType == 1) {
 		var szId = objNode.getAttributeNS(null, "id");
 		objNode.setAttributeNS(null, "id", szId + szExtend);
@@ -1758,7 +1763,7 @@ Map.Dom.prototype.extendAllIds = function (objNode, szExtend) {
  * @param szNodename the searched parent nodename
  * @return the first parent node that fits or null
  */
-Map.Dom.prototype.getParentByNodename = function (objNode, szNodename) {
+ixMap.Dom.prototype.getParentByNodename = function (objNode, szNodename) {
 	var parentNode = null;
 	if (objNode) {
 		while ((parentNode = objNode.parentNode)) {
@@ -1779,7 +1784,7 @@ Map.Dom.prototype.getParentByNodename = function (objNode, szNodename) {
  * @param szAttName  the searched attribute field
  * @return the attribute value found or an empty string
  */
-Map.Dom.prototype.getAttributeByNodeOrParents = function (objNode, szNspace, szAttName) {
+ixMap.Dom.prototype.getAttributeByNodeOrParents = function (objNode, szNspace, szAttName) {
 	var szId = null;
 	while (objNode && (objNode.nodeType == 1)) {
 		szId = objNode.getAttributeNS(szNspace, szAttName);
@@ -1796,7 +1801,7 @@ Map.Dom.prototype.getAttributeByNodeOrParents = function (objNode, szNspace, szA
  * @param objNode	 the starting node
  * @return the clipping rect
  */
-Map.Dom.prototype.getClipRect = function (objNode) {
+ixMap.Dom.prototype.getClipRect = function (objNode) {
 	var clipRect = null;
 	var szClipUrl = objNode.getAttributeNS(null, "clip-path");
 	if (szClipUrl) {
@@ -1817,7 +1822,7 @@ Map.Dom.prototype.getClipRect = function (objNode) {
  * @param setBox	 the clipping region as a box 
  * @return the clipping rect
  */
-Map.Dom.prototype.setClipRect = function (objNode, bBox) {
+ixMap.Dom.prototype.setClipRect = function (objNode, bBox) {
 	var clipRect = this.getClipRect(objNode);
 	if (!clipRect) {
 		var szId = objNode.getAttributeNS(null, "id");
@@ -1841,13 +1846,13 @@ Map.Dom.prototype.setClipRect = function (objNode, bBox) {
 // .................................................................... 
 
 /**
- * Create a new Map.Scale instance.  
+ * Create a new ixMap.Scale instance.  
  * @class It provides all scaling and normalizing functions. <br>It scans the metadata of the SVG map to get the maps dimension and scale.
  * @constructor
  * @throws -
  * @return A new scale
  */
-Map.Scale = function () {
+ixMap.Scale = function () {
 
 	_TRACE("--- init scale");
 
@@ -1871,7 +1876,7 @@ Map.Scale = function () {
 	/** the position of the map relative to the SVG canvas @type point */
 	this.mapPosition = new point(0, 0);
 	/** the internal offset of the map.  
-	 * Maps are generally generated around the coordinate 0,0. (e.g. -5000,-5000 - 5000,5000) and than translated. 
+	 * ixMaps are generally generated around the coordinate 0,0. (e.g. -5000,-5000 - 5000,5000) and than translated. 
 	 * The mapOffset must be added to all map coordinates to get the canvas coordinate.
 	 * @type point
 	 */
@@ -2079,12 +2084,12 @@ Map.Scale = function () {
 	this.setCanvasSize(0, 0, window.innerWidth, window.innerHeight, "center");
 };
 
-Map.Scale.prototype = new Map();
+ixMap.Scale.prototype = new ixMap();
 
 /**
  * reset map scale to initial values
  */
-Map.Scale.prototype.reset = function () {
+ixMap.Scale.prototype.reset = function () {
 
 	_TRACE("--- reset scale");
 
@@ -2113,7 +2118,7 @@ Map.Scale.prototype.reset = function () {
  * @param width position 
  * @param height position 
  */
-Map.Scale.prototype.setCanvasSize = function (x, y, width, height, szMethod) {
+ixMap.Scale.prototype.setCanvasSize = function (x, y, width, height, szMethod) {
 
 	_TRACE("--- setCanvasSize(" + x + "," + y + "," + width + "," + height + "," + szMethod + ")");
 
@@ -2206,7 +2211,7 @@ Map.Scale.prototype.setCanvasSize = function (x, y, width, height, szMethod) {
  * @param width position 
  * @param height position 
  */
-Map.Scale.prototype.resizeCanvas = function (x, y, width, height, szMethod) {
+ixMap.Scale.prototype.resizeCanvas = function (x, y, width, height, szMethod) {
 
 	if (!szMethod) {
 		szMethod = "center";
@@ -2237,7 +2242,7 @@ Map.Scale.prototype.resizeCanvas = function (x, y, width, height, szMethod) {
  * @param y2 y of the second map coordinate
  * @return the distance in meter
  */
-Map.Scale.prototype.getDistanceInMeter = function (x1, y1, x2, y2) {
+ixMap.Scale.prototype.getDistanceInMeter = function (x1, y1, x2, y2) {
 	var nDeltaX = x2 - x1;
 	var nDeltaY = y2 - y1;
 	var nMeter = 0;
@@ -2295,7 +2300,7 @@ Map.Scale.prototype.getDistanceInMeter = function (x1, y1, x2, y2) {
  * @param nMeter the distance in meter to format
  * @return string with distance and unit
  */
-Map.Scale.prototype.formatDistanceString = function (nMeter) {
+ixMap.Scale.prototype.formatDistanceString = function (nMeter) {
 	if (nMeter > 1000) {
 		return String(Math.round(nMeter / 100) / 10) + " km";
 	} else if (nMeter > 100) {
@@ -2310,7 +2315,7 @@ Map.Scale.prototype.formatDistanceString = function (nMeter) {
  * @param nQMeter the surface in meter to format
  * @return string with surface and unit
  */
-Map.Scale.prototype.formatSurfaceString = function (nQMeter) {
+ixMap.Scale.prototype.formatSurfaceString = function (nQMeter) {
 	var szValue = "";
 	if (nQMeter > 1000000) {
 		szValue = String(Math.round(nQMeter / 1000000 * 1000) / 1000) + " km2";
@@ -2329,7 +2334,7 @@ Map.Scale.prototype.formatSurfaceString = function (nQMeter) {
  * @param nMeter the distance in meter
  * @return the X scalar
  */
-Map.Scale.prototype.getDeltaXofDistanceInMeter = function (nMeter) {
+ixMap.Scale.prototype.getDeltaXofDistanceInMeter = function (nMeter) {
 	var n1000 = this.getDistanceInMeter(1000, 1000, 2000, 1000);
 	return 1000 / n1000 * nMeter;
 };
@@ -2339,7 +2344,7 @@ Map.Scale.prototype.getDeltaXofDistanceInMeter = function (nMeter) {
  * @param nMeter the distance in meter
  * @return the Y scalar
  */
-Map.Scale.prototype.getDeltaYofDistanceInMeter = function (nMeter) {
+ixMap.Scale.prototype.getDeltaYofDistanceInMeter = function (nMeter) {
 	var n1000 = this.getDistanceInMeter(1000, 1000, 1000, 2000);
 	return 1000 / n1000 * nMeter;
 };
@@ -2349,7 +2354,7 @@ Map.Scale.prototype.getDeltaYofDistanceInMeter = function (nMeter) {
  * @param y y of the map coordinate
  * @return the geo coordinates as point object
  */
-Map.Scale.prototype.getMapCoordinate = function (x, y) {
+ixMap.Scale.prototype.getMapCoordinate = function (x, y) {
 
 	var nLon1 = 0;
 	var nLat1 = 0;
@@ -2376,7 +2381,7 @@ Map.Scale.prototype.getMapCoordinate = function (x, y) {
  * @param y y of the map coordinate
  * @return the UTM coordinates as point object
  */
-Map.Scale.prototype.getMapCoordinateUTM = function (x, y) {
+ixMap.Scale.prototype.getMapCoordinateUTM = function (x, y) {
 
 	var ptCoord = this.getMapCoordinate(x, y);
 	if (this.szMapProjection == "Mercator") {
@@ -2401,7 +2406,7 @@ Map.Scale.prototype.getMapCoordinateUTM = function (x, y) {
  * @type point
  * @return the map coordinates as point object
  */
-Map.Scale.prototype.getMapPositionOfUTM = function (x, y, szDatum, szUtmZone) {
+ixMap.Scale.prototype.getMapPositionOfUTM = function (x, y, szDatum, szUtmZone) {
 
 	var ptOff = _UTMtoLL(szDatum, x, y, szUtmZone);
 	ptOff = map.Scale.getMapCoordinateOfLatLon(ptOff.y, ptOff.x);
@@ -2419,7 +2424,7 @@ Map.Scale.prototype.getMapPositionOfUTM = function (x, y, szDatum, szUtmZone) {
  * @type point
  * @return the map coordinates as point object
  */
-Map.Scale.prototype.getMapPositionOfLatLon = function (lat, lon) {
+ixMap.Scale.prototype.getMapPositionOfLatLon = function (lat, lon) {
 
 	var ptOff = map.Scale.getMapCoordinateOfLatLon(lat, lon);
 	var nX = (ptOff.x - map.Scale.minBoundX) / map.Scale.mapUnitsPPX - map.Scale.mapOffset.x;
@@ -2436,7 +2441,7 @@ Map.Scale.prototype.getMapPositionOfLatLon = function (lat, lon) {
  * @type point
  * @return the map coordinates as point object
  */
-Map.Scale.prototype.getMapCoordinateOfLatLon = function (lat, lon) {
+ixMap.Scale.prototype.getMapCoordinateOfLatLon = function (lat, lon) {
 
 	var ptCoord;
 	if (this.szMapProjection == "Mercator") {
@@ -2470,7 +2475,7 @@ Map.Scale.prototype.getMapCoordinateOfLatLon = function (lat, lon) {
  * @type point
  * @return the map coordinates as point object
  */
-Map.Scale.prototype.getGeoCoordinateOfPoint = function (x, y) {
+ixMap.Scale.prototype.getGeoCoordinateOfPoint = function (x, y) {
 
 	if (this.szMapProjection == "Mercator") {
 		return _MercatortoLL(y, x);
@@ -2503,7 +2508,7 @@ Map.Scale.prototype.getGeoCoordinateOfPoint = function (x, y) {
  * @param y y of the widget coordinate
  * @return the map position (x,y) as point object
  */
-Map.Scale.prototype.getMapPosition = function (x, y) {
+ixMap.Scale.prototype.getMapPosition = function (x, y) {
 
 	var zoomMatrixA = getMatrix(this.zoomNode);
 	var nZoomX = zoomMatrixA[0];
@@ -2529,7 +2534,7 @@ Map.Scale.prototype.getMapPosition = function (x, y) {
  * @param ptPos point to be clipped ( as point object )
  * @return the clipped position as point object
  */
-Map.Scale.prototype.clipWidgetPositionToMap = function (ptPos) {
+ixMap.Scale.prototype.clipWidgetPositionToMap = function (ptPos) {
 
 	if (ptPos.x >= this.mapPosition.x + this.bBox.width) {
 		ptPos.x = this.mapPosition.x + this.bBox.width;
@@ -2551,7 +2556,7 @@ Map.Scale.prototype.clipWidgetPositionToMap = function (ptPos) {
  * @param ptPos point to be checked
  * @return true or false
  */
-Map.Scale.prototype.isWidgetPositionInMap = function (ptPos) {
+ixMap.Scale.prototype.isWidgetPositionInMap = function (ptPos) {
 
 	if (ptPos.x > this.mapPosition.x + this.bBox.width ||
 		ptPos.x < this.mapPosition.x ||
@@ -2571,7 +2576,7 @@ Map.Scale.prototype.isWidgetPositionInMap = function (ptPos) {
  * @param ptOffset desired offset from the given position
  * @return the clipped position as point object
  */
-Map.Scale.prototype.clipWidgetObjectToMap = function (objNode, ptPos, ptOffset) {
+ixMap.Scale.prototype.clipWidgetObjectToMap = function (objNode, ptPos, ptOffset) {
 
 	var bBox = map.Dom.getBox(objNode);
 
@@ -2593,7 +2598,7 @@ Map.Scale.prototype.clipWidgetObjectToMap = function (objNode, ptPos, ptOffset) 
  * @param ptOffset desired offset from the given position
  * @return the clipped position as point object
  */
-Map.Scale.prototype.clipWidgetObjectToSVG = function (objNode, ptPos, ptOffset, bBox) {
+ixMap.Scale.prototype.clipWidgetObjectToSVG = function (objNode, ptPos, ptOffset, bBox) {
 
 	if (!bBox) {
 		bBox = map.Dom.getBox(objNode);
@@ -2638,7 +2643,7 @@ Map.Scale.prototype.clipWidgetObjectToSVG = function (objNode, ptPos, ptOffset, 
  * @type int
  * @return the width in pixel
  */
-Map.Scale.prototype.getEmbedWidth = function () {
+ixMap.Scale.prototype.getEmbedWidth = function () {
 
 	if (typeof (HTMLDocument) != 'undefined' && HTMLDocument != null) {
 		try {
@@ -2676,7 +2681,7 @@ Map.Scale.prototype.getEmbedWidth = function () {
  * @type int
  * @return the height in pixel
  */
-Map.Scale.prototype.getEmbedHeight = function () {
+ixMap.Scale.prototype.getEmbedHeight = function () {
 
 	if (typeof (HTMLDocument) != 'undefined' && HTMLDocument != null) {
 		try {
@@ -2714,7 +2719,7 @@ Map.Scale.prototype.getEmbedHeight = function () {
  * @type double
  * @return the scaling factor
  */
-Map.Scale.prototype.getEmbedScale = function () {
+ixMap.Scale.prototype.getEmbedScale = function () {
 
 	if (typeof (HTMLDocument) != 'undefined' && HTMLDocument != null) {
 		try {
@@ -2745,7 +2750,7 @@ Map.Scale.prototype.getEmbedScale = function () {
  * @type double
  * @return the map scale 
  */
-Map.Scale.prototype.getTrueMapScale = function () {
+ixMap.Scale.prototype.getTrueMapScale = function () {
 	if (fAdaptMapScaleToSize) {
 		return this.nMapScale / this.getEmbedScale() * this.nPPI / this.nMapPPI;
 	} else {
@@ -2758,7 +2763,7 @@ Map.Scale.prototype.getTrueMapScale = function () {
  * @param x the value to scale
  * @return the scaled x value
  */
-Map.Scale.prototype.normalX = function (x) {
+ixMap.Scale.prototype.normalX = function (x) {
 	return (x * this.nScaleX);
 };
 /**
@@ -2767,7 +2772,7 @@ Map.Scale.prototype.normalX = function (x) {
  * @param y the value to scale
  * @return the scaled y value
  */
-Map.Scale.prototype.normalY = function (y) {
+ixMap.Scale.prototype.normalY = function (y) {
 	return (y * this.nScaleY);
 };
 /**
@@ -2776,7 +2781,7 @@ Map.Scale.prototype.normalY = function (y) {
  * @param x the value to scale
  * @return the scaled x value
  */
-Map.Scale.prototype.embedX = function (x) {
+ixMap.Scale.prototype.embedX = function (x) {
 	return (x / this.nScaleX);
 };
 /**
@@ -2785,7 +2790,7 @@ Map.Scale.prototype.embedX = function (x) {
  * @param y the value to scale
  * @return the scaled y value
  */
-Map.Scale.prototype.embedY = function (y) {
+ixMap.Scale.prototype.embedY = function (y) {
 	return (y / this.nScaleY);
 };
 /**
@@ -2794,7 +2799,7 @@ Map.Scale.prototype.embedY = function (y) {
  * @param x the value to scale
  * @return the scaled x value
  */
-Map.Scale.prototype.scaleX = function (x) {
+ixMap.Scale.prototype.scaleX = function (x) {
 	return (x / SVGRootElement.currentScale * this.viewBox.width / this.getEmbedWidth());
 };
 /**
@@ -2803,7 +2808,7 @@ Map.Scale.prototype.scaleX = function (x) {
  * @param y the value to scale
  * @return the scaled y value
  */
-Map.Scale.prototype.scaleY = function (y) {
+ixMap.Scale.prototype.scaleY = function (y) {
 	return (y / SVGRootElement.currentScale * this.viewBox.height / this.getEmbedHeight());
 };
 /**
@@ -2812,7 +2817,7 @@ Map.Scale.prototype.scaleY = function (y) {
  * @param x the value to scale
  * @return the scaled x value
  */
-Map.Scale.prototype.toSVGx = function (x) {
+ixMap.Scale.prototype.toSVGx = function (x) {
 	return this.scaleX(x * SVGRootElement.currentScale - SVGRootElement.currentTranslate.x) + this.viewBox.x;
 };
 /**
@@ -2821,7 +2826,7 @@ Map.Scale.prototype.toSVGx = function (x) {
  * @param y the value to scale
  * @return the scaledy  value
  */
-Map.Scale.prototype.toSVGy = function (y) {
+ixMap.Scale.prototype.toSVGy = function (y) {
 	return this.scaleY(y * SVGRootElement.currentScale - SVGRootElement.currentTranslate.y) + this.viewBox.y;
 };
 /**
@@ -2830,7 +2835,7 @@ Map.Scale.prototype.toSVGy = function (y) {
  * @param x the value to scale
  * @return the scaled x value
  */
-Map.Scale.prototype.toScreenX = function (x) {
+ixMap.Scale.prototype.toScreenX = function (x) {
 	return (x - this.scaleX(-SVGRootElement.currentTranslate.x) + Number(viewBox[0])) / SVGRootElement.currentScale / viewBoxScale;
 };
 /**
@@ -2839,7 +2844,7 @@ Map.Scale.prototype.toScreenX = function (x) {
  * @param y the value to scale
  * @return the scaled y value
  */
-Map.Scale.prototype.toScreenY = function (y) {
+ixMap.Scale.prototype.toScreenY = function (y) {
 	return (y - this.scaleY(-SVGRootElement.currentTranslate.y) + Number(viewBox[3])) / SVGRootElement.currentScale / viewBoxScale;
 };
 /**
@@ -2848,7 +2853,7 @@ Map.Scale.prototype.toScreenY = function (y) {
  * @param x the value to scale
  * @return the x map position
  */
-Map.Scale.prototype.toMapX = function (x) {
+ixMap.Scale.prototype.toMapX = function (x) {
 	return (x - this.scaleX(-SVGRootElement.currentTranslate.x) + Number(viewBox[0])) / SVGRootElement.currentScale / viewBoxScale;
 };
 /**
@@ -2857,7 +2862,7 @@ Map.Scale.prototype.toMapX = function (x) {
  * @param y the value to scale
  * @return the y map position
  */
-Map.Scale.prototype.toMapY = function (y) {
+ixMap.Scale.prototype.toMapY = function (y) {
 	return (y - this.scaleY(-SVGRootElement.currentTranslate.y) + Number(viewBox[3])) / SVGRootElement.currentScale / viewBoxScale;
 };
 
@@ -2870,7 +2875,7 @@ Map.Scale.prototype.toMapY = function (y) {
  * @param objNode the node to look at
  * @return the offset as point object
  */
-Map.Scale.prototype.getSVGOffset = function (objNode) {
+ixMap.Scale.prototype.getSVGOffset = function (objNode) {
 	var svgNode = objNode;
 	if (svgNode.nodeName != 'svg') {
 		svgNode = map.Dom.getParentByNodename(objNode, 'svg');
@@ -2891,7 +2896,7 @@ Map.Scale.prototype.getSVGOffset = function (objNode) {
  * @param objNode the node to look at
  * @return the group offset as point object
  */
-Map.Scale.prototype.getGroupOffset = function (objNode) {
+ixMap.Scale.prototype.getGroupOffset = function (objNode) {
 	var pNode = null;
 	var sumOffset = new point(0, 0);
 	if (objNode) {
@@ -2912,7 +2917,7 @@ Map.Scale.prototype.getGroupOffset = function (objNode) {
  * @param objNode the node to look at
  * @return the scale as point object
  */
-Map.Scale.prototype.getGroupScale = function (objNode) {
+ixMap.Scale.prototype.getGroupScale = function (objNode) {
 	var groupScale = new point(1, 1);
 	var pNode = objNode.parentNode;
 	while (pNode && pNode.nodeType == 1) {
@@ -2930,7 +2935,7 @@ Map.Scale.prototype.getGroupScale = function (objNode) {
  * @param objNode the node to look at
  * @return the offset as point object
  */
-Map.Scale.prototype.getMapOffset = function (objNode) {
+ixMap.Scale.prototype.getMapOffset = function (objNode) {
 	var ptSVGOffset = this.getSVGOffset(objNode);
 	var ptGroupOffset = this.getGroupOffset(objNode);
 	return new point(-ptSVGOffset.x + ptGroupOffset.x, -ptSVGOffset.y + ptGroupOffset.y);
@@ -2940,7 +2945,7 @@ Map.Scale.prototype.getMapOffset = function (objNode) {
  * @param objNode the node to look at
  * @return the position as point object
  */
-Map.Scale.prototype.getScreenPosition = function (objNode) {
+ixMap.Scale.prototype.getScreenPosition = function (objNode) {
 	var ptSVGOffset = this.getSVGOffset(objNode);
 	var ptGroupOffset = this.getGroupOffset(objNode);
 	var ptOffset = getTranslate(objNode);
@@ -2971,7 +2976,7 @@ Map.Scale.prototype.getScreenPosition = function (objNode) {
  * @param clientGroup [optional] if given, the returned position is relative to this node
  * @return the position as point object
  */
-Map.Scale.prototype.getClientMousePosition = function (evt, clientGroup) {
+ixMap.Scale.prototype.getClientMousePosition = function (evt, clientGroup) {
 	var ret = null;
 	if (evt) {
 		var temp = fEmbedScale;
@@ -3000,7 +3005,7 @@ Map.Scale.prototype.getClientMousePosition = function (evt, clientGroup) {
 /**
  * checks if CSSStyles has ben changed, if yes, makes a reappend to bring the new styles into display
  */
-Map.Scale.prototype.refreshCSSStyles = function () {
+ixMap.Scale.prototype.refreshCSSStyles = function () {
 	if (this.fCSSStyleNodeChanged) {
 		_TRACE("!! +++ Refresh CSS Styles");
 		this.CSSStyleNodes.parentNode.parentNode.appendChild(this.CSSStyleNodes.parentNode);
@@ -3012,7 +3017,7 @@ Map.Scale.prototype.refreshCSSStyles = function () {
  * normalize all symbols - calls {@link #normalizeElements} with <code>nNormalSymbolSize</code>
  * @param targetGroup the DOM group to look for symbols
  */
-Map.Scale.prototype.normalizeSymbols = function (targetGroup) {
+ixMap.Scale.prototype.normalizeSymbols = function (targetGroup) {
 	if (this.featureScaling_lastScale == 1) {
 		this.normalizeElements(targetGroup, /symbol/, nNormalSymbolSize);
 	}
@@ -3022,7 +3027,7 @@ Map.Scale.prototype.normalizeSymbols = function (targetGroup) {
  * normalize all buttons - calls {@link #normalizeElements} with <code>nNormalButtonSize</code>
  * @param targetGroup the DOM group to look for buttons
  */
-Map.Scale.prototype.normalizeButtons = function (targetGroup) {
+ixMap.Scale.prototype.normalizeButtons = function (targetGroup) {
 	this.normalizeElements(targetGroup, /button/, nNormalButtonSize);
 	this.normalizeElements(targetGroup, /icon/, nNormalButtonSize);
 	this.nButtonSize = nNormalButtonSize;
@@ -3033,7 +3038,7 @@ Map.Scale.prototype.normalizeButtons = function (targetGroup) {
  * @param regExMatch a regular expression to match the elements (e.g./symbol/)
  * @param nNormalSize the size (max x/y) all elements will be scaled to
  */
-Map.Scale.prototype.normalizeElements = function (targetGroup, regExMatch, nNormalSize) {
+ixMap.Scale.prototype.normalizeElements = function (targetGroup, regExMatch, nNormalSize) {
 	if (targetGroup) {
 		var symbolObjects = targetGroup.getElementsByTagName('g');
 		var objA = new Array(0);
@@ -3082,7 +3087,7 @@ Map.Scale.prototype.normalizeElements = function (targetGroup, regExMatch, nNorm
  * change the rotation of the map canvas 
  * @param nDelta the rotation change amount
  */
-Map.Scale.prototype.changeRotation = function (evt, nDelta) {
+ixMap.Scale.prototype.changeRotation = function (evt, nDelta) {
 	var nRot = getRotateAttributeValue(map.Scale.canvasNode);
 	nRot = (360 + Number(nRot) + Number(nDelta)) % 360;
 	setRotate(map.Scale.canvasNode, nRot);
@@ -3094,7 +3099,7 @@ Map.Scale.prototype.changeRotation = function (evt, nDelta) {
  * set the rotation of the map canvas 
  * @param nAngle the rotation angle to set
  */
-Map.Scale.prototype.setRotation = function (evt, nAngle) {
+ixMap.Scale.prototype.setRotation = function (evt, nAngle) {
 	nAngle = Math.floor(nAngle);
 	setRotate(map.Scale.canvasNode, nAngle);
 
@@ -3115,7 +3120,7 @@ Map.Scale.prototype.setRotation = function (evt, nAngle) {
  * @param pPoint the point coordinates
  * @param nDir the direction of the rotate; -1 = unrotate
  */
-Map.Scale.prototype.rotatePoint = function (pPoint, nDir) {
+ixMap.Scale.prototype.rotatePoint = function (pPoint, nDir) {
 	var nRot = getRotateAttributeValue(map.Scale.canvasNode) / 180 * Math.PI;
 	if (nRot) {
 		if (nDir == -1) {
@@ -3131,7 +3136,7 @@ Map.Scale.prototype.rotatePoint = function (pPoint, nDir) {
 /**
  * create widget styles
  */
-Map.Scale.prototype.createWidgetStyles = function () {
+ixMap.Scale.prototype.createWidgetStyles = function () {
 
 	if (typeof (szContainerTitle) != 'string') {
 		var szContainerTitle = "font-family:arial;font-size:12px;fill:#444444;pointer-events:none;";
@@ -3168,7 +3173,7 @@ Map.Scale.prototype.createWidgetStyles = function () {
 /**
  * create one text style object
  */
-Map.Scale.prototype.createTextObject = function (szTextStyle) {
+ixMap.Scale.prototype.createTextObject = function (szTextStyle) {
 
 	var tObject = {};
 
@@ -3182,7 +3187,7 @@ Map.Scale.prototype.createTextObject = function (szTextStyle) {
  * @type array 
  * @return javascript object with scale parameter
  */
-Map.Scale.prototype.getScaleParam = function () {
+ixMap.Scale.prototype.getScaleParam = function () {
 
 	var scaleParam = {};
 
@@ -3214,7 +3219,7 @@ Map.Scale.prototype.getScaleParam = function () {
  * @param nodeObj the node to look at
  * @return void
  */
-Map.Scale.prototype.setScaleParam = function (obj) {
+ixMap.Scale.prototype.setScaleParam = function (obj) {
 
 	// because featurescaliing acts on the actual zoom scale,
 	// we must save/restore this local variable of .changeFeatureScaling()
@@ -3525,7 +3530,7 @@ function __boxDup(aBox) {
  * @param element the DOM element of which to give the box
  * @return a new box object
  */
-Map.Dom.prototype.getBox = function (element) {
+ixMap.Dom.prototype.getBox = function (element) {
 	try {
 		return __boxDup(element.getBBox());
 	} catch (e) {
@@ -3788,14 +3793,14 @@ Methods.prototype.extendAllIds = function (szExtend) {
 // --------------------------------------------------------------------------------- 
 
 /**
- * Create a new Map.CSS instance.  
+ * Create a new ixMap.CSS instance.  
  * @class It reads the CSS styles of the SVG and realizes CSS style changing functions 
  * @constructor
  * @param styleNodes the DOM node that containes the CSS styles definition
  * @throws 
- * @return A new Map.CSS Object
+ * @return A new ixMap.CSS Object
  */
-Map.CSS = function (styleNodes) {
+ixMap.CSS = function (styleNodes) {
 
 	this.stylesA = new Array(0);
 	var szStylesValue = styleNodes.firstChild.nextSibling.nodeValue;
@@ -3812,7 +3817,7 @@ Map.CSS = function (styleNodes) {
  * @type string
  * @return a style string with all changes (featurescaling, ... )
  */
-Map.CSS.prototype.getStyleString = function () {
+ixMap.CSS.prototype.getStyleString = function () {
 	var szStyles = "";
 	for (var a in this.stylesA) {
 		szStyles += ' .' + a + '{';
@@ -3829,7 +3834,7 @@ Map.CSS.prototype.getStyleString = function () {
  * @param szAttribute style attribute to change
  * @param szValue new value to set
  */
-Map.CSS.prototype.setStyle = function (szClass, szAttribute, szValue) {
+ixMap.CSS.prototype.setStyle = function (szClass, szAttribute, szValue) {
 	try {
 		this.stylesA[szClass][szAttribute] = szValue;
 	} catch (e) {}
@@ -6067,23 +6072,23 @@ function SVGLoaderMap() {
 			// reset/recreate the map handling
 			// ------------------------------
 
-			map.Scale = new Map.Scale(null);
+			map.Scale = new ixMap.Scale(null);
 			map.Scale.superclass = map;
 
 			map.Scale.createWidgetStyles();
 			map.Scale.normalizeSymbols(SVGDocument.getElementById("symbolstore"));
 			map.Scale.normalizeButtons(SVGDocument.getElementById("widgetstore"));
 
-			map.Layer = new Map.Layer(null);
+			map.Layer = new ixMap.Layer(null);
 
 			map.Layer.initPatternScaling(null, null);
 
-			map.Zoom = new Map.Zoom(map.Scale.initScale);
-			map.Tiles = new Map.Tiles();
-			map.Label = new Map.Label();
-			map.Viewport = new Map.Viewport();
+			map.Zoom = new ixMap.Zoom(map.Scale.initScale);
+			map.Tiles = new ixMap.Tiles();
+			map.Label = new ixMap.Label();
+			map.Viewport = new ixMap.Viewport();
 
-			map.Query = new Map.Query();
+			map.Query = new ixMap.Query();
 
 			// magick !!!
 			//var rectArea = map.Zoom.getBox();

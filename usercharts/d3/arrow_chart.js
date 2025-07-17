@@ -179,7 +179,7 @@ window.ixmaps = window.ixmaps || {};
 
             // show only if fontsize is reasonable (fontsize is n * 20)
 			if ( args.flag.match(/ZOOM/) || (
-                nValue > (args.theme.nValueValueMin || 0) && 
+                nValue > (args.theme.nValueValueMin || (-Number.MAX_VALUE)) && 
                 nFontSize > ((args.theme.nValueSizeMin*15)||60) )
                ){
                 // var szText = (nValue).toFixed(0) + (args.theme.szUnits || "");

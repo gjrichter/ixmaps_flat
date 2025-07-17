@@ -24,7 +24,7 @@ var mapSelection = null;
 	window, alert, setTimeout, _TRACE,
 	szMapNs, Methods, MapObject, HighLight, activeSelection, 
 	SVGDocument, HTMLWindow, getMatrix, setMatrix, SVGPopupGroup, SVGToolsGroup, SVGFixedGroup, SVGMessageGroup,
-	Map, map, thisversion, box, point, Button, MapTool, setMapTool, szMapToolType, InfoContainer, mapToolList, highLightList, 
+	ixMap, map, thisversion, box, point, Button, MapTool, setMapTool, szMapToolType, InfoContainer, mapToolList, highLightList, 
 	displayMessage, clearMessage, executeWithMessage, displayInfoDelayed, displayScale, createTextGrid, __getStyleObj, getActiveTheme,
 	loadSVGIncludes, bookmarkList, fInitLegendOff, fPreserveMapRatio, fPendingNewGeoBounds, fFroozeDynamicContent, zoomAndPanHistory,
 	nNormalFontSize, htmlgui_prettyPrintXML, __doGetPolygonSurface, antiZoomAndPanList, szTextGridStyle, __formatValue, DonutCharts
@@ -38,15 +38,15 @@ var mapSelection = null;
  * @throws 
  * @return A new Selections object
  */
-Map.Selections = function() {
+ixMap.Selections = function() {
 };
-Map.Selections.prototype = new Map();
+ixMap.Selections.prototype = new Map();
 // create instance on load
 if ( (typeof(thisversion) == "string") && map.checkVersion(thisversion) ){
-	map.Selections = new Map.Selections(); 
+	map.Selections = new ixMap.Selections(); 
 }
 else{
-	alert("Map.Themes incompatible !");
+	alert("ixMap.Themes incompatible !");
 }
 /**
  * creates a new map selection
@@ -58,7 +58,7 @@ else{
  * @throws 
  * @return A new MapSelection object
 **/
-Map.Selections.prototype.newSelection = function(szThemes,szSelectShape,szStyle,szTitle){
+ixMap.Selections.prototype.newSelection = function(szThemes,szSelectShape,szStyle,szTitle){
 
 	if ( szSelectShape == null ){
 		displayMessage("empty selection",1000);
@@ -457,7 +457,7 @@ MapSelection.prototype.realize = function(){
 		this.nSkipCount = 0;
 
 		activeSelection = this;
-		this.mapSleep = new Map.Sleep("activeSelection.selectShapes",100,map.Dictionary.getLocalText("do selection"));
+		this.mapSleep = new ixMap.Sleep("activeSelection.selectShapes",100,map.Dictionary.getLocalText("do selection"));
 		this.mapSleep.fShowProgressBar = true;
 		this.mapSleep.nCount = this.nCount;
 		this.mapSleep.szCancel = "activeSelection.cancel()";
@@ -1580,7 +1580,7 @@ MapSelection.prototype.getNodeArea = function(szId) {
  * @param {String} pos position in x, y coordinates
  * @return {String} item id
  */
-Map.Selections.prototype.selectItemByPosition = function(szThemes,pos){
+ixMap.Selections.prototype.selectItemByPosition = function(szThemes,pos){
     let themeObj = map.Themes.getTheme(szThemes);
     let position = map.Scale.getMapPositionOfLatLon(pos.lat, pos.lng);
     for (var i in themeObj.itemA){
@@ -1603,7 +1603,7 @@ Map.Selections.prototype.selectItemByPosition = function(szThemes,pos){
  * @param {String} pos position in x, y coordinates
  * @return {String} item id
  */
-Map.Selections.prototype.selectItemByBoundingBox = function(szThemes,box){
+ixMap.Selections.prototype.selectItemByBoundingBox = function(szThemes,box){
     
     let themeObj = map.Themes.getTheme(szThemes);
     let SW = map.Scale.getMapPositionOfLatLon(box[0].lat, box[0].lng);

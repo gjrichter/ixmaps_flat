@@ -12,21 +12,21 @@ $Id: mapuser.js 5 2007-03-01 15:17:28Z Guenter Richter $
 /* jshint funcscope:true, evil:true, eqnull:true, loopfunc:true, shadow: true, laxcomma: true, laxbreak: true, expr: true, sub: true*/
 /* globals 
 	document, window, alert, _TRACE, setTimeout, HTMLWindow,
-	Map, map, thisversion, szMapNs, SVGDocument, SVGRootElement, SVGPopupGroup, 
+	ixMap, map, thisversion, szMapNs, SVGDocument, SVGRootElement, SVGPopupGroup, 
 	htmlgui_prettyPrintXML, doDomViewer
 	*/
 
-Map.User = function(){
+ixMap.User = function(){
 };
-Map.User.prototype = new Map();
+ixMap.User.prototype = new Map();
 // create instance here
-map.User = new Map.User(); 
+map.User = new ixMap.User(); 
 
 /**
  * generate ARCXML code from a map shape<br>
  * (may be called by context menu and generates than the ARCXML code of the context menu mouse object)
  */
-Map.User.prototype.printARCXML = function(objNode){
+ixMap.User.prototype.printARCXML = function(objNode){
 
 	if ( objNode ){
 
@@ -82,7 +82,7 @@ Map.User.prototype.printARCXML = function(objNode){
  * generate GML (Geographis Markup Language) code from a map shape<br>
  * (may be called by context menu and generates than the GML code of the context menu mouse object)
  */
-Map.User.prototype.printGML = function(objNode){
+ixMap.User.prototype.printGML = function(objNode){
 	if ( objNode ){
 
 		map.Api.createInfoBubble(objNode,new Array("GML created from this"),1);
@@ -123,7 +123,7 @@ Map.User.prototype.printGML = function(objNode){
  * generates a DOM tree in HTML <br>
  * (may be called by context menu; evokes a DOM Viever, and passes the context menu object as parameter)
  */
-Map.User.prototype.contextDomViewer = function(){
+ixMap.User.prototype.contextDomViewer = function(){
 	var domObj = map.Api.getContextMenuTarget();
 	while ( domObj.nodeName != 'g' && domObj.parentNode ){
 		domObj = domObj.parentNode;
@@ -139,7 +139,7 @@ Map.User.prototype.contextDomViewer = function(){
  * @type boolean
  * @return true, to suppress the normal handler action
  */
-Map.User.prototype.onMouseOver = function(evt,szId){
+ixMap.User.prototype.onMouseOver = function(evt,szId){
 	return false;
 };
 /**
@@ -149,7 +149,7 @@ Map.User.prototype.onMouseOver = function(evt,szId){
  * @type boolean
  * @return true, to suppress the normal handler action
  */
-Map.User.prototype.onMouseOut = function(evt,szId){
+ixMap.User.prototype.onMouseOut = function(evt,szId){
 	return false;
 };
 /**
@@ -159,7 +159,7 @@ Map.User.prototype.onMouseOut = function(evt,szId){
  * @type boolean
  * @return true, to suppress the normal handler action
  */
-Map.User.prototype.onMouseDown = function(evt,szId){
+ixMap.User.prototype.onMouseDown = function(evt,szId){
 	return false;
 };
 /**
@@ -169,7 +169,7 @@ Map.User.prototype.onMouseDown = function(evt,szId){
  * @type boolean
  * @return true, to suppress the normal handler action
  */
-Map.User.prototype.onMouseUp = function(evt,szId){
+ixMap.User.prototype.onMouseUp = function(evt,szId){
 	return false;
 };
 /**
@@ -180,7 +180,7 @@ Map.User.prototype.onMouseUp = function(evt,szId){
  * @type boolean
  * @return true, to suppress the normal handler action
  */
-Map.User.prototype.onMouseMove = function(evt,szId,ptPos){
+ixMap.User.prototype.onMouseMove = function(evt,szId,ptPos){
 	return false;
 };
 /**
@@ -190,7 +190,7 @@ Map.User.prototype.onMouseMove = function(evt,szId,ptPos){
  * @type boolean
  * @return true, to suppress the normal handler action
  */
-Map.User.prototype.onClick = function(evt,szId){
+ixMap.User.prototype.onClick = function(evt,szId){
 	try{
 		HTMLWindow.ixmaps.htmlgui_onItemClick(szId);
 	}
@@ -204,7 +204,7 @@ Map.User.prototype.onClick = function(evt,szId){
  * @type boolean
  * @return true, to suppress the info display
  */
-Map.User.prototype.onInfoDisplay = function(evt,szId){
+ixMap.User.prototype.onInfoDisplay = function(evt,szId){
 	try{
 		return HTMLWindow.ixmaps.htmlgui_onInfoDisplay(szId);
 	}

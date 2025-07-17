@@ -24,7 +24,7 @@ $Log: colorscheme.js,v $
 	window, alert, setTimeout,
 	Methods, MapObject,
 	SVGDocument, HTMLWindow, getMatrix, setMatrix, SVGPopupGroup, SVGToolsGroup, SVGFixedGroup, SVGMessageGroup,
-	Map, map, thisversion, box, point, Button, MapTool, setMapTool, szMapToolType, InfoContainer, mapToolList, highLightList, 
+	ixMap, map, thisversion, box, point, Button, MapTool, setMapTool, szMapToolType, InfoContainer, mapToolList, highLightList, 
 	displayMessage, displayInfoDelayed, displayScale, createTextGrid,
 	loadSVGIncludes, bookmarkList, fInitLegendOff, fPreserveMapRatio, fPendingNewGeoBounds, fFroozeDynamicContent, zoomAndPanHistory,
 	nNormalFontSize, htmlgui_prettyPrintXML, __doGetPolygonSurface
