@@ -147,6 +147,7 @@ var themeStyleTranslateA = [
 	,{ style: "scale"			,obj: "nScale"  }
 	,{ style: "rangescale"		,obj: "nRangeScale"  }
 	,{ style: "sizepow"			,obj: "nSizePow"  }
+	,{ style: "outlierscale"	,obj: "nOutlierScale"  }
 
 	,{ style: "colorfield"		,obj: "szColorField"  }
 	,{ style: "symbolfield"		,obj: "szSymbolField"  }
@@ -1295,6 +1296,10 @@ ixMap.Themes.prototype.parseStyle = function (mapTheme, styleObj) {
 		// GR 27.06.2019 define power for dynamic size calculation
 		if (__isdef(styleObj.sizepow)) {
 			mapTheme.nSizePow = styleObj.sizepow;
+		}
+		// GR 19.07.2025 define scale of outlier (faktor of standard deviation)
+		if (__isdef(styleObj.outlierscale)) {
+			mapTheme.nOutlierScale = styleObj.outlierscale;
 		}
 		// GR 14.01.2015 define parts to show for stacked bars 
 		if (__isdef(styleObj.showparts)) {
@@ -4058,6 +4063,11 @@ ixMap.Themes.prototype.doChangeThemeStyle = function (szId, szStyle, szFlag) {
 			}
 			if (__isdef(styleObj.sizepow)) {
 				mapTheme.nSizePow = __calcNewValue(mapTheme.nSizePow, Number(styleObj.sizepow), szFlag);
+				//				mapTheme.fRealize = true;
+				mapTheme.fRedraw = true;
+			}
+			if (__isdef(styleObj.outlierscale)) {
+				mapTheme.nOutlierScale = __calcNewValue(mapTheme.nOutlierScale, Number(styleObj.outlierscale), szFlag);
 				//				mapTheme.fRealize = true;
 				mapTheme.fRedraw = true;
 			}
@@ -9352,7 +9362,7 @@ MapTheme.prototype.loadAndAggregateValuesOfTheme = function (szThemeLayer, nCont
                     item.nAlpha = Math.max(item.nAlpha, nAlphaValue || 1);
                     item.ptPosA = [ptOrigPos];
                     item.szTitle = szTitle;
-                    item.dbIndexA = [j];
+                    item.dbIndexA.push(j);
                 } else {
                     item.nSize += Math.abs(nValueSize || (this.objTheme.nSizeFieldIndex ? 0 : nSize));
                     item.nAlpha += nAlphaValue || 1;
@@ -10787,7 +10797,7 @@ MapTheme.prototype.distributeValues = function () {
 
 			for (var a in this.itemA) {
 				for (var i = 0; i < nParts; i++) {
-					if (Math.abs(this.itemA[a].nValuesA[i] - this.itemA[a].nValuesA[i-1]) > (this.nDeviationA[a])*2) {
+					if (Math.abs(this.itemA[a].nValuesA[i] - this.itemA[a].nValuesA[i-1]) > (this.nDeviationA[a])*(this.nOutlierScale||2)) {
 						if (this.szFlag.match(/NOOUTLIER/)) {
 							this.itemA[a].nValuesA[i] = this.itemA[a].nValuesA[i-1];
 							//delete this.itemA[a];
@@ -10811,7 +10821,7 @@ MapTheme.prototype.distributeValues = function () {
 
 			for (var i = 0; i < nParts; i++) {
 				for (var a in this.itemA) {
-					if (Math.abs(this.itemA[a].nValuesA[i] - this.nMeanA[i]) > this.nDeviationA[i] * 3) {
+					if (Math.abs(this.itemA[a].nValuesA[i] - this.nMeanA[i]) > this.nDeviationA[i] * (this.nOutlierScale||3)) {
 						if (this.szFlag.match(/NOOUTLIER/)) {
 							delete this.itemA[a];
 						}
