@@ -250,7 +250,7 @@ $Log: htmlgui_api.js,v $
             type: 'js'
         },
         {
-            url: '../data.min.js/data.js',
+            url: './data.min.js/data.js',
             type: 'js'
         },
         {
