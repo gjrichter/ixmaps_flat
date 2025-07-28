@@ -68,7 +68,7 @@ $Log:data.js,v $
  * });
  *
  * @author Guenter Richter guenter.richter@medienobjekte.de
- * @version 1.50 
+ * @version 1.51 
  * @copyright CC BY SA
  * @license MIT
  */
@@ -79,8 +79,6 @@ $Log:data.js,v $
     //
     var _log_start_time = new Date();
     _LOG = function (szLog) {
-        var x = new Date();
-        //var time = String(x.getSeconds()+(x.getMilliseconds()/1000));
         var time = ((new Date()) - _log_start_time) / 1000;
         console.log("_LOG: time[sec.ms] " + time + "\n" + szLog);
     };
@@ -89,18 +87,18 @@ $Log:data.js,v $
 
     /**
      * test if object is array 
-     * @parameter obj the object to test
-     * @return true/false
-     * @type boolean
+     * @param obj the object to test
+     * @returns true/false
+     * @type {boolean}
      */
     __isArray = function (obj) {
         return Object.prototype.toString.call(obj) === '[object Array]';
     };
     /**
      * make sure, object is type array 
-     * @parameter obj the object to transform
-     * @return array
-     * @type array
+     * @param obj the object to transform
+     * @returns array
+     * @type {Array}
      */
     __toArray = function (obj) {
         if (!obj || typeof (obj) == 'undefined') {
@@ -116,8 +114,8 @@ $Log:data.js,v $
     /**
      * get array with unique values
      * by filter function 
-     * @return array
-     * @type array
+     * @returns array
+     * @type {Array}
      */
     __onlyUnique = function (value, index, self) {
         return self.indexOf(value) === index;
@@ -128,7 +126,7 @@ $Log:data.js,v $
      */
 
     var Data = {
-        version: "1.50",
+        version: "1.51",
         errors: []
     };
 
@@ -170,7 +168,7 @@ $Log:data.js,v $
      *								   <tr><td><b>"rss"</b></td><td>the source is an xml rss feed</td></tr>
      *								   <tr><td><b>"kml"</b></td><td>the source is in Keyhole Markup Language</td></tr>
      *								   </table> 
-     * @type Data.Object
+     * @type {Data.Object}
      * @example
      * // load the data table defined by a JSON object named response and get the values of one column 
      *
@@ -178,7 +176,7 @@ $Log:data.js,v $
      *     var a = mydata.column("column name").values();
      *     ...
      * });
-     * @return A new Data.Import object
+     * @returns A new Data.Import object
      */
 
     Data.Object = function (options) {
@@ -192,8 +190,8 @@ $Log:data.js,v $
          * set data from the specified source and call user function
          * @param {function} function(result) the function to call when data is successfully imported<br>
          * the argument passed is a Data.Table object with the imported data 
-         * @type Data.Object
-         * @return itself 
+         * @type {Data.Object}
+         * @returns itself 
          */
         import: function (callback) {
 
@@ -236,8 +234,8 @@ $Log:data.js,v $
          * error function
          * define a function to handle a loading error
          * @param {function} function(errorText) a user defined function to call when an error occurs
-         * @type Data.Object
-         * @return itself  
+         * @type {Data.Object}
+         * @returns itself  
          */
         error: function (callback) {
             this.options.error = callback;
@@ -259,14 +257,14 @@ $Log:data.js,v $
      *								   <tr><td><b>"jsonDB"</b></td><td>the source is a jsonDB table object</td></tr>
      *								   <tr><td><b>"rss"</b></td><td>the source is an xml rss feed</td></tr>
      *								   </table> 
-     * @type Data.Object
+     * @type {Data.Object}
      * @example
      * // load the data table defined by a JSON object named response and get the values of one column 
      *
      * table = Data.import({"source":response,"type":"json"});
      *
      * var a = table.column("column name").values();
-     * @return A new Table object
+     * @returns A new Table object
      */
 
     Data.Import = function (options) {
@@ -288,8 +286,8 @@ $Log:data.js,v $
      *								   <tr><td><b>"jsonDB"</b></td><td>the source is in ixmaps internal data table format</td></tr>
      *								   <tr><td><b>"rss"</b></td><td>the source is an xml rss feed</td></tr>
      *								   </table> 
-     * @type Data.Feed
-     * @return a new Data.Feed object
+     * @type {Data.Feed}
+     * @returns a new Data.Feed object
      * @example
      * var szUrl = "https://raw.githubusercontent.com/emergenzeHack/terremotocentro/master/_data/issues.csv";
      * var myfeed = new Data.Feed("Segnalazioni",{"source":szUrl,"type":"csv"}).load(function(mydata){
@@ -323,9 +321,9 @@ $Log:data.js,v $
 
         /**
          * load the data from the source specified in the Data.Feed instance and call a user defined callback function on success
-         * @param {function} function(data) the function to call when data is successfully loaded<br> it receives a Data.Table object with the loaded data
-         * @type object
-         * @return the {@link Data.Feed} object
+         * @param {function} function(data) the function to call when data is successfully loaded<br> it receives a {Data.Table} object with the loaded data
+         * @type {Object}
+         * @returns the {@link Data.Feed} object
          * @example
          * var szUrl = "https://raw.githubusercontent.com/emergenzeHack/terremotocentro/master/_data/issues.csv";
          * var myfeed = Data.feed({"source":szUrl,"type":"csv"}).load(function(mydata){
@@ -390,8 +388,8 @@ $Log:data.js,v $
         /**
          * define a function to handle a loading error
          * @param {function} function(errorText) a user defined function to call when an error occurs
-         * @type object
-         * @return the {@link Data.Feed} object
+         * @type {Object}
+         * @returns the {@link Data.Feed} object
          * @example
          * var myfeed = Data.feed("Segnalazioni",{"source":szUrl,"type":"csv"})
          *
@@ -547,7 +545,7 @@ $Log:data.js,v $
         if (typeof (script) == "string") {
             var name = opt.source.split(/\//).pop();
             name = name.split(/\./)[0];
-            loadedTable = eval(name);
+            loadedTable = (typeof window !== "undefined" ? window[name] : global[name]);
         } else {
             loadedTable = opt.source;
         }
@@ -607,11 +605,11 @@ $Log:data.js,v $
      * Parses the loaded CSV text data and creates a data object.
      *
      * @param {string} csv - The CSV text string.
-     * @param {object} opt - Optional options.
+     * @param {Object} opt - Optional options.
      * @param {function} [opt.callback] - A callback function to receive the raw parsed data.
-     * @param {object} [opt.parser] - Papa Parse options.
+     * @param {Object} [opt.parser] - Papa Parse options.
      * @param {function} [opt.error] - A callback function to handle parsing errors.
-     * @param {object} [opt.options] - Additional options (e.g., name).
+     * @param {Object} [opt.options] - Additional options (e.g., name).
      * @param {string} [opt.type] - The data type (e.g., "csv").
      * @returns {boolean} - Returns false if there's an error or a callback is defined.
      */
@@ -753,10 +751,6 @@ $Log:data.js,v $
 
         if (opt.format == "xml") {
 
-            var layerset = null;
-            var layer = null;
-            var fonte = null;
-
             if ($(data).find('rss').length) {
                 this.__parseRSSData(data, opt);
             } else
@@ -782,19 +776,9 @@ $Log:data.js,v $
 
         if (opt.format == "xml") {
 
-            var layerset = null;
-            var layer = null;
-            var fonte = null;
-
-            var channelLat = null;
-            var channelLng = null;
-
-            var version = $(data).find('rss').attr("version");
-
             $(data).find('channel').each(function () {
 
                 var dataA = [];
-                var count = 0;
                 var childNamesA = null;
 
                 $(data).find('item').each(function () {
@@ -819,7 +803,7 @@ $Log:data.js,v $
 
                     // make one item values
                     var row = [];
-                    for (var i = 0; i < childNamesA.length; i++) {
+                    for (let i = 0; i < childNamesA.length; i++) {
                         if (childNamesA[i] == "enclosure") {
                             row.push(($(this).find(childNamesA[i] + ':first').attr("url")) || "");
                         } else {
@@ -881,10 +865,6 @@ $Log:data.js,v $
 
         if (opt.format == "xml") {
 
-            var layerset = null;
-            var layer = null;
-            var fonte = null;
-
             if ($(data).find('kml').length) {
                 this.__parseKMLData(data, opt);
             } else {
@@ -906,14 +886,6 @@ $Log:data.js,v $
 
         if (opt.format == "xml") {
 
-            var layerset = null;
-            var layer = null;
-            var fonte = null;
-
-            var channelLat = null;
-            var channelLng = null;
-
-            var version = $(data).find('kml').attr("xmlns");
             var document = $(data).find('Document');
 
             var dataA = [];
@@ -1103,14 +1075,14 @@ $Log:data.js,v $
             var columns = data.data.columns;
             var rows = data.data.rows;
 
-            for (var i in columns) {
+            for (const i in columns) {
                 row.push(columns[i]);
             }
             dataA.push(row);
 
-            for (var i = 0; i < rows.length; i++) {
+            for (let i = 0; i < rows.length; i++) {
                 row = [];
-                for (var ii in rows[0]) {
+                for (const ii in rows[0]) {
                     row.push(rows[i][ii]);
                 }
                 dataA.push(row);
@@ -1157,7 +1129,7 @@ $Log:data.js,v $
                 let dataA = [];
                 dataA.push(["unknown type"]);
                 let scriptA = script.split('\n');
-                for (var i in scriptA){
+                for (let i in scriptA){
                     dataA.push([scriptA[i]]);
                 }
                 this.__createDataTableObject(dataA, "json", opt); 
@@ -1168,7 +1140,7 @@ $Log:data.js,v $
             dataA.push(__getNestedPaths(data[0]));
 
             // create data rows
-            for (var i = 0; i < data.length; i++) {
+            for (let i = 0; i < data.length; i++) {
                 dataA.push(__extractValuesRecursive(data[i], data[0]));
             }
         }
@@ -1290,6 +1262,7 @@ $Log:data.js,v $
                 this.__createDataTableObject([], "json", opt);
             }
         } else {
+
             data = script;
         }
         this.data = data;
@@ -1300,26 +1273,26 @@ $Log:data.js,v $
 
         if (data && data.features && data.features.length) {
 
-            for (i = 0; i < data.features.length; i++) {
-                for (var p in data.features[i].properties) {
+            for (let i = 0; i < data.features.length; i++) {
+                for (const p in data.features[i].properties) {
                     if (typeof data.features[i].properties[p] === "string" || typeof data.features[i].properties[p] === "number") {
                         columns[p] = true;
                     } else {
-                        for (var pp in data.features[i].properties[p]) {
+                        for (const pp in data.features[i].properties[p]) {
                             columns[p + "." + pp] = true;
                         }
                     }
                 }
             }
-            for (var p in columns) {
+            for (const p in columns) {
                 row.push(p);
             }
             row.push("geometry");
             dataA.push(row);
 
-            for (var i = 0; i < data.features.length; i++) {
+            for (let i = 0; i < data.features.length; i++) {
                 row = [];
-                for (p = 0; p < dataA[0].length - 1; p++) {
+                for (let p = 0; p < dataA[0].length - 1; p++) {
                     var xA = dataA[0][p].split(".");
                     if (xA.length >= 2) {
                         row.push(data.features[i].properties[xA[0]][xA[1]] || "");
@@ -1397,7 +1370,7 @@ $Log:data.js,v $
                 break;
             }
 
-        for (var i in topoObject.features) {
+        for (const i in topoObject.features) {
             topoObject.features[i].properties.id = topoObject.features[i].id;
         }
 
@@ -1455,8 +1428,8 @@ $Log:data.js,v $
      *             ]
      * }
      * @constructor
-     * @type Data.Table
-     * @return A new Data.Table object<br><br>in the following the methods of the Data.Table to read and process the data
+     * @type {Data.Table}
+     * @returns A new Data.Table object<br><br>in the following the methods of the Data.Table to read and process the data
      */
 
     Data.Table = function (table) {
@@ -1479,15 +1452,15 @@ $Log:data.js,v $
         /**
          * get the data of a Data.Table as 2d array
          * first row are the column names
-         * @type Array
-         * @return table as array of arrays
+         * @type {Array}
+         * @returns table as array of arrays
          */
         getArray: function () {
             var dataA = [[]];
-            for (var i in this.fields) {
+            for (const i in this.fields) {
                 dataA[0].push(this.fields[i].id);
             }
-            for (var i = 0; i < this.records.length; i++) {
+            for (let i = 0; i < this.records.length; i++) {
                 dataA.push(this.records[i]);
             }
             return dataA;
@@ -1497,14 +1470,14 @@ $Log:data.js,v $
          * set the data of a Data.Table by a given 2d array
          * first row must be the column names
          * @param {Array} dataA a 2 dimensionale array with the table data<br>first row must contain the column names
-         * @type Data.Table
+         * @type {Data.Table}
          * @return itself
          */
         setArray: function (dataA) {
             // first row of data => object.fields
             // ------------
             this.fields = [];
-            for (var a in dataA[0]) {
+            for (const a in dataA[0]) {
                 this.fields.push({
                     id: (dataA[0][a] || " ").trim(),
                     typ: 0,
@@ -1518,7 +1491,7 @@ $Log:data.js,v $
 
             // set records checking length
             this.records = [];
-            for (var r in dataA) {
+            for (const r in dataA) {
                 if (dataA[r].length == this.fields.length) {
                     this.records.push(dataA[r]);
                 }
@@ -1532,12 +1505,12 @@ $Log:data.js,v $
 
         /**
          * revert the rows of a data table
-         * @type Data.Table
-         * @return the reverted table
+         * @type {Data.Table}
+         * @returns the reverted table
          */
         revert: function () {
             var records = [];
-            for (var i = this.records.length - 1; i >= 0; i--) {
+            for (let i = this.records.length - 1; i >= 0; i--) {
                 records.push(this.records[i]);
             }
             this.records = records;
@@ -1546,12 +1519,12 @@ $Log:data.js,v $
 
         /**
          * reverse the rows of a data table
-         * @type Data.Table
+         * @type {Data.Table}
          * @return the reversed table
          */
         reverse: function () {
             var records = [];
-            for (var i = this.records.length - 1; i >= 0; i--) {
+            for (let i = this.records.length - 1; i >= 0; i--) {
                 records.push(this.records[i]);
             }
             this.records = records;
@@ -1560,12 +1533,12 @@ $Log:data.js,v $
 
         /**
          * get an array of the column names
-         * @type array
-         * @return an array with the column names
+         * @type {Array}
+         * @returns an array with the column names
          */
         columnNames: function () {
             var fieldsA = [];
-            for (var i in this.fields) {
+            for (const i in this.fields) {
                 fieldsA.push(this.fields[i].id);
             }
             return fieldsA;
@@ -1574,9 +1547,9 @@ $Log:data.js,v $
         /**
          * get the index of a column by its name<br>
          * useful if you have the values of one data row as array and want to access a column value
-         * @param {String} columnName the name of the column
-         * @type int
-         * @return {int} the index of the column or null
+         * @param {string} columnName the name of the column
+         * @type {number}
+         * @return {number} the index of the column or null
          */
         columnIndex: function (szColumn) {
             for (var i in this.fields) {
@@ -1590,9 +1563,9 @@ $Log:data.js,v $
         /**
          * get a column object for one column from the Data.Table<br>
          * the column object provides methods to read or map the column values
-         * @param {String} columnName the name of the column to get a handle to
-         * @type {Column}
-         * @return {Column} Data.Column object
+         * @param {string} columnName the name of the column to get a handle to
+         * @type {Data.Column}
+         * @returns {Data.Column} Data.Column object
          * @example
          * var myfeed = new Data.Feed("Segnalazioni",{"source":szUrl,"type":"csv"}).load(function(mydata){
          *    var dateArray = mydata.column('created_at').values();
@@ -1613,10 +1586,10 @@ $Log:data.js,v $
 
         /**
          * get an associative array of the values of two columns like array[String(lookup column value)] = value
-         * @param {String} szValue the name of the value column
-         * @param {String} szLookup the name of the lookup value column
-         * @type array
-         * @return {array} associative array for lookup
+         * @param {string} szValue the name of the value column
+         * @param {string} szLookup the name of the lookup value column
+         * @type {Array}
+         * @return {Array} associative array for lookup
          * @example
          * id           nome
          * -------------------------------------------
@@ -1662,16 +1635,16 @@ $Log:data.js,v $
             var idA = this.column(szLookup).values();
             var valueA = this.column(szValue).values();
             if (calc == "sum") {
-                for (var i in idA) {
+                for (const i in idA) {
                     lookupA[String(idA[i])] = (lookupA[String(idA[i])] || 0) + valueA[i];
                 }
             } else
             if (calc == "max") {
-                for (var i in idA) {
+                for (const i in idA) {
                     lookupA[String(idA[i])] = Math.max(lookupA[String(idA[i])] || 0, valueA[i]);
                 }
             } else {
-                for (var i in idA) {
+                for (const i in idA) {
                     lookupA[String(idA[i])] = valueA[i];
                 }
             }
@@ -1680,11 +1653,12 @@ $Log:data.js,v $
 
         /**
          * get an associative array of the values of two columns like array[String(lookup column value)] = value
-         * only for string values, creates aggregated string of multiple values 
-         * @param {String} szValue the name of the value column
-         * @param {String} szLookup the name of the lookup value column
-         * @type array
-         * @return {array} associative array for lookup
+         * in difference to lookupArray, this method creates a concatenated string in case of multiple values
+         * only for string values, creates a comma separated risultive string 
+         * @param {string} szValue the name of the value column
+         * @param {string} szLookup the name of the lookup value column
+         * @type {Array}
+         * @returns {Array} associative array for lookup
          * @example
          * id           nome
          * -------------------------------------------
@@ -1724,7 +1698,7 @@ $Log:data.js,v $
 
             var idA = this.column(szLookup).values();
             var valueA = this.column(szValue).values();
-            for (var i in idA) {
+            for (const i in idA) {
                 //				if (valueA[i]) {
                 lookupA[String(idA[i])] = (lookupA[String(idA[i])] ? (lookupA[String(idA[i])] + ", " + valueA[i]) : valueA[i]);
                 //}
@@ -1735,8 +1709,8 @@ $Log:data.js,v $
         /**
          * get the value of a column cell by the known value of a lookup column
          * @param value the value we know 
-         * @param {object} option a json structure with {value:value column name, lookup:lookup column name} 
-         * @type String
+         * @param {Object} option a json structure with {value:value column name, lookup:lookup column name} 
+         * @type {string}
          * @return the found value 
          */
         lookup: function (value, option) {
@@ -1751,9 +1725,41 @@ $Log:data.js,v $
         },
 
         /**
+         * get a key value array (associative array) with the values of two columns
+         * @param {Object} option a json structure with {key:key column name, value:value column name} 
+         * @type {Array}
+         * @return {Array} associative array with key/value pairs
+         * @example
+         * id           nome
+         * -------------------------------------------
+         * 00000000000  ITALIA
+         * 01000000000  PIEMONTE 1
+         * 01100000000  PIEMONTE 1 - 01
+         * 01110000000  01 TORINO - ZONA STATISTICA 16
+         * 01110812620  TORINO - PIEMONTE 1 - 01 - 01
+         * 01120000000  02 TORINO - ZONA STATISTICA 38
+         * ...
+         *
+         * // create assoc.array with id ==> nome from camera_geopolitico_italia.csv (id == ELIGENDO_C_UID_CI)
+         * var nomeA = camera_geopolitico_italia.toKeyValue({key:"id", value:"nome"});
+         *
+         * ['00000000000']="ITALIA";
+         * ['01000000000']="PIEMONTE 1";
+         * ['01100000000']="PIEMONTE 1 - 01";
+         * ['01110000000']="01 TORINO - ZONA STATISTICA 16";
+         * ['01110812620']="TORINO - PIEMONTE 1 - 01 - 01";
+         * ['01120000000']="02 TORINO - ZONA STATISTICA 38";
+         * ...
+         *
+         */
+        toKeyValue: function (option) {
+            return this.lookupArray(option.value, option.key);
+        },
+
+        /**
          * creates a new column based on existing ones<br>
          * the values of the new column are defined by a user function, which receives data from the actual row and must returns the new value
-         * @param {object} options the creation parameter
+         * @param {Object} options the creation parameter
          *								   <table border='0' style='border-left: 1px solid #ddd;'>	
          *								   <tr><th>property</th><th>description</th></tr>
          *								   <tr><td><b>"source"</b></td><td>[optional] the name of the source column </td></tr>
@@ -1769,7 +1775,7 @@ $Log:data.js,v $
          *  It is called for every row of the table and receives as parameter the value
          *  of the source column, or, if no source column defined, an array of all values of the table row.
          * @type {Data.Table}
-         * @return {Data.Table} the enhanced table
+         * @returns {Data.Table} the enhanced table
          * @example
          *    mydata = mydata.addColumn({'source':'created_at','destination':'date'},
          *        function(value){
@@ -1786,7 +1792,7 @@ $Log:data.js,v $
             }
             var column = null;
             if (options.source) {
-                for (var i in this.fields) {
+                for (const i in this.fields) {
                     if (this.fields[i].id == options.source) {
                         column = i;
                     }
@@ -1807,21 +1813,21 @@ $Log:data.js,v $
             // add new column values
             // ---------------------
             if (callback && (typeof (callback) == "function")) {
-                for (var j in this.records) {
+                for (const j in this.records) {
                     this.records[j].push((column != null) ? callback(this.records[j][column],this.records[j]) : callback(this.records[j]));
                 }
             } else
             if (callback && (typeof (callback) == "object")) {
-                for (var j in this.records) {
+                for (const j in this.records) {
                     this.records[j].push(callback[j] || 0);
                 }
             } else
             if (options.values && (typeof (options.values) == "object")) {
-                for (var j in this.records) {
+                for (const j in this.records) {
                     this.records[j].push(options.values[j] || 0);
                 }
             } else {
-                for (var j in this.records) {
+                for (const j in this.records) {
                     this.records[j].push(0);
                 }
             }
@@ -1832,7 +1838,7 @@ $Log:data.js,v $
         /**
          * adds a row to the data<br>
          * the values of columns are defined by a JSON Object, which defines values for selected columns; non defined columns are set to ' '
-         * @param {object} options the creation parameter
+         * @param {Object} options the creation parameter
          *								   <table border='0' style='border-left: 1px solid #ddd;'>	
          *								   <tr><th>property</th><th>description</th></tr>
          *								   <tr><td><b>"column name"</b></td><td>value</td></tr>
@@ -1851,7 +1857,7 @@ $Log:data.js,v $
             }
             // create new empty row
             var row = [];
-            for (var i in this.fields) {
+            for (const i in this.fields) {
                 row.push("");
             }
             // set user values
@@ -1872,8 +1878,8 @@ $Log:data.js,v $
         /**
          * filter rows from a dbtable objects data by callback
          * @param {function} the user defined filter function, must return 0 or 1 
-         * @type Data.Table
-         * @return {Table}
+         * @type {Data.Table}
+         * @returns {Data.Table}
          * @example
          *    mydata.filter(
          *        function(row){
@@ -1884,7 +1890,7 @@ $Log:data.js,v $
 
             this.selection = new Data.Table();
 
-            for (var j in this.records) {
+            for (const j in this.records) {
                 if (callback && callback(this.records[j])) {
                     this.selection.records.push(this.records[j]);
                     this.selection.table.records++;
@@ -1897,7 +1903,7 @@ $Log:data.js,v $
 
         /**
          * select rows from a dbtable objects data by SQL query
-         * @param {String} szSelection the selection query string<br>WHERE "<em>column name</em>" [operator] "<em>selection value</em>" 
+         * @param {string} szSelection the selection query string<br>WHERE "<em>column name</em>" [operator] "<em>selection value</em>" 
          *<table class="w3-table-all notranslate">
          * <tr>
          *    <th style="width:20%">Operator</th>
@@ -1944,8 +1950,8 @@ $Log:data.js,v $
          *   <td>To specify multiple possible values for a column;<br> example: WHERE "<em>column</em>" IN "<em>value1,value2,value3</em>"</td>
          *  </tr>
          *</table>
-         * @type Data.Table
-         * @return Data.Table object with the selection result in dbTable format
+         * @type {Data.Table}
+         * @returns {Data.Table} object with the selection result in dbTable format
          * @example
          * var mydata   =  mydata.select('WHERE description like "montana"');
          * var ageTotal = rawdata.select('WHERE "Age" = "Total" AND "SEX" = "MW" AND "Series" = "Labour force participation rate"');
@@ -1965,7 +1971,7 @@ $Log:data.js,v $
                     var szTokenA = szSelection.split('WHERE')[1].trim().split(' ');
 
                     // test for quotes and join the included text parts
-                    for (var ii = 0; ii < szTokenA.length; ii++) {
+                    for (let ii = 0; ii < szTokenA.length; ii++) {
                         if (szTokenA[ii].length) {
                             if ((szTokenA[ii][0] == '"') && (szTokenA[ii][szTokenA[ii].length - 1] != '"')) {
                                 do {
@@ -2015,7 +2021,7 @@ $Log:data.js,v $
                         if (nToken) {
 
                             // get data table column index for query field
-                            for (var ii = 0; ii < this.fields.length; ii++) {
+                            for (let ii = 0; ii < this.fields.length; ii++) {
                                 if (this.fields[ii].id == filterObj.szSelectionField) {
                                     filterObj.nFilterFieldIndex = ii;
                                 }
@@ -2054,7 +2060,7 @@ $Log:data.js,v $
 
                 this.selection = new Data.Table();
 
-                for (var i in this.filterQueryA) {
+                for (const i in this.filterQueryA) {
                     if (typeof this.filterQueryA[i].nFilterFieldIndex === "undefined") {
                         this.selection.fields = this.fields.slice();
                         this.selection.table.fields = this.table.fields;
@@ -2063,11 +2069,11 @@ $Log:data.js,v $
                     }
                 }
 
-                for (var j in this.records) {
+                for (const j in this.records) {
 
                     var allResult = null;
 
-                    for (var i in this.filterQueryA) {
+                    for (const i in this.filterQueryA) {
 
                         var result = true;
                         // get the value to test
@@ -2111,23 +2117,30 @@ $Log:data.js,v $
                             if (this.__szSelectionValue == "*") {
                                 result = this.__szValue.length;
                             } else {
-                                result = eval("this.__szValue.match(/" + this.__szSelectionValue.replace(/\//gi, '\\/') + "/i)");
+                                // Escape regex special characters in the value
+                                let pattern = this.__szSelectionValue.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+                                let regex = new RegExp(pattern, "i");
+                                result = regex.test(this.__szValue);
                             }
                         } else
                         if (this.__szSelectionOp == "NOT") {
-                            result = !eval("this.__szValue.match(/" + this.__szSelectionValue.replace(/\//gi, '\\/') + "/i)");
+                            let pattern = this.__szSelectionValue.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+                            let regex = new RegExp(pattern, "i");
+                            result = !regex.test(this.__szValue);
                         } else
                         if (this.__szSelectionOp == "IN") {
-                            result = eval("this.__szSelectionValue.match(/\\(" + this.__szValue + "\\,/)") ||
-                                eval("this.__szSelectionValue.match(/\\," + this.__szValue + "\\,/)") ||
-                                eval("this.__szSelectionValue.match(/\\," + this.__szValue + "\\)/)");
+                            // Assume values are comma-separated
+                            let values = this.__szSelectionValue.split(",").map(v => v.trim());
+                            result = values.includes(this.__szValue);
                         } else
                         if ((this.__szSelectionOp == "BETWEEN")) {
                             result = ((nValue >= Number(this.__szSelectionValue)) &&
                                 (nValue <= Number(this.__szSelectionValue2)));
                         } else {
-                            // default operator	
-                            result = eval("this.__szValue.match(/" + this.__szSelectionValue.replace(/\//gi, '\\/') + "/i)");
+                            // default operator
+                            let pattern = this.__szSelectionValue.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+                            let regex = new RegExp(pattern, "i");
+                            result = regex.test(this.__szValue);
                         }
                         if (this.__szCombineOp == "AND") {
                             allResult = (allResult && result);
@@ -2150,10 +2163,10 @@ $Log:data.js,v $
          * aggregate the values of one column for the unique values of one or more other columns<br>
          * usefull to transform journals with more than one qualifying column (time, product class, ...)<br>
          * into something like a pivot table 
-         * @param {String} valueColumn the value source
-         * @param {String} aggregateColumn the aggregation leads; more than one column can be defined with seperator '|'<br>example: "month|type"
-         * @type Data.Table
-         * @return Data.Table object with the aggregation result in dbTable format
+         * @param {string} valueColumn the value source
+         * @param {string} aggregateColumn the aggregation leads; more than one column can be defined with seperator '|'<br>example: "month|type"
+         * @type {Data.Table}
+         * @returns {Data.Table} object with the aggregation result in dbTable format
          * @example
          *  myData.aggregate("value","month|type");
          *	     
@@ -2194,8 +2207,8 @@ $Log:data.js,v $
 
             var nValueIndex = null;
 
-            for (var i = 0; i < szAggregateA.length; i++) {
-                for (var ii = 0; ii < this.fields.length; ii++) {
+            for (let i = 0; i < szAggregateA.length; i++) {
+                for (let ii = 0; ii < this.fields.length; ii++) {
                     if (this.fields[ii].id == szAggregateA[i]) {
                         nAggregateIndexA[i] = ii;
                     }
@@ -2209,9 +2222,9 @@ $Log:data.js,v $
 
             xRecords = [];
             xCount = [];
-            for (var j in this.records) {
+            for (const j in this.records) {
                 xField = "";
-                for (var i = 0; i < nAggregateIndexA.length; i++) {
+                for (let i = 0; i < nAggregateIndexA.length; i++) {
                     xField += this.records[j][nAggregateIndexA[i]];
                 }
                 if (xRecords[xField]) {
@@ -2228,7 +2241,7 @@ $Log:data.js,v $
                 }
             }
 
-            for (var j in xRecords) {
+            for (const j in xRecords) {
                 if (mean) {
                     xRecords[j][nAggregateIndexA.length] /= xCount[j][nAggregateIndexA.length];
                 }
@@ -2237,7 +2250,7 @@ $Log:data.js,v $
             }
 
             var fields = [];
-            for (var i = 0; i < szAggregateA.length; i++) {
+            for (let i = 0; i < szAggregateA.length; i++) {
                 fields[i] = {
                     id: szAggregateA[i]
                 };
@@ -2256,10 +2269,10 @@ $Log:data.js,v $
          * condense (aggregate) the rows of a table by the unique values of one column <br>
          * sums the numeric values of the rows with the same leed column value<br>
          * don't sum the values of columns defined as 'keep' in the 'option'
-         * @param {String} leadColumn the column of the values to make unique
+         * @param {string} leadColumn the column of the values to make unique
          * @param {Object} option parameter
-         * @type Data.Table
-         * @return the condensed table
+         * @type {Data.Table}
+         * @returns the condensed table
          * @example
          *  data.condense({lead:'name',keep:'codice'});
          *
@@ -2305,11 +2318,11 @@ $Log:data.js,v $
                     }
             }
             var __newRecords = [];
-            for (var j = 0; j < this.records.length; j++) {
+            for (let j = 0; j < this.records.length; j++) {
                 var szTest = String(this.records[j][uniqueIndex]);
                 if (uniqueA[szTest] != null) {
                     var k = uniqueA[szTest];
-                    for (var v in this.records[j]) {
+                    for (const v in this.records[j]) {
                         if (!keepIndexA[v]) {
                             if (!isNaN(this.records[j][v])) {
                                 if (option && option.calc == "max") {
@@ -2343,14 +2356,14 @@ $Log:data.js,v $
         /**
          * creates a new column based on existing ones<br>
          * the values of the new column are the sum of the source columns
-         * @param {object} options the creation parameter
+         * @param {Object} options the creation parameter
          *								   <table border='0' style='border-left: 1px solid #ddd;'>	
          *								   <tr><th>property</th><th>description</th></tr>
          *								   <tr><td><b>"source"</b></td><td>the name of the source columns </td></tr>
          *								   <tr><td><b>"destination"</b></td><td>the name of the new colmn to create</td></tr>
          *								   </table> 
          * @type {Data.Table}
-         * @return {Data.Table} the enhanced table
+         * @returns {Data.Table} the enhanced table
          * @example
          *    mydata = mydata.groupColumns({'source':['col_1','col_2'],'destination':'col_sum'});
          *
@@ -2359,14 +2372,14 @@ $Log:data.js,v $
 
             var sourceA = options.source;
             var iA = [];
-            for (var i in sourceA) {
+            for (const i in sourceA) {
                 iA[i] = this.column(sourceA[i]).index;
             }
             this.addColumn({
                 destination: options.destination
             }, function (row) {
                 var value = 0;
-                for (var i in iA) {
+                for (const i in iA) {
                     value += Number(row[iA[i]]);
                 }
                 return value;
@@ -2405,8 +2418,8 @@ $Log:data.js,v $
          *         if '1', count the cases of the cols topicsthan</td>
          *  </tr>
          *</table>
-         * @type Data.Table
-         * @return the pivot table
+         * @type {Data.Table}
+         * @returns the pivot table
          * @example
          * 
          * // we have a table 'scrutini' with election results like:
@@ -2459,33 +2472,33 @@ $Log:data.js,v $
             // make field indices
 
             var indexA = [];
-            for (var i = 0; i < this.fields.length; i++) {
+            for (let i = 0; i < this.fields.length; i++) {
                 indexA[String(this.fields[i].id)] = i;
             }
 
             // check the source columns
 
-            for (i in options.lead) {
+            for (const i in options.lead) {
                 if (typeof (indexA[options.lead[i]]) == 'undefined') {
                     _alert("data.pivot - pivot keep column '" + options.lead[i] + "' not found");
                 }
             }
-            for (i in options.cols) {
+            for (const i in options.cols) {
                 if (options.cols && (typeof (indexA[options.cols[i]]) == 'undefined')) {
                     _alert("data.pivot - pivot columns source column '" + options.cols[i] + "' not found");
                 }
             }
-            for (i in options.keep) {
+            for (const i in options.keep) {
                 if (typeof (indexA[options.keep[i]]) == 'undefined') {
                     _alert("data.pivot - pivot keep column '" + options.keep[i] + "' not found");
                 }
             }
-            for (i in options.sum) {
+            for (const i in options.sum) {
                 if (typeof (indexA[options.sum[i]]) == 'undefined') {
                     _alert("data.pivot - pivot sum column '" + options.sum[i] + "' not found");
                 }
             }
-            for (i in options.value) {
+            for (const i in options.value) {
                 if (typeof (indexA[options.value[i]]) == 'undefined') {
                     _alert("data.pivot - pivot value column '" + options.value[i] + "' not found");
                 }
@@ -2500,15 +2513,15 @@ $Log:data.js,v $
             // GR 12/03/2023 preset columns with forced columns
 
             if (options.forced) {
-                for (i in options.forced) {
+                for (const i in options.forced) {
                      colA[String(options.forced[i])] = 0;
                 }
             }
 
-            for (var row = 0; row < data.length; row++) {
+            for (let row = 0; row < data.length; row++) {
 
                 var szRow = String(data[row][indexA[options.lead[0]]]);
-                for (var k = 1; k < options.lead.length; k++) {
+                for (let k = 1; k < options.lead.length; k++) {
                     szRow += "|" + data[row][indexA[options.lead[k]]];
                 }
 
@@ -2521,7 +2534,7 @@ $Log:data.js,v $
                     nValue = 1;
                     if (options.value && options.value.length) {
                         nValue = 0;
-                        for (var k = 0; k < options.value.length; k++) {
+                        for (let k = 0; k < options.value.length; k++) {
                             nValue += options.value[k] ? __scanValue(data[row][indexA[options.value[k]]]) : 1;
                         }
                     }
@@ -2536,21 +2549,21 @@ $Log:data.js,v $
                     rowA[szRow] = {
                         "Total": 0
                     };
-                    for (var k = 0; k < options.keep.length; k++) {
+                    for (let k = 0; k < options.keep.length; k++) {
                         rowA[szRow][options.keep[k]] = data[row][indexA[options.keep[k]]];
                     }
-                    for (var k = 0; k < options.sum.length; k++) {
+                    for (let k = 0; k < options.sum.length; k++) {
                         rowA[szRow][options.sum[k]] = Number(data[row][indexA[options.sum[k]]]);
                     }
                 } else {
-                    for (var k = 0; k < options.keep.length; k++) {
+                    for (let k = 0; k < options.keep.length; k++) {
                         if (data[row][indexA[options.keep[k]]] &&
                             data[row][indexA[options.keep[k]]].length &&
                             (rowA[szRow][options.keep[k]] != data[row][indexA[options.keep[k]]])) {
                             rowA[szRow][options.keep[k]] = data[row][indexA[options.keep[k]]];
                         }
                     }
-                    for (var k = 0; k < options.sum.length; k++) {
+                    for (let k = 0; k < options.sum.length; k++) {
                         rowA[szRow][options.sum[k]] += Number(data[row][indexA[options.sum[k]]]);
                     }
                 }
@@ -2572,32 +2585,31 @@ $Log:data.js,v $
             }
             
             this.__pivot = new Data.Table();
-            var pivotTable = this.__pivot.records;
 
             // make first row (table.fields) with column names
             // ------------------------------------------------
 
             // lead
-            for (var k = 0; k < options.lead.length; k++) {
+            for (let k = 0; k < options.lead.length; k++) {
                 this.__pivot.fields.push({
                     id: options.lead[k]
                 });
             }
             // keep
-            for (var k = 0; k < options.keep.length; k++) {
+            for (let k = 0; k < options.keep.length; k++) {
                 this.__pivot.fields.push({
                     id: options.keep[k]
                 });
             }
             // sum
-            for (var k = 0; k < options.sum.length; k++) {
+            for (let k = 0; k < options.sum.length; k++) {
                 this.__pivot.fields.push({
                     id: options.sum[k]
                 });
             }
             // cols
             if (options.cols && options.cols.length)
-            for (var a in colA) {
+            for (const a in colA) {
                 this.__pivot.fields.push({
                     id: a
                 });
@@ -2610,7 +2622,7 @@ $Log:data.js,v $
 
             // make the values
             // ----------------
-            for (var a in rowA) {
+            for (const a in rowA) {
 
                 // collect values per place
                 var valueA = [];
@@ -2618,22 +2630,22 @@ $Log:data.js,v $
                 // lead
                 var leadA = a.split("|");
                 if (options.lead && options.lead.length)
-                for (var k = 0; k < leadA.length; k++) {
+                for (let k = 0; k < leadA.length; k++) {
                     valueA.push(leadA[k]);
                 }
 
                 // keep
-                for (var k = 0; k < options.keep.length; k++) {
+                for (let k = 0; k < options.keep.length; k++) {
                     valueA.push(rowA[a][options.keep[k]]);
                 }
                 // sum
-                for (var k = 0; k < options.sum.length; k++) {
+                for (let k = 0; k < options.sum.length; k++) {
                     valueA.push(rowA[a][options.sum[k]]);
                 }
 
                 // cols
                 if (options.cols && options.cols.length)
-                for (var t in colA) {
+                for (const t in colA) {
                     if (options.calc == "mean") {
                         valueA.push((rowA[a][t] || 0) / (rowA[a][t + "count"] || 1));
                     } else {
@@ -2655,7 +2667,7 @@ $Log:data.js,v $
         /**
          * creates a sub table <br>
          * which only contains the specified columns
-         * @param options {object} the subtable columns definition; use either 'columns' or 'fields'
+         * @param options {Object} the subtable columns definition; use either 'columns' or 'fields'
          *<table class="w3-table-all notranslate">
          * <tr>
          *    <th style="width:20%">Property</th>
@@ -2670,8 +2682,8 @@ $Log:data.js,v $
          *    <td>array of column names</td>
          *  </tr>
          *</table>
-         * @type Data.Table
-         * @return the generated sub table
+         * @type {Data.Table}
+         * @returns the generated sub table
          * @example
          * subTable = table.subtable({"columns":[1,2,3]});
          * @example
@@ -2683,8 +2695,8 @@ $Log:data.js,v $
 
             if (options.fields) {
                 options.columns = [];
-                for (var i = 0; i < options.fields.length; i++) {
-                    for (var ii = 0; ii < this.fields.length; ii++) {
+                for (let i = 0; i < options.fields.length; i++) {
+                    for (let ii = 0; ii < this.fields.length; ii++) {
                         if (this.fields[ii].id == options.fields[i]) {
                             options.columns.push(ii);
                         }
@@ -2692,16 +2704,15 @@ $Log:data.js,v $
                 }
             }
 
-            var indexA = [];
-            for (var i = 0; i < options.columns.length; i++) {
+            for (let i = 0; i < options.columns.length; i++) {
                 this.__subt.fields.push({
                     id: String(this.fields[options.columns[i]].id)
                 });
                 this.__subt.table.fields++;
             }
-            for (var j in this.records) {
+            for (const j in this.records) {
                 var records = [];
-                for (var i = 0; i < options.columns.length; i++) {
+                for (let i = 0; i < options.columns.length; i++) {
                     records.push(this.records[j][options.columns[i]]);
                 }
                 this.__subt.records.push(records);
@@ -2712,28 +2723,28 @@ $Log:data.js,v $
 
         /**
          * sort the rows of a data table by values of a given column
-         * @param {String} sortColumn the column by which values to sort the table
-         * @type Data.Table
-         * @return the sorted table
+         * @param {string} sortColumn the column by which values to sort the table
+         * @type {Data.Table}
+         * @returns the sorted table
          */
         sort: function (szColumn, szFlag) {
             var valuesA = this.column(szColumn).values();
             var number = 0;
-            for (var i = 0; i < Math.min(valuesA.length,10); i++) {
+            for (let i = 0; i < Math.min(valuesA.length,10); i++) {
                  if (!isNaN(parseFloat(String(valuesA[i]).replace(",",".")))){
                     number++;
                 }
             }
             var sortA = [];
             if (number){
-                for (var i = 0; i < valuesA.length; i++) {
+                for (let i = 0; i < valuesA.length; i++) {
                     sortA.push({
                         index: i,
                         value: Number(String(valuesA[i]).replace(",","."))
                     });
                 }
             }else{
-                 for (var i = 0; i < valuesA.length; i++) {
+                 for (let i = 0; i < valuesA.length; i++) {
                     sortA.push({
                         index: i,
                         value: valuesA[i]
@@ -2750,7 +2761,7 @@ $Log:data.js,v $
                 });
             }
             var records = [];
-            for (var i = 0; i < sortA.length; i++) {
+            for (let i = 0; i < sortA.length; i++) {
                 records.push(this.records[sortA[i].index]);
             }
             this.records = records;
@@ -2761,20 +2772,20 @@ $Log:data.js,v $
          * appends the rows of a data table to the actual table<br>
          * ! <b>important</b>: the structure of both tables must be identical, i.e. same column count and names
          * @param {Data.Table} sourceTable table the source of the rows to append
-         * @type Data.Table
-         * @return the extended table
+         * @type {Data.Table}
+         * @returns the extended table
          */
         append: function (sourceTable) {
             if (this.table.fields.length != sourceTable.table.fields.length) {
                 return null;
             }
-            for (var i = 0; i < this.table.fields.length; i++) {
+            for (let i = 0; i < this.table.fields.length; i++) {
                 if (this.table.fields[i].id != sourceTable.table.fields[i].id) {
                     return null;
                 }
             }
             var records = sourceTable.records;
-            for (var i = 0; i < records.length; i++) {
+            for (let i = 0; i < records.length; i++) {
                 this.records.push(records[i]);
             }
             this.table.records = this.records.length;
@@ -2790,9 +2801,9 @@ $Log:data.js,v $
         json: function () {
 
             this.__json = [];
-            for (var r in this.records) {
+            for (const r in this.records) {
                 var row = {};
-                for (var c in this.fields) {
+                for (const c in this.fields) {
                     row[String(this.fields[c].id)] = this.records[r][c];
                 }
                 this.__json.push(row);
@@ -2836,8 +2847,8 @@ $Log:data.js,v $
      * <br>
      * @param data the input tabel (array of arrarys)
      * @param options generation options
-     * @type array
-     * @return the pivot table
+     * @type {Array}
+     * @returns the pivot table
      * @example
      * <br><br>
      * <strong>options definition object:</strong>
@@ -2855,7 +2866,7 @@ $Log:data.js,v $
             return null;
         }
 
-        for (var column in this.fields) {
+        for (const column in this.fields) {
             if (this.fields[column].id == options.source) {
 
                 // make fields object
@@ -2865,7 +2876,7 @@ $Log:data.js,v $
                 var timeCollA = options.create || ['date', 'year', 'month', 'day', 'hour'];
 
                 // add new time columns 
-                for (var i = 0; i < timeCollA.length; i++) {
+                for (let i = 0; i < timeCollA.length; i++) {
                     this.fields.push({
                         id: String(timeCollA[i])
                     });
@@ -2916,7 +2927,7 @@ $Log:data.js,v $
      * <p>it provides ther methods to access or process the values of one column of the data table</p>
      * @class It realizes an object to hold a table column
      * @constructor
-     * @return A new Data.Column object
+     * @returns A new Data.Column object
      * @example
      *    var myColumn = mydata.column('timestamp');
      */
@@ -2931,14 +2942,14 @@ $Log:data.js,v $
         /**
          * get the values of the column
          * <br>
-         * @type array
-         * @return {array} an array with the values of the column
+         * @type {Array}
+         * @returns {Array} an array with the values of the column
          * @example
          *    var sumArray = mydata.column('total').values();
          */
         values: function () {
             this.valueA = [];
-            for (var i in this.table.records) {
+            for (const i in this.table.records) {
                 this.valueA.push(this.table.records[i][this.index]);
             }
             return this.valueA;
@@ -2947,14 +2958,14 @@ $Log:data.js,v $
         /**
          * get the values of the column
          * <br>
-         * @type array
-         * @return {array} an array with the values of the column
+         * @type {Array}
+         * @returns {Array} an array with the values of the column
          * @example
          *    var sumArray = mydata.column('total').values();
          */
         uniqueValues: function () {
             this.valueA = [];
-            for (var i in this.table.records) {
+            for (const i in this.table.records) {
                 this.valueA.push(this.table.records[i][this.index]);
             }
             return this.valueA.filter(__onlyUnique);
@@ -2964,7 +2975,7 @@ $Log:data.js,v $
          * map the values of the column
          * @param {function} function(currVal) the user function to map the column values
          * @type void
-         * @return {Column}
+         * @returns {Data.Column}
          * @example
          *    mydata.column('timestamp').map(
          *        function(value){
@@ -2976,7 +2987,7 @@ $Log:data.js,v $
 
             // make new record values 
             // ----------------------
-            for (var j in this.table.records) {
+            for (const j in this.table.records) {
                 // query new column value by callback
                 this.table.records[j][this.index] = callback(this.table.records[j][this.index], this.table.records[j], this.index);
             }
@@ -2986,9 +2997,9 @@ $Log:data.js,v $
 
         /**
          * rename the column
-         * @param {Sting} szName the new column name
+         * @param {string} szName the new column name
          * @type void
-         * @return {Column}
+         * @returns {Data.Column}
          * @example
          *    mydata.column('timestamp').rename('time');
          */
@@ -3001,14 +3012,14 @@ $Log:data.js,v $
         /**
          * remove the column
          * @type void
-         * @return {Column}
+         * @returns {Data.Column}
          * @example
          *    mydata.column('timestamp').remove();
          */
         remove: function () {
 
             this.table.fields.splice(this.index, 1);
-            for (var j in this.table.records) {
+            for (const j in this.table.records) {
                 this.table.records[j].splice(this.index, 1);
             }
             this.table.table.fields--;
@@ -3023,8 +3034,8 @@ $Log:data.js,v $
     /**
      * extract the values of one column from a data table
      * @param szColumn the name of the column to extract from loaded data
-     * @type array
-     * @return column values array or null
+     * @type {Array}
+     * @returns column values array or null
      */
     Data.Feed.prototype.column = function (szColumn) {
         return this.dbtable.column(szColumn);
@@ -3033,8 +3044,8 @@ $Log:data.js,v $
     /**
      * applicate filter to one theme item
      * @param j the index (data row) of the item to check
-     * @type boolean
-     * @return true if item passes the filter
+     * @type {boolean}
+     * @returns true if item passes the filter
      */
     Data.Feed.prototype.select = function (szSelection) {
         return this.dbtable.select(szSelection);
@@ -3043,8 +3054,8 @@ $Log:data.js,v $
     /**
      * aggregate 
      * @param j the index (data row) of the item to check
-     * @type boolean
-     * @return true if item passes the filter
+     * @type {boolean}
+     * @returns true if item passes the filter
      */
     Data.Feed.prototype.aggregate = function (szColumn, szAggregation) {
         return this.dbtable.aggregate(szColumn, szAggregation);
@@ -3053,8 +3064,8 @@ $Log:data.js,v $
     /**
      * revert 
      * @param void
-     * @type feed
-     * @return the reverted feed
+     * @type {Data.Feed}
+     * @returns the reverted feed
      */
     Data.Feed.prototype.revert = function () {
         return this.dbtable.revert();
@@ -3063,8 +3074,8 @@ $Log:data.js,v $
     /**
      * reverse 
      * @param void
-     * @type feed
-     * @return the reversed feed
+     * @type {Data.Feed}
+     * @returns the reversed feed
      */
     Data.Feed.prototype.reverse = function () {
         return this.dbtable.reverse();
@@ -3073,8 +3084,8 @@ $Log:data.js,v $
     /**
      * pivot 
      * @param j the index (data row) of the item to check
-     * @type boolean
-     * @return true if item passes the filter
+     * @type {boolean}
+     * @returns true if item passes the filter
      */
     Data.Feed.prototype.pivot = function (options) {
         return this.dbtable.pivot(options);
@@ -3083,8 +3094,8 @@ $Log:data.js,v $
     /**
      * subtable 
      * @param j the index (data row) of the item to check
-     * @type boolean
-     * @return true if item passes the filter
+     * @type {boolean}
+     * @returns true if item passes the filter
      */
     Data.Feed.prototype.subtable = function (options) {
         return this.dbtable.subtable(options);
@@ -3093,8 +3104,8 @@ $Log:data.js,v $
     /**
      * add time fields to table by a timestamp column 
      * @param options ( see Data.Table.prototype.addTimeColumns )
-     * @type feed
-     * @return the enhanced feed
+     * @type {Data.Feed}
+     * @returns the enhanced feed
      */
     Data.Feed.prototype.addTimeColumns = function (options) {
         return this.dbtable.addTimeColumns(options);
@@ -3113,8 +3124,8 @@ $Log:data.js,v $
      * 
      * @class realizes an object to load <b>one or more</b> data sources
      * @constructor
-     * @type Data.Broker
-     * @return a new Data.Broker object
+     * @type {Data.Broker}
+     * @returns a new Data.Broker object
      * @example
      *	var broker = new Data.Broker()
      *		.addSource("https://raw.githubusercontent.com/ondata/elezionipolitiche2018/master/dati/scrutiniCI_cm.csv","csv")
@@ -3148,8 +3159,8 @@ $Log:data.js,v $
     Data.Broker.prototype = {
         /**
          * add one source to the broker
-         * @param {String} szUrl the url of the data source
-         * @param {String} szType type of the data (csv,...)
+         * @param {string} szUrl the url of the data source
+         * @param {string} szType type of the data (csv,...)
          *								   <table border='0' style='border-left: 1px solid #ddd;'>	
          *								   <tr><td><b>"csv"</b></td><td>the source is 'plain text' formatted as Comma Separated Values<br>delimiter supported: <span style='background:#dddddd'>,</span> and <span style='background:#dddddd'>;</span></td></tr>
          *								   <tr><td><b>"json"</b></td><td>the source is JSON (Javascript Object Notation)</td></tr>
@@ -3157,8 +3168,8 @@ $Log:data.js,v $
          *								   <tr><td><b>"jsonDB"</b></td><td>the source is in ixmaps internal data table format</td></tr>
          *								   <tr><td><b>"rss"</b></td><td>the source is an xml rss feed</td></tr>
          *								   </table> 
-         * @type Data.Broker
-         * @return the Data.Broker object
+         * @type {Data.Broker}
+         * @returns the Data.Broker object
          */
         addSource: function (szUrl, szType) {
             _LOG("Data.Broker.addSource: " + szUrl);
@@ -3176,8 +3187,8 @@ $Log:data.js,v $
          * set the callback function to execute on sucess of all loading.<br>
          * Note: can also be defined as argument of .realize()
          * @param {function(broker)} callback the callback function
-         * @type Data.Broker
-         * @return the Data.Broker object
+         * @type {Data.Broker}
+         * @returns the Data.Broker object
          * @example
          *  function onSuccess(dataA) {
          *      ... do something with the loaded data
@@ -3213,14 +3224,14 @@ $Log:data.js,v $
          */
         realize: function (callback) {
             this.callback = callback || this.callback;
-            for (var i in this.souceQueryA) {
+            for (const i in this.souceQueryA) {
                 if (this.souceQueryA[i].url && !this.souceQueryA[i].result) {
                     this.getData(this.souceQueryA[i]);
                     return this;
                 }
             }
             this.data = [];
-            for (var i in this.souceQueryA) {
+            for (const i in this.souceQueryA) {
                 this.data.push(this.souceQueryA[i].data);
             }
             this.callback(this.data);
@@ -3229,9 +3240,9 @@ $Log:data.js,v $
 
         /**
          * define error function
-         * @param {function(exeption)} onError a user defined function to call when error occurs 
-         * @type Data.Broker
-         * @return the Data.Broker object
+         * @param {function(exception)} onError a user defined function to call when error occurs 
+         * @type {Data.Broker}
+         * @returns the Data.Broker object
          * @example
          *	var broker = new Data.Broker()
          *      .addSource("https://raw.githubusercontent.com/ondata/elezionipolitiche2018/master/dati/scrutiniCI_cm.csv","csv")
@@ -3251,9 +3262,9 @@ $Log:data.js,v $
 
         /**
          * define notify function
-         * @param {function(exeption)} onError a user defined function to call when notify occurs 
-         * @type Data.Broker
-         * @return the Data.Broker object
+         * @param {function(exception)} onError a user defined function to call when notify occurs 
+         * @type {Data.Broker}
+         * @returns the Data.Broker object
          * @example
          *	var broker = new Data.Broker()
          *      .addSource("https://raw.githubusercontent.com/ondata/elezionipolitiche2018/master/dati/scrutiniCI_cm.csv","csv")
@@ -3349,8 +3360,8 @@ $Log:data.js,v $
      * 
      * @class realizes an object to merge <b>two or more</b> data sources
      * @constructor
-     * @type Data.Merger
-     * @return a new Data.Merger object
+     * @type {Data.Merger}
+     * @returns a new Data.Merger object
      * @example
      *	var merger = new Data.Merger()
      *      .addSource(prezzi,{lookup:"idImpianto",columns:["descCarburante","prezzo","isSelf","dtComu"]});
@@ -3373,14 +3384,14 @@ $Log:data.js,v $
     Data.Merger.prototype = {
         /**
          * add one source to the merger
-         * @param {object} source a loaded data.js table object, typically the result of a data.feed 
-         * @param {object} option the merging parameter for this sorce: lookup, columns and label [optional]
+         * @param {Object} source a loaded data.js table object, typically the result of a data.feed 
+         * @param {Object} option the merging parameter for this sorce: lookup, columns and label [optional]
          * @example
          *   .addSource(prezzi,{lookup:"idImpianto",columns:["descCarburante","prezzo","isSelf","dtComu"]});
          * @example
          *   .addSource(prezzi,{lookup:"idImpianto",columns:["descCarburante","prezzo","isSelf","dtComu"],label:["CARB1","PREZZO","SELF","COM"]});
-         * @type Data.Merger
-         * @return the Data.Merger object
+         * @type {Data.Merger}
+         * @returns the Data.Merger object
          */
         addSource: function (source, option) {
             this.sourceA.push({
@@ -3392,8 +3403,8 @@ $Log:data.js,v $
 
         /**
          * define which source columns should be included into the merged table.
-         * @param {array} columnsA a subset of source columns or label you defined by .addSource 
-         * @type Data.Merger
+         * @param {Array} columnsA a subset of source columns or label you defined by .addSource 
+         * @type {Data.Merger}
          * @return the Data.Merger object
          * @example
          *		var merger = new Data.Merger()
@@ -3428,7 +3439,7 @@ $Log:data.js,v $
 
             var indexAA = [];
 
-            for (var i in this.sourceA) {
+            for (const i in this.sourceA) {
 
                 var source = this.sourceA[i];
 
@@ -3451,13 +3462,13 @@ $Log:data.js,v $
                 }
 
                 var index = [];
-                for (var ii in this.sourceA[i].data[0]) {
+                for (const ii in this.sourceA[i].data[0]) {
 
                     if (this.sourceA[i].data[0][ii] == this.sourceA[i].opt.lookup) {
                         index[this.sourceA[i].opt.lookup] = ii;
                     }
 
-                    for (var iii in this.sourceA[i].opt.columns) {
+                    for (const iii in this.sourceA[i].opt.columns) {
                         if (!this.sourceA[i].opt.label[iii]) {
                             this.sourceA[i].opt.label[iii] = this.sourceA[i].opt.columns[iii] + "." + (Number(i) + 1) + "";
                         }
@@ -3467,7 +3478,7 @@ $Log:data.js,v $
                     }
                 }
                 // check completeness
-                for (var iii in this.sourceA[i].opt.columns) {
+                for (const iii in this.sourceA[i].opt.columns) {
                     if (!index[this.sourceA[i].opt.label[iii]]) {
                         _LOG("DataMerger: '" + this.sourceA[i].opt.label[iii] + "' not found");
                     }
@@ -3476,23 +3487,23 @@ $Log:data.js,v $
             }
 
             var labelA = [];
-            for (var i in this.sourceA) {
-                for (var ii in this.sourceA[i].opt.label) {
+            for (const i in this.sourceA) {
+                for (const ii in this.sourceA[i].opt.label) {
                     labelA.push(this.sourceA[i].opt.label[ii]);
                 }
             }
 
             if (!this.outColumnsA) {
                 this.outColumnsA = [];
-                for (i in labelA) {
+                for (const i in labelA) {
                     this.outColumnsA.push(labelA[i]);
                 }
             }
 
             var outColumnsLookupA = [];
-            for (var i in this.outColumnsA) {
-                for (var ii in indexAA) {
-                    for (var iii in indexAA[ii]) {
+            for (const i in this.outColumnsA) {
+                for (const ii in indexAA) {
+                    for (const iii in indexAA[ii]) {
                         if (iii == this.outColumnsA[i]) {
                             outColumnsLookupA[iii] = {
                                 input: ii,
@@ -3503,10 +3514,10 @@ $Log:data.js,v $
                 }
             }
 
-            for (i in this.outColumnsA) {
+            for (const i in this.outColumnsA) {
                 if (!outColumnsLookupA[this.outColumnsA[i]]) {
 
-                    for (var ii in this.sourceA[0].data[0]) {
+                    for (const ii in this.sourceA[0].data[0]) {
                         if (this.sourceA[0].data[0][ii] == this.outColumnsA[i]) {
                             outColumnsLookupA[this.outColumnsA[i]] = {
                                 input: 0,
@@ -3518,9 +3529,9 @@ $Log:data.js,v $
             }
 
             this.namedSourceA = [];
-            for (var i = 1; i < this.sourceA.length; i++) {
+            for (let i = 1; i < this.sourceA.length; i++) {
                 this.namedSourceA[i] = [];
-                for (var ii = 1; ii < this.sourceA[i].data.length; ii++) {
+                for (let ii = 1; ii < this.sourceA[i].data.length; ii++) {
                     this.namedSourceA[i][String(this.sourceA[i].data[ii][indexAA[i][this.sourceA[i].opt.lookup]])] = this.sourceA[i].data[ii];
                 }
             }
@@ -3528,12 +3539,12 @@ $Log:data.js,v $
             var newData = [];
             newData.push(this.outColumnsA);
 
-            for (i = 1; i < this.sourceA[0].data.length; i++) {
+            for (let i = 1; i < this.sourceA[0].data.length; i++) {
                 var lookup = String(this.sourceA[0].data[i][[indexAA[0][this.sourceA[0].opt.lookup]]]);
 
                 var row = [];
 
-                for (var ii in this.outColumnsA) {
+                for (const ii in this.outColumnsA) {
                     var ll = outColumnsLookupA[this.outColumnsA[ii]];
                     if (ll) {
                         if (ll.input == 0) {
@@ -3568,9 +3579,9 @@ $Log:data.js,v $
 
         /**
          * define error function
-         * @param {function(exeption)} onError a user defined function to call when error occurs 
-         * @type Data.Merger
-         * @return the Data.Merger object
+         * @param {function(exception)} onError a user defined function to call when error occurs 
+         * @type {Data.Merger}
+         * @returns the Data.Merger object
          * @example
          *	var merger= new Data.Merger()
          *      .addSource("https://raw.githubusercontent.com/ondata/elezionipolitiche2018/master/dati/scrutiniCI_cm.csv","csv")
