@@ -15858,8 +15858,6 @@ MapTheme.prototype.chartMap = function (startIndex) {
 						// make time stamp
 						// -----------------
 						if ( this.szTimeField ){
-							console.log("---------!");
-							console.log("timestamp!");
 							var uTime = new Date(this.itemA[a].szTime).getTime() || this.itemA[a].szTime;
 							boxGroup.setAttributeNS(szMapNs, "time", uTime);
 						 }
@@ -18826,7 +18824,6 @@ MapTheme.prototype.drawChart = function (chartGroup, a, nChartSize, szFlag, nMar
 					}
 					// GR 26.06.2006 bubbles with colorscheme (classes)
 					if (this.colorScheme.length > 2 || (this.szRanges && this.szRanges.length)) {
-                        console.log("xxxxxx->"+this.colorScheme);
 						for (ii = 0; ii < this.partsA.length; ii++) {
 							if ((szFlag.match(/CATEGORICAL/) && (nValue == this.partsA[ii].min)) || (!szFlag.match(/CATEGORICAL/) && (nValue < this.partsA[ii].max))) {
 								szColor = this.colorScheme[ii];
