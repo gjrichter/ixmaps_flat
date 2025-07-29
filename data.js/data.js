@@ -77,7 +77,7 @@ $Log:data.js,v $
 
     // write to console with time in sec : millisec
     //
-    var _log_start_time = new Date();
+    const _log_start_time = new Date();
     _LOG = function (szLog) {
         var time = ((new Date()) - _log_start_time) / 1000;
         console.log("_LOG: time[sec.ms] " + time + "\n" + szLog);
@@ -126,12 +126,12 @@ $Log:data.js,v $
      */
 
     var Data = {
-        version: "1.51",
+        version: "1.52",
         errors: []
     };
 
     function expose() {
-        var oldData = window.Data;
+        const oldData = window.Data;
 
         Data.noConflict = function () {
             window.Data = oldData;
@@ -334,8 +334,8 @@ $Log:data.js,v $
 
             this.options.success = callback;
 
-            var option = this.options;
-            var szUrl = option.source || option.src || option.url || option.ext;
+            const option = this.options;
+            const szUrl = option.source || option.src || option.url || option.ext;
 
             if (typeof (option.cache) === 'undefined') {
                 option.cache = true;
@@ -344,7 +344,7 @@ $Log:data.js,v $
                 }
             }
 
-            var __this = this;
+            const __this = this;
 
             if (!szUrl) {
                 _alert("Data.feed(...).load(): no source defined !", 2000);
@@ -455,12 +455,12 @@ $Log:data.js,v $
      */
     Data.Feed.prototype.__doLoadJSONstat = function (szUrl, opt) {
 
-        var __this = this;
+        const __this = this;
 
         JSONstat(szUrl,
             function () {
 
-                var dataA = [];
+                const dataA = [];
 
                 // for now we take dimension 0 and 1
                 // 0 for the y axis = first column
@@ -468,19 +468,19 @@ $Log:data.js,v $
 
                 // first row = column names
                 //
-                var row = [this.Dataset(0).Dimension(0).label];
-                var index = this.Dataset(0).Dimension(1).id;
-                for (i = 0; i < index.length; i++) {
+                let row = [this.Dataset(0).Dimension(0).label];
+                const index = this.Dataset(0).Dimension(1).id;
+                for (let i = 0; i < index.length; i++) {
                     row.push(this.Dataset(0).Dimension(1).Category(index[i]).label);
                 }
                 dataA.push(row);
 
                 // data rows
                 //
-                for (var i = 0; i < this.Dataset(0).Dimension(0).length; i++) {
+                for (let i = 0; i < this.Dataset(0).Dimension(0).length; i++) {
                     row = [];
                     row.push(this.Dataset(0).Dimension(0).Category(this.Dataset(0).Dimension(0).id[i]).label);
-                    for (var ii = 0; ii < this.Dataset(0).Dimension(1).length; ii++) {
+                    for (let ii = 0; ii < this.Dataset(0).Dimension(1).length; ii++) {
                         row.push(this.Dataset(0).Data([i, ii]).value);
                     }
                     dataA.push(row);
@@ -513,7 +513,7 @@ $Log:data.js,v $
     Data.Feed.prototype.__doJsonDBImport = function (szUrl, opt) {
 
         _LOG("__doJsonDBImport: " + szUrl);
-        var __this = this;
+        const __this = this;
 
         opt.url = szUrl;
 
@@ -541,10 +541,9 @@ $Log:data.js,v $
         // create data object
         // ------------------
         this.dbtable = new Data.Table();
-        var loadedTable = null;
+        let loadedTable = null;
         if (typeof (script) == "string") {
-            var name = opt.source.split(/\//).pop();
-            name = name.split(/\./)[0];
+            const name = opt.source.split(/\//).pop().split(/\./)[0];
             loadedTable = (typeof window !== "undefined" ? window[name] : global[name]);
         } else {
             loadedTable = opt.source;
@@ -583,7 +582,7 @@ $Log:data.js,v $
     Data.Feed.prototype.__doCSVImport = function (szUrl, opt) {
 
         _LOG("__doCSVImport: " + szUrl);
-        var __this = this;
+        const __this = this;
         $.ajax({
             type: "GET",
             url: szUrl,
@@ -720,7 +719,7 @@ $Log:data.js,v $
     Data.Feed.prototype.__doRSSImport = function (szUrl, opt) {
 
         _LOG("__doRSSImport: " + szUrl);
-        var __this = this;
+        const __this = this;
 
         opt.format = "xml";
 
@@ -772,25 +771,25 @@ $Log:data.js,v $
      */
     Data.Feed.prototype.__parseRSSData = function (data, opt) {
 
-        var __this = this;
+        const __this = this;
 
         if (opt.format == "xml") {
 
             $(data).find('channel').each(function () {
 
-                var dataA = [];
-                var childNamesA = null;
+                const dataA = [];
+                let childNamesA = null;
 
                 $(data).find('item').each(function () {
 
                     // get item fieldnames from the first item of the channel
                     // ------------------------------------------------------
                     if (!childNamesA) {
-                        var check = [];
+                        const check = [];
                         childNamesA = [];
-                        var childs = $(this).children();
-                        for (var i = 0; i < childs.length; i++) {
-                            var szNode = $(this).children()[i].nodeName;
+                        const childs = $(this).children();
+                        for (let i = 0; i < childs.length; i++) {
+                            let szNode = $(this).children()[i].nodeName;
                             while (check[szNode]) {
                                 szNode += "*";
                             }
@@ -802,7 +801,7 @@ $Log:data.js,v $
                     }
 
                     // make one item values
-                    var row = [];
+                    const row = [];
                     for (let i = 0; i < childNamesA.length; i++) {
                         if (childNamesA[i] == "enclosure") {
                             row.push(($(this).find(childNamesA[i] + ':first').attr("url")) || "");
@@ -834,7 +833,7 @@ $Log:data.js,v $
     Data.Feed.prototype.__doKMLImport = function (szUrl, opt) {
 
         _LOG("__doKMLImport: " + szUrl);
-        var __this = this;
+        const __this = this;
 
         opt.format = "xml";
 
@@ -882,18 +881,18 @@ $Log:data.js,v $
      */
     Data.Feed.prototype.__parseKMLData = function (data, opt) {
 
-        var __this = this;
+        const __this = this;
 
         if (opt.format == "xml") {
 
-            var document = $(data).find('Document');
+            const document = $(data).find('Document');
 
-            var dataA = [];
-            var childNamesA = null;
+            const dataA = [];
+            let childNamesA = null;
 
             document.find('Placemark').each(function () {
 
-                var xdata = $(this).find('ExtendedData') || $(this);
+                const xdata = $(this).find('ExtendedData') || $(this);
 
                 // get item fieldnames from the first item of the channel
                 // ------------------------------------------------------
@@ -909,7 +908,7 @@ $Log:data.js,v $
                 }
 
                 // make one item values
-                var row = [];
+                const row = [];
                 xdata.find('Data').each(function () {
                     row.push($(this).find("value").text());
                 });
@@ -939,7 +938,7 @@ $Log:data.js,v $
      */
     Data.Feed.prototype.__doJSONImport = function (szUrl, opt) {
 
-        var __this = this;
+        const __this = this;
         $.get(szUrl,
             function (data) {
                 __this.__processJsonData(data, opt);
@@ -961,7 +960,7 @@ $Log:data.js,v $
      *                     to a leaf node in the data structure.
      */
     __getNestedPaths = function(dataItem, currentPath = "") {
-        let paths = [];
+        const paths = [];
 
         // If the current element is an object (but not null and not an array)
         if (typeof dataItem === "object" && dataItem !== null && !Array.isArray(dataItem)) {
@@ -971,7 +970,7 @@ $Log:data.js,v $
                     const value = dataItem[key];
                     // Build the new path by appending the key
                     const newPath = currentPath ? `${currentPath}.${key}` : key;
-                    paths = paths.concat(__getNestedPaths(value, newPath));
+                    paths.push(...__getNestedPaths(value, newPath));
                 }
             }
         }
@@ -981,7 +980,7 @@ $Log:data.js,v $
                 // The original JavaScript code includes array indices in the path.
                 // We replicate this behavior by adding the index to the path.
                 const newPath = currentPath ? `${currentPath}.${index}` : String(index);
-                paths = paths.concat(__getNestedPaths(value, newPath));
+                paths.push(...__getNestedPaths(value, newPath));
             });
         }
         // Base case: the current element is neither an object nor an array, so it's a leaf node.
@@ -1006,7 +1005,7 @@ $Log:data.js,v $
         let extractedValues = [];
 
         // Special case: if the data element is null, add the string 'null' as per original logic.
-        if (dataItem === null) {
+        if (dataItem === null || typeof dataItem === "undefined") {
             extractedValues.push('null');
         }
         // If the schema element is an object (not null, not an array), explore it recursively.
@@ -1052,7 +1051,7 @@ $Log:data.js,v $
      */
     Data.Feed.prototype.__processJsonData = function (script, opt) {
 
-        var data = null;
+        let data = null;
         
         if (typeof (script) == "string") {
             try {
@@ -1065,24 +1064,24 @@ $Log:data.js,v $
         }
         this.data = data;
 
-        var dataA = [];
-        var row = [];
+        let dataA = [];
+        let row = [];
 
         // json with structure data.columns[] data.rows[][]
         // -------------------------------------------------
         if (data && data.data && data.data.columns && data.data.rows) {
 
-            var columns = data.data.columns;
-            var rows = data.data.rows;
+            const columns = data.data.columns;
+            const rows = data.data.rows;
 
-            for (const i in columns) {
+            for (let i = 0, len = columns.length; i < len; i++) {
                 row.push(columns[i]);
             }
             dataA.push(row);
 
-            for (let i = 0; i < rows.length; i++) {
+            for (let i = 0, len = rows.length; i < len; i++) {
                 row = [];
-                for (const ii in rows[0]) {
+                for (let ii = 0, row0Len = rows[0].length; ii < row0Len; ii++) {
                     row.push(rows[i][ii]);
                 }
                 dataA.push(row);
@@ -1128,8 +1127,8 @@ $Log:data.js,v $
             if (!data){
                 let dataA = [];
                 dataA.push(["unknown type"]);
-                let scriptA = script.split('\n');
-                for (let i in scriptA){
+                const scriptA = script.split('\n');
+                for (let i = 0, len = scriptA.length; i < len; i++){
                     dataA.push([scriptA[i]]);
                 }
                 this.__createDataTableObject(dataA, "json", opt); 
@@ -1164,7 +1163,7 @@ $Log:data.js,v $
      */
     Data.Feed.prototype.__doGeoJSONImport = function (szUrl, opt) {
 
-        var __this = this;
+        const __this = this;
         $.get(szUrl,
             function (data) {
                 __this.__processGeoJsonData(data, opt);
@@ -1253,7 +1252,7 @@ $Log:data.js,v $
      */
     Data.Feed.prototype.__processGeoJsonData_expandProperty = function (script, opt) {
 
-        var data = null;
+        let data = null;
         
         if (typeof (script) == "string") {
             try {
@@ -1267,9 +1266,9 @@ $Log:data.js,v $
         }
         this.data = data;
 
-        var dataA = [];
-        var row = [];
-        var columns = [];
+        let dataA = [];
+        let row = [];
+        const columns = [];
 
         if (data && data.features && data.features.length) {
 
@@ -1293,7 +1292,7 @@ $Log:data.js,v $
             for (let i = 0; i < data.features.length; i++) {
                 row = [];
                 for (let p = 0; p < dataA[0].length - 1; p++) {
-                    var xA = dataA[0][p].split(".");
+                    const xA = dataA[0][p].split(".");
                     if (xA.length >= 2) {
                         row.push(data.features[i].properties[xA[0]][xA[1]] || "");
                     } else {
@@ -1322,7 +1321,7 @@ $Log:data.js,v $
      */
     Data.Feed.prototype.__doTopoJSONImport = function (szUrl, opt) {
 
-        var __this = this;
+        const __this = this;
         $.get(szUrl,
             function (data) {
                 __this.__processTopoJsonData(data, opt);
@@ -1346,7 +1345,7 @@ $Log:data.js,v $
             _alert("'" + opt.type + "' parser not loaded !");
             return;
         }
-        var data = null;
+        let data = null;
         if (typeof (script) == "string") {
             try {
                 data = JSON.parse(script);
@@ -1358,7 +1357,7 @@ $Log:data.js,v $
         }
         this.data = data;
 
-        var topoObject = null;
+        let topoObject = null;
 
         // select topojson object by given name
         if (opt.options && opt.options.name && data.objects[opt.options.name]) {
@@ -1456,11 +1455,11 @@ $Log:data.js,v $
          * @returns table as array of arrays
          */
         getArray: function () {
-            var dataA = [[]];
-            for (const i in this.fields) {
+            let dataA = [[]];
+            for (let i = 0, len = this.fields.length; i < len; i++) {
                 dataA[0].push(this.fields[i].id);
             }
-            for (let i = 0; i < this.records.length; i++) {
+            for (let i = 0, len = this.records.length; i < len; i++) {
                 dataA.push(this.records[i]);
             }
             return dataA;
@@ -1477,7 +1476,7 @@ $Log:data.js,v $
             // first row of data => object.fields
             // ------------
             this.fields = [];
-            for (const a in dataA[0]) {
+            for (let a = 0, len = dataA[0].length; a < len; a++) {
                 this.fields.push({
                     id: (dataA[0][a] || " ").trim(),
                     typ: 0,
@@ -1491,7 +1490,7 @@ $Log:data.js,v $
 
             // set records checking length
             this.records = [];
-            for (const r in dataA) {
+            for (let r = 0, len = dataA.length; r < len; r++) {
                 if (dataA[r].length == this.fields.length) {
                     this.records.push(dataA[r]);
                 }
@@ -1509,7 +1508,7 @@ $Log:data.js,v $
          * @returns the reverted table
          */
         revert: function () {
-            var records = [];
+            let records = [];
             for (let i = this.records.length - 1; i >= 0; i--) {
                 records.push(this.records[i]);
             }
@@ -1523,7 +1522,7 @@ $Log:data.js,v $
          * @return the reversed table
          */
         reverse: function () {
-            var records = [];
+            let records = [];
             for (let i = this.records.length - 1; i >= 0; i--) {
                 records.push(this.records[i]);
             }
@@ -1537,8 +1536,8 @@ $Log:data.js,v $
          * @returns an array with the column names
          */
         columnNames: function () {
-            var fieldsA = [];
-            for (const i in this.fields) {
+            const fieldsA = [];
+            for (let i = 0, len = this.fields.length; i < len; i++) {
                 fieldsA.push(this.fields[i].id);
             }
             return fieldsA;
@@ -1573,9 +1572,9 @@ $Log:data.js,v $
          * });
          */
         column: function (szColumn) {
-            for (var i in this.fields) {
+            for (let i in this.fields) {
                 if (this.fields[i].id == szColumn) {
-                    var column = new Data.Column();
+                    const column = new Data.Column();
                     column.index = i;
                     column.table = this;
                     return column;
@@ -1615,7 +1614,7 @@ $Log:data.js,v $
          */
         lookupArray: function (szValue, szLookup) {
 
-            var calc = "overwrite";
+            let calc = "overwrite";
 
             // GR 06.09.2021 new argument object {}
             if (szValue && szValue.key) {
@@ -1624,7 +1623,7 @@ $Log:data.js,v $
                 szValue = szValue.value;
             }
 
-            var lookupA = [];
+            let lookupA = [];
             if (!this.column(szLookup)) {
                 alert("'" + szLookup + "' column not found!");
             }
@@ -1632,19 +1631,19 @@ $Log:data.js,v $
                 alert("'" + szValue + "' column not found!");
             }
 
-            var idA = this.column(szLookup).values();
-            var valueA = this.column(szValue).values();
+            const idA = this.column(szLookup).values();
+            const valueA = this.column(szValue).values();
             if (calc == "sum") {
-                for (const i in idA) {
+                for (let i = 0, len = idA.length; i < len; i++) {
                     lookupA[String(idA[i])] = (lookupA[String(idA[i])] || 0) + valueA[i];
                 }
             } else
             if (calc == "max") {
-                for (const i in idA) {
+                for (let i = 0, len = idA.length; i < len; i++) {
                     lookupA[String(idA[i])] = Math.max(lookupA[String(idA[i])] || 0, valueA[i]);
                 }
             } else {
-                for (const i in idA) {
+                for (let i = 0, len = idA.length; i < len; i++) {
                     lookupA[String(idA[i])] = valueA[i];
                 }
             }
@@ -1688,7 +1687,7 @@ $Log:data.js,v $
                 szValue = szValue.value;
             }
 
-            var lookupA = [];
+            let lookupA = [];
             if (!this.column(szLookup)) {
                 alert("'" + szLookup + "' column not found!");
             }
@@ -1696,12 +1695,10 @@ $Log:data.js,v $
                 alert("'" + szValue + "' column not found!");
             }
 
-            var idA = this.column(szLookup).values();
-            var valueA = this.column(szValue).values();
-            for (const i in idA) {
-                //				if (valueA[i]) {
+            const idA = this.column(szLookup).values();
+            const valueA = this.column(szValue).values();
+            for (let i = 0, len = idA.length; i < len; i++) {
                 lookupA[String(idA[i])] = (lookupA[String(idA[i])] ? (lookupA[String(idA[i])] + ", " + valueA[i]) : valueA[i]);
-                //}
             }
             return lookupA;
         },
@@ -1714,9 +1711,9 @@ $Log:data.js,v $
          * @return the found value 
          */
         lookup: function (value, option) {
-            var colValue = option.value;
-            var colLookup = option.lookup;
-            var sCacheId = colValue + "_" + colLookup;
+            const colValue = option.value;
+            const colLookup = option.lookup;
+            const sCacheId = colValue + "_" + colLookup;
             if (!(this.lookupsA && this.lookupsA[sCacheId])) {
                 this.lookupsA = this.lookupsA || [];
                 this.lookupsA[sCacheId] = this.lookupArray(colValue, colLookup);
@@ -1792,7 +1789,7 @@ $Log:data.js,v $
             }
             var column = null;
             if (options.source) {
-                for (const i in this.fields) {
+                for (let i = 0, len = this.fields.length; i < len; i++) {
                     if (this.fields[i].id == options.source) {
                         column = i;
                     }
@@ -1813,21 +1810,21 @@ $Log:data.js,v $
             // add new column values
             // ---------------------
             if (callback && (typeof (callback) == "function")) {
-                for (const j in this.records) {
+                for (let j = 0, len = this.records.length; j < len; j++) {
                     this.records[j].push((column != null) ? callback(this.records[j][column],this.records[j]) : callback(this.records[j]));
                 }
             } else
             if (callback && (typeof (callback) == "object")) {
-                for (const j in this.records) {
+                for (let j = 0, len = this.records.length; j < len; j++) {
                     this.records[j].push(callback[j] || 0);
                 }
             } else
             if (options.values && (typeof (options.values) == "object")) {
-                for (const j in this.records) {
+                for (let j = 0, len = this.records.length; j < len; j++) {
                     this.records[j].push(options.values[j] || 0);
                 }
             } else {
-                for (const j in this.records) {
+                for (let j = 0, len = this.records.length; j < len; j++) {
                     this.records[j].push(0);
                 }
             }
@@ -1857,7 +1854,7 @@ $Log:data.js,v $
             }
             // create new empty row
             var row = [];
-            for (const i in this.fields) {
+            for (let i = 0, len = this.fields.length; i < len; i++) {
                 row.push("");
             }
             // set user values
@@ -1968,7 +1965,7 @@ $Log:data.js,v $
 
                     // tokenize
                     // ---------
-                    var szTokenA = szSelection.split('WHERE')[1].trim().split(' ');
+                    let szTokenA = szSelection.split('WHERE')[1].trim().split(' ');
 
                     // test for quotes and join the included text parts
                     for (let ii = 0; ii < szTokenA.length; ii++) {
@@ -1993,14 +1990,14 @@ $Log:data.js,v $
                         }
                     }
                     this.filterQueryA = [];
-                    var filterObj = {};
+                    let filterObj = {};
 
-                    var szCombineOp = "";
+                    let szCombineOp = "";
 
                     // make the query object(s)
                     // ------------------------
                     do {
-                        var nToken = 0;
+                        let nToken = 0;
 
                         if (szTokenA.length >= 3) {
                             filterObj = {};
@@ -2060,7 +2057,7 @@ $Log:data.js,v $
 
                 this.selection = new Data.Table();
 
-                for (const i in this.filterQueryA) {
+                for (let i = 0; i < this.filterQueryA.length; i++) {
                     if (typeof this.filterQueryA[i].nFilterFieldIndex === "undefined") {
                         this.selection.fields = this.fields.slice();
                         this.selection.table.fields = this.table.fields;
@@ -2069,13 +2066,13 @@ $Log:data.js,v $
                     }
                 }
 
-                for (const j in this.records) {
+                for (let j = 0, len = this.records.length; j < len; j++) {
 
-                    var allResult = null;
+                    let allResult = null;
 
-                    for (const i in this.filterQueryA) {
+                    for (let i = 0, lenQA = this.filterQueryA.length; i < lenQA; i++) {
 
-                        var result = true;
+                        let result = true;
                         // get the value to test
                         this.__szValue = String(this.records[j][this.filterQueryA[i].nFilterFieldIndex]);
                         this.__szSelectionOp = this.filterQueryA[i].szSelectionOp.toUpperCase();
@@ -2090,7 +2087,7 @@ $Log:data.js,v $
 
                         // do the query 
                         // ------------
-                        var nValue = __scanValue(this.__szValue);
+                        let nValue = __scanValue(this.__szValue);
                         if (this.__szSelectionOp == "=") {
                             if (this.__szSelectionValue == '*') {
                                 result = (this.__szValue.replace(/ /g, "") != "");
@@ -2118,19 +2115,19 @@ $Log:data.js,v $
                                 result = this.__szValue.length;
                             } else {
                                 // Escape regex special characters in the value
-                                let pattern = this.__szSelectionValue.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
-                                let regex = new RegExp(pattern, "i");
+                                const pattern = this.__szSelectionValue.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+                                const regex = new RegExp(pattern, "i");
                                 result = regex.test(this.__szValue);
                             }
                         } else
                         if (this.__szSelectionOp == "NOT") {
-                            let pattern = this.__szSelectionValue.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
-                            let regex = new RegExp(pattern, "i");
+                            const pattern = this.__szSelectionValue.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+                            const regex = new RegExp(pattern, "i");
                             result = !regex.test(this.__szValue);
                         } else
                         if (this.__szSelectionOp == "IN") {
                             // Assume values are comma-separated
-                            let values = this.__szSelectionValue.split(",").map(v => v.trim());
+                            const values = this.__szSelectionValue.split(",").map(v => v.trim());
                             result = values.includes(this.__szValue);
                         } else
                         if ((this.__szSelectionOp == "BETWEEN")) {
@@ -2138,8 +2135,8 @@ $Log:data.js,v $
                                 (nValue <= Number(this.__szSelectionValue2)));
                         } else {
                             // default operator
-                            let pattern = this.__szSelectionValue.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
-                            let regex = new RegExp(pattern, "i");
+                            const pattern = this.__szSelectionValue.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+                            const regex = new RegExp(pattern, "i");
                             result = regex.test(this.__szValue);
                         }
                         if (this.__szCombineOp == "AND") {
@@ -2193,7 +2190,7 @@ $Log:data.js,v $
          */
         aggregate: function (szColumn, szAggregate) {
 
-            var mean = false;
+            let mean = false;
 
             // GR 06.09.2021 new argument object {}
             if (szColumn.lead) {
@@ -2202,10 +2199,10 @@ $Log:data.js,v $
                 szColumn = szColumn.column || szColumn.value;
             }
 
-            var szAggregateA = szAggregate.split("|");
-            var nAggregateIndexA = [];
+            const szAggregateA = szAggregate.split("|");
+            const nAggregateIndexA = [];
 
-            var nValueIndex = null;
+            let nValueIndex = null;
 
             for (let i = 0; i < szAggregateA.length; i++) {
                 for (let ii = 0; ii < this.fields.length; ii++) {
@@ -2222,9 +2219,9 @@ $Log:data.js,v $
 
             xRecords = [];
             xCount = [];
-            for (const j in this.records) {
+            for (let j = 0, len = this.records.length; j < len; j++) {
                 xField = "";
-                for (let i = 0; i < nAggregateIndexA.length; i++) {
+                for (let i = 0, lenA = nAggregateIndexA.length; i < lenA; i++) {
                     xField += this.records[j][nAggregateIndexA[i]];
                 }
                 if (xRecords[xField]) {
@@ -2233,7 +2230,7 @@ $Log:data.js,v $
                 } else {
                     xRecords[xField] = [];
                     xRecords[xField][nAggregateIndexA.length] = __scanValue(this.records[j][nValueIndex]);
-                    for (var i = 0; i < nAggregateIndexA.length; i++) {
+                    for (let i = 0; i < nAggregateIndexA.length; i++) {
                         xRecords[xField][i] = this.records[j][nAggregateIndexA[i]];
                     }
                     xCount[xField] = [];
@@ -2241,7 +2238,7 @@ $Log:data.js,v $
                 }
             }
 
-            for (const j in xRecords) {
+            for (let j = 0, len = xRecords.length; j < len; j++) {
                 if (mean) {
                     xRecords[j][nAggregateIndexA.length] /= xCount[j][nAggregateIndexA.length];
                 }
@@ -2249,7 +2246,7 @@ $Log:data.js,v $
                 this.aggregation.table.records++;
             }
 
-            var fields = [];
+            const fields = [];
             for (let i = 0; i < szAggregateA.length; i++) {
                 fields[i] = {
                     id: szAggregateA[i]
@@ -2296,8 +2293,8 @@ $Log:data.js,v $
          */
         condense: function (szColumn, option) {
 
-            var uniqueA = {};
-            var keepIndexA = [];
+            const uniqueA = {};
+            const keepIndexA = [];
 
             // GR 06.09.2021 new argument object {}
             if (szColumn && szColumn.lead) {
@@ -2305,7 +2302,7 @@ $Log:data.js,v $
                 szColumn = option.lead;
             }
 
-            var uniqueIndex = this.columnIndex(szColumn);
+            const uniqueIndex = this.columnIndex(szColumn);
 
             if (option && option.keep) {
                 // option.keep is string
@@ -2317,12 +2314,12 @@ $Log:data.js,v $
                         keepIndexA[this.columnIndex(option.keep[i])] = true;
                     }
             }
-            var __newRecords = [];
+            const __newRecords = [];
             for (let j = 0; j < this.records.length; j++) {
-                var szTest = String(this.records[j][uniqueIndex]);
+                const szTest = String(this.records[j][uniqueIndex]);
                 if (uniqueA[szTest] != null) {
-                    var k = uniqueA[szTest];
-                    for (const v in this.records[j]) {
+                    const k = uniqueA[szTest];
+                    for (let v = 0, len = this.records[j].length; v < len; v++) {
                         if (!keepIndexA[v]) {
                             if (!isNaN(this.records[j][v])) {
                                 if (option && option.calc == "max") {
@@ -2332,7 +2329,7 @@ $Log:data.js,v $
                                 }
                             } else {
                                 if (isNaN(this.records[j][v]) && (__newRecords[k][v] != this.records[j][v])) {
-                                    var n = parseFloat(String(__newRecords[k][v]).split(" (+")[1]) || 0;
+                                    let n = parseFloat(String(__newRecords[k][v]).split(" (+")[1]) || 0;
                                     __newRecords[k][v] = String(__newRecords[k][v]).split(" (+")[0] + " (+" + (++n) + ") ";
                                 }
                             }
@@ -2370,16 +2367,16 @@ $Log:data.js,v $
          */
         groupColumns: function (options) {
 
-            var sourceA = options.source;
-            var iA = [];
-            for (const i in sourceA) {
+            let sourceA = options.source;
+            let iA = [];
+            for (let i = 0, len = sourceA.length; i < len; i++) {
                 iA[i] = this.column(sourceA[i]).index;
             }
             this.addColumn({
                 destination: options.destination
             }, function (row) {
-                var value = 0;
-                for (const i in iA) {
+                let value = 0;
+                for (let i = 0, len = iA.length; i < len; i++) {
                     value += Number(row[iA[i]]);
                 }
                 return value;
@@ -2471,34 +2468,34 @@ $Log:data.js,v $
 
             // make field indices
 
-            var indexA = [];
+            let indexA = [];
             for (let i = 0; i < this.fields.length; i++) {
                 indexA[String(this.fields[i].id)] = i;
             }
 
             // check the source columns
 
-            for (const i in options.lead) {
+            for (let i = 0, len = options.lead.length; i < len; i++) {
                 if (typeof (indexA[options.lead[i]]) == 'undefined') {
                     _alert("data.pivot - pivot keep column '" + options.lead[i] + "' not found");
                 }
             }
-            for (const i in options.cols) {
+            for (let i = 0, len = options.cols.length; i < len; i++) {
                 if (options.cols && (typeof (indexA[options.cols[i]]) == 'undefined')) {
                     _alert("data.pivot - pivot columns source column '" + options.cols[i] + "' not found");
                 }
             }
-            for (const i in options.keep) {
+            for (let i = 0, len = options.keep.length; i < len; i++) {
                 if (typeof (indexA[options.keep[i]]) == 'undefined') {
                     _alert("data.pivot - pivot keep column '" + options.keep[i] + "' not found");
                 }
             }
-            for (const i in options.sum) {
+            for (let i = 0, len = options.sum.length; i < len; i++) {
                 if (typeof (indexA[options.sum[i]]) == 'undefined') {
                     _alert("data.pivot - pivot sum column '" + options.sum[i] + "' not found");
                 }
             }
-            for (const i in options.value) {
+            for (let i = 0, len = options.value.length; i < len; i++) {
                 if (typeof (indexA[options.value[i]]) == 'undefined') {
                     _alert("data.pivot - pivot value column '" + options.value[i] + "' not found");
                 }
@@ -2506,28 +2503,28 @@ $Log:data.js,v $
 
             // make the pivot 
 
-            var rowA = [];
-            var colA = [];
-            var data = this.records;
+            let rowA = [];
+            let colA = [];
+            let data = this.records;
 
             // GR 12/03/2023 preset columns with forced columns
 
             if (options.forced) {
-                for (const i in options.forced) {
-                     colA[String(options.forced[i])] = 0;
+                for (let i = 0; i < options.forced.length; i++) {
+                    colA[String(options.forced[i])] = 0;
                 }
             }
 
-            for (let row = 0; row < data.length; row++) {
+            for (let row = 0, len = data.length; row < len; row++) {
 
-                var szRow = String(data[row][indexA[options.lead[0]]]);
+                let szRow = String(data[row][indexA[options.lead[0]]]);
                 for (let k = 1; k < options.lead.length; k++) {
                     szRow += "|" + data[row][indexA[options.lead[k]]];
                 }
 
-                var szCol = String(data[row][indexA[options.cols[0]]]);
+                let szCol = String(data[row][indexA[options.cols[0]]]);
 
-                var nValue = null;
+                let nValue = null;
                 if (options.calc == "string") {
                     nValue = data[row][indexA[options.value[0]]];
                 } else {
@@ -2609,11 +2606,13 @@ $Log:data.js,v $
             }
             // cols
             if (options.cols && options.cols.length)
-            for (const a in colA) {
-                this.__pivot.fields.push({
-                    id: a
-                });
-            }
+                for (let a in colA) {
+                    if (Object.prototype.hasOwnProperty.call(colA, a)) {
+                        this.__pivot.fields.push({
+                            id: a
+                        });
+                    }
+                }
             //totale
             this.__pivot.fields.push({
                 id: "Total"
@@ -2622,43 +2621,41 @@ $Log:data.js,v $
 
             // make the values
             // ----------------
-            for (const a in rowA) {
-
-                // collect values per place
-                var valueA = [];
-
-                // lead
-                var leadA = a.split("|");
-                if (options.lead && options.lead.length)
-                for (let k = 0; k < leadA.length; k++) {
-                    valueA.push(leadA[k]);
-                }
-
-                // keep
-                for (let k = 0; k < options.keep.length; k++) {
-                    valueA.push(rowA[a][options.keep[k]]);
-                }
-                // sum
-                for (let k = 0; k < options.sum.length; k++) {
-                    valueA.push(rowA[a][options.sum[k]]);
-                }
-
-                // cols
-                if (options.cols && options.cols.length)
-                for (const t in colA) {
-                    if (options.calc == "mean") {
-                        valueA.push((rowA[a][t] || 0) / (rowA[a][t + "count"] || 1));
-                    } else {
-                        valueA.push(rowA[a][t] || 0);
+            for (let a in rowA) {
+                if (Object.prototype.hasOwnProperty.call(rowA, a)) {
+                    // collect values per place
+                    const valueA = [];
+                    // lead
+                    const leadA = a.split("|");
+                    if (options.lead && options.lead.length)
+                        for (let k = 0; k < leadA.length; k++) {
+                            valueA.push(leadA[k]);
+                        }
+                    // keep
+                    for (let k = 0; k < options.keep.length; k++) {
+                        valueA.push(rowA[a][options.keep[k]]);
                     }
+                    // sum
+                    for (let k = 0; k < options.sum.length; k++) {
+                        valueA.push(rowA[a][options.sum[k]]);
+                    }
+                    // cols
+                    if (options.cols && options.cols.length)
+                        for (let t in colA) {
+                            if (Object.prototype.hasOwnProperty.call(colA, t)) {
+                                if (options.calc == "mean") {
+                                    valueA.push((rowA[a][t] || 0) / (rowA[a][t + "count"] || 1));
+                                } else {
+                                    valueA.push(rowA[a][t] || 0);
+                                }
+                            }
+                        }
+                    // totale
+                    valueA.push(rowA[a].Total);
+                    // record complete
+                    this.__pivot.records.push(valueA);
+                    this.__pivot.table.records++;
                 }
-
-                // totale
-                valueA.push(rowA[a].Total);
-                
-                // record complete
-                this.__pivot.records.push(valueA);
-                this.__pivot.table.records++;
             }
             
             return (this.__pivot);
@@ -2711,7 +2708,7 @@ $Log:data.js,v $
                 this.__subt.table.fields++;
             }
             for (const j in this.records) {
-                var records = [];
+                let records = [];
                 for (let i = 0; i < options.columns.length; i++) {
                     records.push(this.records[j][options.columns[i]]);
                 }
@@ -2728,14 +2725,14 @@ $Log:data.js,v $
          * @returns the sorted table
          */
         sort: function (szColumn, szFlag) {
-            var valuesA = this.column(szColumn).values();
-            var number = 0;
+            let valuesA = this.column(szColumn).values();
+            let number = 0;
             for (let i = 0; i < Math.min(valuesA.length,10); i++) {
                  if (!isNaN(parseFloat(String(valuesA[i]).replace(",",".")))){
                     number++;
                 }
             }
-            var sortA = [];
+            let sortA = [];
             if (number){
                 for (let i = 0; i < valuesA.length; i++) {
                     sortA.push({
@@ -2760,7 +2757,7 @@ $Log:data.js,v $
                     return ((a.value < b.value) ? -1 : 1);
                 });
             }
-            var records = [];
+            let records = [];
             for (let i = 0; i < sortA.length; i++) {
                 records.push(this.records[sortA[i].index]);
             }
@@ -2784,7 +2781,7 @@ $Log:data.js,v $
                     return null;
                 }
             }
-            var records = sourceTable.records;
+            let records = sourceTable.records;
             for (let i = 0; i < records.length; i++) {
                 this.records.push(records[i]);
             }
@@ -2802,7 +2799,7 @@ $Log:data.js,v $
 
             this.__json = [];
             for (const r in this.records) {
-                var row = {};
+                let row = {};
                 for (const c in this.fields) {
                     row[String(this.fields[c].id)] = this.records[r][c];
                 }
@@ -2818,13 +2815,13 @@ $Log:data.js,v $
     // local helper
     //...................................................................
     __myNumber = function (value) {
-        var number = parseFloat(value.replace(/\./g, "").replace(/\,/g, "."));
+        let number = parseFloat(value.replace(/\./g, "").replace(/\,/g, "."));
         return isNaN(number) ? 0 : number;
     };
 
     __scanValue = function (nValue) {
         // strips blanks inside numbers (e.g. 1 234 456 --> 1234456)
-        var number = null;
+        let number = null;
         if (String(nValue).match(/,/)) {
             number = parseFloat(String(nValue).replace(/\./gi, "").replace(/,/gi, "."));
             return isNaN(number) ? 0 : number;
@@ -2873,7 +2870,7 @@ $Log:data.js,v $
                 // ------------------
 
                 // copy orig fields 
-                var timeCollA = options.create || ['date', 'year', 'month', 'day', 'hour'];
+                let timeCollA = options.create || ['date', 'year', 'month', 'day', 'hour'];
 
                 // add new time columns 
                 for (let i = 0; i < timeCollA.length; i++) {
@@ -2885,17 +2882,17 @@ $Log:data.js,v $
 
                 // make values 
                 // ------------------
-                var length = this.records.length;
-                var j = 0;
+                let length = this.records.length;
+                let j = 0;
                 for (j = 0; j < length; j++) {
 
                     // add new time column values
-                    var d = new Date(this.records[j][column]);
+                    let d = new Date(this.records[j][column]);
                     if (d) {
-                        for (var i = 0; i < timeCollA.length; i++) {
+                        for (let i = 0; i < timeCollA.length; i++) {
                             switch (timeCollA[i]) {
                                 case 'date':
-                                    var date = String(d.getDate()) + "." + String(d.getMonth() + 1) + "." + String(d.getFullYear());
+                                    let date = String(d.getDate()) + "." + String(d.getMonth() + 1) + "." + String(d.getFullYear());
                                     this.records[j].push(date);
                                     break;
                                 case 'year':
@@ -3335,7 +3332,7 @@ $Log:data.js,v $
     // @factory Data.Feed.broker(options?: Data options)
     //
     Data.Feed.prototype.broker = function (options) {
-        var broker = new Data.Broker(options);
+        let broker = new Data.Broker(options);
         broker.parent = this;
         return broker;
     };
@@ -3437,11 +3434,11 @@ $Log:data.js,v $
 
             _LOG("DataMerger: >>>");
 
-            var indexAA = [];
+            let indexAA = [];
 
             for (const i in this.sourceA) {
 
-                var source = this.sourceA[i];
+                let source = this.sourceA[i];
 
                 source.opt.columns = source.opt.columns || source.data.columnNames();
                 source.opt.label = source.opt.label || [];
@@ -3461,7 +3458,7 @@ $Log:data.js,v $
                     _alert("DataMerger: source '" + i + "' not found or not of type Array");
                 }
 
-                var index = [];
+                let index = [];
                 for (const ii in this.sourceA[i].data[0]) {
 
                     if (this.sourceA[i].data[0][ii] == this.sourceA[i].opt.lookup) {
@@ -3486,7 +3483,7 @@ $Log:data.js,v $
                 indexAA.push(index);
             }
 
-            var labelA = [];
+            let labelA = [];
             for (const i in this.sourceA) {
                 for (const ii in this.sourceA[i].opt.label) {
                     labelA.push(this.sourceA[i].opt.label[ii]);
@@ -3500,7 +3497,7 @@ $Log:data.js,v $
                 }
             }
 
-            var outColumnsLookupA = [];
+            let outColumnsLookupA = [];
             for (const i in this.outColumnsA) {
                 for (const ii in indexAA) {
                     for (const iii in indexAA[ii]) {
@@ -3536,16 +3533,16 @@ $Log:data.js,v $
                 }
             }
 
-            var newData = [];
+            let newData = [];
             newData.push(this.outColumnsA);
 
             for (let i = 1; i < this.sourceA[0].data.length; i++) {
-                var lookup = String(this.sourceA[0].data[i][[indexAA[0][this.sourceA[0].opt.lookup]]]);
+                let lookup = String(this.sourceA[0].data[i][[indexAA[0][this.sourceA[0].opt.lookup]]]);
 
-                var row = [];
+                let row = [];
 
                 for (const ii in this.outColumnsA) {
-                    var ll = outColumnsLookupA[this.outColumnsA[ii]];
+                    let ll = outColumnsLookupA[this.outColumnsA[ii]];
                     if (ll) {
                         if (ll.input == 0) {
                             row.push(this.sourceA[0].data[i][ll.index]);
@@ -3567,7 +3564,7 @@ $Log:data.js,v $
 
             _LOG("DataMerger: done");
 
-            var dbTable = new Data.Table();
+            let dbTable = new Data.Table();
             dbTable.setArray(newData);
 
             if (this.callback) {
