@@ -68,7 +68,7 @@ $Log:data.js,v $
  * });
  *
  * @author Guenter Richter guenter.richter@medienobjekte.de
- * @version 1.51 
+ * @version 1.53 
  * @copyright CC BY SA
  * @license MIT
  */
@@ -91,7 +91,7 @@ $Log:data.js,v $
      * @returns true/false
      * @type {boolean}
      */
-    __isArray = function (obj) {
+    const __isArray = function (obj) {
         return Object.prototype.toString.call(obj) === '[object Array]';
     };
     /**
@@ -100,7 +100,7 @@ $Log:data.js,v $
      * @returns array
      * @type {Array}
      */
-    __toArray = function (obj) {
+    const __toArray = function (obj) {
         if (!obj || typeof (obj) == 'undefined') {
             return [];
         } else
@@ -117,7 +117,7 @@ $Log:data.js,v $
      * @returns array
      * @type {Array}
      */
-    __onlyUnique = function (value, index, self) {
+    const __onlyUnique = function (value, index, self) {
         return self.indexOf(value) === index;
     };
 
@@ -126,7 +126,7 @@ $Log:data.js,v $
      */
 
     var Data = {
-        version: "1.52",
+        version: "1.53",
         errors: []
     };
 
@@ -2220,10 +2220,11 @@ $Log:data.js,v $
             xRecords = [];
             xCount = [];
             for (let j = 0, len = this.records.length; j < len; j++) {
-                xField = "";
+                const fieldParts = [];
                 for (let i = 0, lenA = nAggregateIndexA.length; i < lenA; i++) {
-                    xField += this.records[j][nAggregateIndexA[i]];
+                    fieldParts.push(this.records[j][nAggregateIndexA[i]]);
                 }
+                const xField = fieldParts.join("");
                 if (xRecords[xField]) {
                     xRecords[xField][nAggregateIndexA.length] += __scanValue(this.records[j][nValueIndex]);
                     xCount[xField][nAggregateIndexA.length]++;
@@ -2517,10 +2518,11 @@ $Log:data.js,v $
 
             for (let row = 0, len = data.length; row < len; row++) {
 
-                let szRow = String(data[row][indexA[options.lead[0]]]);
+                const parts = [data[row][indexA[options.lead[0]]]];
                 for (let k = 1; k < options.lead.length; k++) {
-                    szRow += "|" + data[row][indexA[options.lead[k]]];
+                    parts.push(data[row][indexA[options.lead[k]]]);
                 }
+                const szRow = parts.join("|");
 
                 let szCol = String(data[row][indexA[options.cols[0]]]);
 
