@@ -16,7 +16,7 @@ $Log:data.js,v $
 /** 
  * @fileoverview
  * provides an object and methods to load, parse and process various data sources.<br>
- * The <b>sources</b> may be of the following type: <b>csv</b>, <b>json</b>, <b>geojson</b>, <b>kml</b> e <b>rss</b>.<br>
+ * The <b>sources</b> may be of the following type: <b>csv</b>, <b>json</b>, <b>geojson</b>, <b>kml</b>, <b>gml</b>, <b>rss</b>, and <b>parquet</b>.<br>
  * The <b>methods</b> to load data are: 
  * <ul><li>Data.<b>feed()</b> to load from url</li>
  * <li>Data.<b>import()</b> to import javascript objects and</li>
@@ -126,7 +126,7 @@ $Log:data.js,v $
      */
 
     var Data = {
-        version: "1.53",
+        version: "1.54",
         errors: []
     };
 
@@ -165,8 +165,10 @@ $Log:data.js,v $
      *								   <tr><td><b>"csv"</b></td><td>the source is 'plain text' formatted as Comma Separated Values<br>delimiter supported: , and ;</td></tr>
      *								   <tr><td><b>"json"</b></td><td>the source is JSON (Javascript Object Notation)</td></tr>
      *								   <tr><td><b>"geojson"</b></td><td>the source is a JSON object formatted in <a href="https://geojson.org/" target="_blank">GeoJson</a></td></tr>
+     *								   <tr><td><b>"geoparquet"</b></td><td>the source is a GeoParquet file (converted to GeoJSON)</td></tr>
      *								   <tr><td><b>"rss"</b></td><td>the source is an xml rss feed</td></tr>
      *								   <tr><td><b>"kml"</b></td><td>the source is in Keyhole Markup Language</td></tr>
+     *								   <tr><td><b>"gml"</b></td><td>the source is in Geography Markup Language</td></tr>
      *								   </table> 
      * @type {Data.Object}
      * @example
@@ -195,7 +197,8 @@ $Log:data.js,v $
          */
         import: function (callback) {
 
-            this.options.success = callback;
+            this.options.success = this.options.success || callback;
+
 
             // we create a dummy Data.feed to use its parser
             this.feed = Data.feed({});
@@ -215,6 +218,10 @@ $Log:data.js,v $
                 this.options.format = "xml";
                 this.feed.__processKMLData(this.options.source, this.options);
             } else
+            if ((this.options.type == "gml") || (this.options.type == "GML")) {
+                this.options.format = "xml";
+                this.feed.__processGMLData(this.options.source, this.options);
+            } else
             if ((this.options.type == "json") || (this.options.type == "JSON") || (this.options.type == "Json")) {
                 this.feed.__processJsonData(this.options.source, this.options);
             } else
@@ -227,6 +234,20 @@ $Log:data.js,v $
             if ((this.options.type == "jsonDB") || (this.options.type == "JSONDB") || (this.options.type == "JsonDB") ||
                 (this.options.type == "jsondb")) {
                 this.feed.__processJsonDBData(this.options.source, this.options);
+            } else
+            if ((this.options.type == "parquet") || (this.options.type == "PARQUET")) {
+                // Check if source is already an ArrayBuffer (from File API)
+                if (this.options.source instanceof ArrayBuffer) {
+                    _LOG("Processing parquet ArrayBuffer directly: " + this.options.source.byteLength + " bytes");
+                    this.feed.__processParquetData(this.options.source, this.options);
+                }
+            } else
+            if ((this.options.type == "geoparquet") || (this.options.type == "GEOPARQUET")) {
+                // Check if source is already an ArrayBuffer (from File API)
+                if (this.options.source instanceof ArrayBuffer) {
+                    _LOG("Processing geoparquet ArrayBuffer directly: " + this.options.source.byteLength + " bytes");
+                    this.feed.__processGeoParquetData(this.options.source, this.options);
+                }
             }
             return this;
         },
@@ -253,6 +274,7 @@ $Log:data.js,v $
      *								   <tr><td><b>"csv"</b></td><td>the source is 'plain text' formatted as Comma Separated Values<br>delimiter supported: , and ;</td></tr>
      *								   <tr><td><b>"json"</b></td><td>the source is JSON (Javascript Object Notation)</td></tr>
      *								   <tr><td><b>"geojson"</b></td><td>the source is a JSON object formatted in <a href="https://geojson.org/" target="_blank">GeoJson</a></td></tr>
+     *								   <tr><td><b>"geoparquet"</b></td><td>the source is a GeoParquet file (converted to GeoJSON)</td></tr>
      *								   <tr><td><b>"topojson"</b></td><td>the source is a JSON object formatted in <a href="https://github.com/topojson/topojson" target="_blank">TopoJson</a></td></tr>
      *								   <tr><td><b>"jsonDB"</b></td><td>the source is a jsonDB table object</td></tr>
      *								   <tr><td><b>"rss"</b></td><td>the source is an xml rss feed</td></tr>
@@ -282,6 +304,9 @@ $Log:data.js,v $
      *								   <tr><th>type</th><th>description</th></tr>
      *								   <tr><td><b>"csv"</b></td><td>the source is 'plain text' formatted as Comma Separated Values<br>delimiter supported: , and ;</td></tr>
      *								   <tr><td><b>"json"</b></td><td>the source is JSON (Javascript Object Notation)</td></tr>
+     *								   <tr><td><b>"geojson"</b></td><td>the source is a JSON object formatted in <a href="https://geojson.org/" target="_blank">GeoJson</a></td></tr>
+     *								   <tr><td><b>"geoparquet"</b></td><td>the source is a GeoParquet file (converted to GeoJSON)</td></tr>
+     *								   <tr><td><b>"parquet"</b></td><td>the source is a Parquet file</td></tr>
      *								   <tr><td><b>"JSON-stat"</b></td><td>the source is a JSON object formatted in <a href="https://json-stat.org/JSON-stat" target="_blank">JSON-stat</a></td></tr>
      *								   <tr><td><b>"jsonDB"</b></td><td>the source is in ixmaps internal data table format</td></tr>
      *								   <tr><td><b>"rss"</b></td><td>the source is an xml rss feed</td></tr>
@@ -359,6 +384,9 @@ $Log:data.js,v $
             if ((option.type == "kml") || (option.type == "KML")) {
                 this.__doKMLImport(szUrl, option);
             } else
+            if ((option.type == "gml") || (option.type == "GML")) {
+                this.__doGMLImport(szUrl, option);
+            } else
             if ((option.type == "json") || (option.type == "JSON") || (option.type == "Json")) {
                 this.__doJSONImport(szUrl, option);
             } else
@@ -380,6 +408,9 @@ $Log:data.js,v $
                     .fail(function (jqxhr, settings, exception) {
                         _alert("'" + option.type + "' unknown format !");
                     });
+            } else
+            if ((option.type == "parquet") || (option.type == "PARQUET")) {
+                this.__doParquetImport(szUrl, option);
             } else {
                 _alert("'" + option.type + "' unknown format !");
             }
@@ -854,6 +885,37 @@ $Log:data.js,v $
     };
 
     /**
+     * __doGMLImport 
+     * reads GML feed from URL
+     * parses the data into a table
+     * @param szUrl gml feed url
+     * @param opt optional options
+     * @type void
+     */
+    Data.Feed.prototype.__doGMLImport = function (szUrl, opt) {
+
+        _LOG("__doGMLImport: " + szUrl);
+        const __this = this;
+
+        opt.format = "xml";
+
+        $.ajax({
+            type: "GET",
+            url: szUrl,
+            dataType: "xml",
+            success: function (data) {
+                __this.__processGMLData(data, opt);
+            },
+            error: function (jqxhr, settings, exception) {
+                if ((typeof (opt) != "undefined") && opt.error) {
+                    opt.error(jqxhr, settings, exception);
+                }
+            }
+        });
+
+    };
+
+    /**
      * __processKMLData 
      * parse the loaded KML xml data and create data object
      * @param the kml object
@@ -920,6 +982,136 @@ $Log:data.js,v $
             });
 
             __this.__createDataTableObject(dataA, "kml", opt);
+
+        }
+    };
+
+    /**
+     * __processGMLData 
+     * parse the loaded GML xml data and create data object
+     * @param the gml object
+     * @param opt optional options
+     * @type void
+     */
+    Data.Feed.prototype.__processGMLData = function (data, opt) {
+
+        if (opt.format == "xml") {
+
+            if ( typeof(data) === "string"){
+                parser = new DOMParser();
+                data = parser.parseFromString(data,"text/xml");
+            }
+            console.log(data);
+            console.log($(data).find('wfs\\:FeatureCollection, gml\\:FeatureCollection, FeatureCollection'));
+            if ($(data).find('wfs\\:FeatureCollection, gml\\:FeatureCollection, FeatureCollection').length) {
+                this.__parseGMLData(data, opt);
+            } else {
+                _alert("feed not gml");
+            }
+        }
+    };
+
+    /**
+     * __parseGMLData 
+     * parse the loaded GML xml data and create data object
+     * @param the gml object
+     * @param opt optional options
+     * @type void
+     */
+    Data.Feed.prototype.__parseGMLData = function (data, opt) {
+
+        const __this = this;
+
+        if (opt.format == "xml") {
+
+            // Look for FeatureCollection (GML 3.x) or gml:FeatureCollection (GML 2.x)
+            const featureCollection = $(data).find('wfs\\:FeatureCollection, FeatureCollection').first();
+            
+            if (featureCollection.length === 0) {
+                _alert("No FeatureCollection found in GML data");
+                return;
+            }
+
+            const dataA = [];
+            let childNamesA = null;
+
+            // Process each feature member
+            featureCollection.find('wfs\\:member, gml\\:featureMember, featureMember, gml\\:featureMembers, featureMembers').each(function () {
+                
+                const feature = $(this).find('gml\\:*, *').first();
+                if (feature.length === 0) return;
+
+                // Get fieldnames from the first feature
+                if (!childNamesA) {
+                    childNamesA = [];
+                    
+                    // Add property columns
+                    feature.find('gml\\:*, *').each(function () {
+                        const tagName = $(this).prop('tagName');
+                        if (tagName && !tagName.match(/^(gml:)?(boundedBy|location|pos|coordinates|geometry|geometryProperty)$/i)) {
+                            childNamesA.push(tagName.replace(/^gml:/, ''));
+                        }
+                    });
+                    
+                    // Add geometry column
+                    childNamesA.push('GML.Geometry');
+                    
+                    dataA.push(childNamesA);
+                }
+
+                // Extract feature data
+                const row = [];
+                
+                
+                // Add property values
+                feature.find('gml\\:*, *').each(function () {
+                    const tagName = $(this).prop('tagName');
+                    if (tagName && !tagName.match(/^(gml:)?(boundedBy|location|pos|coordinates|geometry|geometryProperty)$/i)) {
+                        row.push($(this).text());
+                    }
+                });
+                
+                // Add geometry data
+                const geometry = feature.find('gml\\:Polygon').first();
+                if (geometry.length > 0) {
+                    let value = '{"type":"Polygon","coordinates":[['; 
+                    let coords = (geometry.text().split(" "));
+                    let start = 0;
+                    
+                    // Find the first valid number
+                    for (var i = 0; i < coords.length; i++){
+                        if (Number(coords[i]) && !isNaN(Number(coords[i]))){
+                            start = i;
+                            break;
+                        }
+                    }
+                    
+                     
+                    // Check if we have enough coordinates
+                    if (start < coords.length - 1) {
+                        console.log("coords[start]:", coords[start]);
+                        console.log("coords[start+1]:", coords[start+1]);
+                        
+                        // Process coordinates in pairs
+                        for (i = start; i < coords.length - 1; i += 2) {
+                            if (coords[i] && coords[i+1] && 
+                                !isNaN(Number(coords[i])) && !isNaN(Number(coords[i+1]))) {
+                                value += (i>start?',':'')+ '[' + coords[i+1] + ',' + coords[i] + ']';
+                            }
+                        }
+                    }
+                    
+                    value += ']]}';
+                    console.log("final value:", value);                    
+                    row.push(value);
+                } else {
+                    row.push('');
+                }
+                
+                dataA.push(row);
+            });
+
+            __this.__createDataTableObject(dataA, "gml", opt);
 
         }
     };
@@ -1376,6 +1568,859 @@ $Log:data.js,v $
         this.__processGeoJsonData(topoObject, opt);
     };
 
+    // ---------------------------------------
+    // P A R Q U E T   e   G E O P A R Q U E T 
+    // ---------------------------------------
+
+    /**
+     * __doParquetImport
+     * reads parquet file from URL using hyparquet module
+     * @param szUrl parquet file url
+     * @param opt options object
+     * @type void
+     */
+    Data.Feed.prototype.__doParquetImport = function (szUrl, opt) {
+        _LOG("__doParquetImport: " + szUrl);
+        
+        const __this = this;
+        
+        // Use Fetch API instead of jQuery AJAX for better binary handling
+        _LOG("Attempting to load parquet file using Fetch API...");
+        
+        fetch(szUrl, {
+            method: 'GET',
+            cache: opt.cache ? 'default' : 'no-cache'
+        })
+        .then(response => {
+            _LOG("Fetch response received, status: " + response.status);
+            _LOG("Response headers: " + JSON.stringify([...response.headers.entries()]));
+            
+            if (!response.ok) {
+                throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+            }
+            
+            // Get the response as ArrayBuffer
+            return response.arrayBuffer();
+        })
+        .then(arrayBuffer => {
+            _LOG("Successfully loaded parquet as ArrayBuffer: " + arrayBuffer.byteLength + " bytes");
+            
+            // Verify this looks like a parquet file
+            const uint8Array = new Uint8Array(arrayBuffer);
+            if (uint8Array.length >= 4) {
+                const magic = String.fromCharCode(...uint8Array.slice(0, 4));
+                _LOG("Magic number: " + magic);
+                if (magic === 'PAR1') {
+                    _LOG("✅ SUCCESS: Valid parquet file detected!");
+                    __this.__processParquetData(arrayBuffer, opt);
+                } else {
+                    _LOG("⚠️ Warning: Magic number is not PAR1: " + magic);
+                    _LOG("First 16 bytes: " + Array.from(uint8Array.slice(0, 16)).map(b => b.toString(16).padStart(2, '0')).join(' '));
+                    
+                    // Even if magic number is wrong, try to process it
+                    _LOG("Attempting to process anyway...");
+                    __this.__processParquetData(arrayBuffer, opt);
+                }
+            } else {
+                _LOG("⚠️ Warning: Response too short to check magic number");
+                __this.__processParquetData(arrayBuffer, opt);
+            }
+        })
+        .catch(error => {
+            _LOG("Fetch failed: " + error.message);
+            
+            // Fallback to XMLHttpRequest if Fetch fails
+            _LOG("Falling back to XMLHttpRequest...");
+            __this.__loadParquetWithXHR(szUrl, opt);
+        });
+    };
+
+    /**
+     * __loadParquetWithXHR
+     * fallback method using XMLHttpRequest if Fetch fails
+     * @param szUrl parquet file url
+     * @param opt options object
+     * @type void
+     */
+    Data.Feed.prototype.__loadParquetWithXHR = function (szUrl, opt) {
+        const __this = this;
+        
+        _LOG("Loading parquet with XMLHttpRequest...");
+        
+        const xhr = new XMLHttpRequest();
+        xhr.open('GET', szUrl, true);
+        xhr.responseType = 'arraybuffer';
+        
+        xhr.onload = function() {
+            if (xhr.status === 200) {
+                const arrayBuffer = xhr.response;
+                _LOG("XHR successful: " + arrayBuffer.byteLength + " bytes");
+                
+                // Verify this looks like a parquet file
+                const uint8Array = new Uint8Array(arrayBuffer);
+                if (uint8Array.length >= 4) {
+                    const magic = String.fromCharCode(...uint8Array.slice(0, 4));
+                    _LOG("XHR magic number: " + magic);
+                    if (magic === 'PAR1') {
+                        _LOG("✅ SUCCESS: Valid parquet file via XHR!");
+                        __this.__processParquetData(arrayBuffer, opt);
+                    } else {
+                        _LOG("⚠️ Warning: XHR magic number is not PAR1: " + magic);
+                        _LOG("First 16 bytes: " + Array.from(uint8Array.slice(0, 16)).map(b => b.toString(16).padStart(2, '0')).join(' '));
+                        
+                        // Even if magic number is wrong, try to process it
+                        _LOG("Attempting to process anyway...");
+                        __this.__processParquetData(arrayBuffer, opt);
+                    }
+                } else {
+                    _LOG("⚠️ Warning: XHR response too short to check magic number");
+                    __this.__processParquetData(arrayBuffer, opt);
+                }
+            } else {
+                _LOG("XHR failed with status: " + xhr.status + " " + xhr.statusText);
+                if (typeof opt !== "undefined" && opt.error) {
+                    opt.error("XHR failed: " + xhr.status + " " + xhr.statusText);
+                } else {
+                    _alert("XHR failed: " + xhr.status + " " + xhr.statusText);
+                }
+            }
+        };
+        
+        xhr.onerror = function() {
+            _LOG("XHR network error");
+            if (typeof opt !== "undefined" && opt.error) {
+                opt.error("XHR network error");
+            } else {
+                _alert("XHR network error");
+            }
+        };
+        
+        xhr.send();
+    };
+
+    /**
+     * __checkGeoParquetMetadata
+     * Helper function to check GeoParquet metadata using loaded hyparquet
+     * @param parquetBuffer ArrayBuffer containing parquet data
+     * @param hyparquet loaded hyparquet module
+     * @param resolve Promise resolve function
+     * @param reject Promise reject function
+     */
+    Data.Feed.prototype.__checkGeoParquetMetadata = function (parquetBuffer, hyparquet, resolve, reject) {
+        try {
+            console.log("🔍 Checking GeoParquet metadata with existing hyparquet...");
+            
+            // Use parquetMetadataAsync to get metadata
+            if (typeof hyparquet.parquetMetadataAsync === 'function') {
+                console.log("📊 Using parquetMetadataAsync method");
+                
+                hyparquet.parquetMetadataAsync(parquetBuffer).then(function(metadata) {
+                    console.log("📊 Metadata received:", metadata);
+                    
+                    let isGeoParquet = false;
+                    
+                    // Check metadata for "geo" key
+                    if (metadata && metadata.key_value_metadata) {
+                        console.log("📊 Schema metadata found:", metadata.key_value_metadata);
+                        const hasGeoMetadata = metadata.key_value_metadata.some(item => 
+                            item.key === 'geo' || item.key.toLowerCase().includes('geo')
+                        );
+                        
+                        if (hasGeoMetadata) {
+                            console.log("✅ GeoParquet detected via metadata geo key");
+                            isGeoParquet = true;
+                        }
+                    }
+                    
+                    // Check if any column has geometry type
+                    if (!isGeoParquet && metadata && metadata.schema && metadata.schema.fields) {
+                        console.log("📊 Schema fields found:", metadata.schema.fields);
+                        const hasGeometryField = metadata.schema.fields.some(field => 
+                            field.type && (
+                                field.type.toLowerCase().includes('geometry') ||
+                                field.type.toLowerCase().includes('geography') ||
+                                field.type.toLowerCase().includes('point') ||
+                                field.type.toLowerCase().includes('polygon') ||
+                                field.type.toLowerCase().includes('linestring')
+                            )
+                        );
+                        
+                        if (hasGeometryField) {
+                            console.log("✅ GeoParquet detected via field types");
+                            isGeoParquet = true;
+                        }
+                    }
+                    
+                    // Check for geometry column names in field names
+                    if (!isGeoParquet && metadata && metadata.schema && metadata.schema.fields) {
+                        const geoColumns = ['geometry', 'geom', 'the_geom', 'wkb_geometry', 'shape'];
+                        const hasGeoColumn = metadata.schema.fields.some(field => 
+                            geoColumns.some(geoCol => 
+                                field.name && field.name.toLowerCase().includes(geoCol.toLowerCase())
+                            )
+                        );
+                        
+                        if (hasGeoColumn) {
+                            console.log("✅ GeoParquet detected via column names");
+                            isGeoParquet = true;
+                        }
+                    }
+                    
+                    console.log("🎯 GeoParquet detection result:", isGeoParquet);
+                    resolve(isGeoParquet);
+                    
+                }).catch(function(error) {
+                    console.warn("Error reading parquet metadata:", error);
+                    resolve(false);
+                });
+                
+            } else {
+                console.log("📊 parquetMetadataAsync not available, trying fallback methods");
+                
+                // Fallback: try to read a small sample and check for geo columns
+                try {
+                    const sample = hyparquet.parquetReadObjects({
+                        file: parquetBuffer,
+                        rowStart: 0,
+                        rowEnd: 1,
+                        compressors: hyparquet.compressors
+                    });
+                    
+                    if (sample && sample.length > 0) {
+                        const firstRow = sample[0];
+                        console.log("📊 Sample row columns:", Object.keys(firstRow));
+                        // Check for common GeoParquet column names
+                        const geoColumns = ['geometry', 'geom', 'the_geom', 'wkb_geometry', 'shape'];
+                        const hasGeoColumn = geoColumns.some(col => firstRow.hasOwnProperty(col));
+                        
+                        if (hasGeoColumn) {
+                            console.log("✅ GeoParquet detected via column names");
+                            resolve(true);
+                        } else {
+                            resolve(false);
+                        }
+                    } else {
+                        resolve(false);
+                    }
+                } catch (error) {
+                    console.warn("Error in fallback detection:", error);
+                    resolve(false);
+                }
+            }
+            
+        } catch (error) {
+            console.warn("Error detecting GeoParquet metadata:", error);
+            resolve(false);
+        }
+    };
+    
+    /**
+     * __processParquetData
+     * processes parquet data using hyparquet module and converts it to table format
+     * @param parquetBuffer ArrayBuffer containing parquet data
+     * @param opt options object
+     * @type void
+     */
+    Data.Feed.prototype.__processParquetData = function (parquetBuffer, opt) {
+        const __this = this;
+        
+        console.log("🚀 Starting parquet processing...");
+        _LOG("Processing parquet data...");
+        
+        // First, ensure hyparquet is loaded
+        if (typeof window.hyparquet !== 'undefined') {
+            console.log("📦 Using existing hyparquet module");
+            __this.__processParquetWithHyparquet(parquetBuffer, opt, window.hyparquet);
+        } else {
+            console.log("📦 Loading hyparquet module...");
+            __this.__loadHyparquetAndProcess(parquetBuffer, opt);
+        }
+    };
+    
+    /**
+     * __processParquetWithHyparquet
+     * Processes parquet data with loaded hyparquet module (includes GeoParquet detection)
+     * @param parquetBuffer ArrayBuffer containing parquet data
+     * @param opt options object
+     * @param hyparquet loaded hyparquet module
+     */
+    Data.Feed.prototype.__processParquetWithHyparquet = function (parquetBuffer, opt, hyparquet) {
+        const __this = this;
+        
+        console.log("🔍 Starting GeoParquet detection with loaded hyparquet...");
+        _LOG("Detecting if parquet file is GeoParquet...");
+        
+        // Use the loaded hyparquet to detect GeoParquet
+        __this.__checkGeoParquetMetadata(parquetBuffer, hyparquet, function(isGeoParquet) {
+            console.log("🎯 GeoParquet detection result:", isGeoParquet);
+            
+            if (isGeoParquet) {
+                _LOG("✅ GeoParquet detected! Switching to GeoParquet processing...");
+                console.log("🎯 Branching to GeoParquet processing");
+                
+                // Branch to GeoParquet processing
+                if (typeof __this.__processGeoParquetData === 'function') {
+                    __this.__processGeoParquetData(parquetBuffer, opt);
+                } else {
+                    _LOG("⚠️ GeoParquet processing function not found, falling back to regular parquet processing");
+                    console.log("⚠️ GeoParquet function not found, using regular processing");
+                    __this.__processWithHyparquet(parquetBuffer, opt, hyparquet);
+                }
+            } else {
+                _LOG("✅ Regular parquet file detected, proceeding with standard processing...");
+                console.log("🎯 Branching to regular parquet processing");
+                
+                // Continue with regular parquet processing
+                __this.__processWithHyparquet(parquetBuffer, opt, hyparquet);
+            }
+        }, function(error) {
+            _LOG("⚠️ Error detecting GeoParquet, falling back to regular parquet processing: " + error);
+            console.error("❌ Detection error:", error);
+            
+            // Fallback to regular parquet processing
+            __this.__processWithHyparquet(parquetBuffer, opt, hyparquet);
+        });
+    };
+    
+    /**
+     * __loadHyparquetAndProcess
+     * Loads hyparquet module and processes parquet data
+     * @param parquetBuffer ArrayBuffer containing parquet data
+     * @param opt options object
+     */
+    Data.Feed.prototype.__loadHyparquetAndProcess = function (parquetBuffer, opt) {
+        const __this = this;
+        
+        // Load hyparquet module dynamically using script tag
+        _LOG("Loading hyparquet module dynamically...");
+        
+        // Create a script element to load hyparquet (compressors will be handled separately)
+        const script = document.createElement('script');
+        script.type = 'module';
+        script.textContent = `
+            import * as hyparquet from "https://cdn.jsdelivr.net/npm/hyparquet@1.8.0/src/hyparquet.min.js";
+            import * as compressors from "https://cdn.jsdelivr.net/npm/hyparquet-compressors@1.1.1/+esm";
+            
+            console.log("Hyparquet module imported:", hyparquet);
+            console.log("Available hyparquet methods:", Object.keys(hyparquet));
+            
+            console.log("Compressor module imported:", compressors);
+            console.log("Available compressors methods:", Object.keys(compressors));
+            console.log("Full compressors object:", compressors);
+            
+            
+            // Create a wrapper object that includes both hyparquet and compressors
+            const hyparquetWithCompressors = {
+                ...hyparquet,
+                compressors: null
+            };
+            
+            // Try to attach compressors to the wrapper
+            if (compressors && compressors.compressors) {
+                hyparquetWithCompressors.compressors = compressors.compressors;
+                console.log("✅ ZSTD compressors attached to wrapper");
+                console.log("Available compressors:", Object.keys(compressors.compressors));
+            } else if (compressors && compressors.default && compressors.default.compressors) {
+                hyparquetWithCompressors.compressors = compressors.default.compressors;
+                console.log("✅ ZSTD compressors attached to wrapper (default export)");
+                console.log("Available compressors:", Object.keys(compressors.default.compressors));
+            } else {
+                console.log("⚠️ Compressors structure:", Object.keys(compressors));
+                // Try to find compressors in the module
+                for (const key in compressors) {
+                    if (compressors[key] && typeof compressors[key] === 'object' && compressors[key].zstd) {
+                        hyparquetWithCompressors.compressors = compressors[key];
+                        console.log("✅ Found compressors in:", key);
+                        break;
+                    }
+                }
+            }
+           
+            window.hyparquet = hyparquetWithCompressors;
+            window.compressors = compressors;
+            window.hyparquetLoaded = true;
+            console.log("Hyparquet wrapper with compressors loaded and set to window.hyparquet");
+        `;
+        
+        // Listen for when hyparquet is loaded
+        const checkLoaded = setInterval(function() {
+            if (window.hyparquetLoaded && window.hyparquet) {
+                clearInterval(checkLoaded);
+                _LOG("Hyparquet module loaded successfully");
+                __this.__processParquetWithHyparquet(parquetBuffer, opt, window.hyparquet);
+            }
+        }, 100);
+        
+        // Set a timeout in case loading fails
+        setTimeout(function() {
+            if (!window.hyparquetLoaded) {
+                clearInterval(checkLoaded);
+                _LOG("Failed to load hyparquet module");
+                if (typeof opt !== "undefined" && opt.error) {
+                    opt.error("Failed to load hyparquet module");
+                } else {
+                    _alert("Failed to load hyparquet module");
+                }
+            }
+        }, 10000); // 10 second timeout
+        
+        // Add the script to the document
+        document.head.appendChild(script);
+    };
+    
+    /**
+     * __processWithHyparquet
+     * helper method to process parquet data once hyparquet is loaded
+     * @param parquetBuffer ArrayBuffer containing parquet data
+     * @param opt options object
+     * @param hyparquet the loaded hyparquet module
+     * @type void
+     */
+        Data.Feed.prototype.__processWithHyparquet = function (parquetBuffer, opt, hyparquet) {
+        try {
+            _LOG("Processing parquet data with hyparquet, buffer size: " + parquetBuffer.byteLength + " bytes");
+            _LOG("Hyparquet object: " + JSON.stringify(hyparquet));
+            _LOG("Available hyparquet methods: " + Object.keys(hyparquet).join(', '));
+            
+            // Check for parquet magic number (PAR1)
+            if (parquetBuffer.byteLength < 4) {
+                throw new Error("File too small to be a valid parquet file");
+            }
+            
+            const uint8Array = new Uint8Array(parquetBuffer);
+            const magic = String.fromCharCode(...uint8Array.slice(0, 4));
+            _LOG("Parquet file magic number: " + magic);
+            _LOG("Parquet file size: " + parquetBuffer.byteLength + " bytes");
+            _LOG("First 16 bytes: " + Array.from(uint8Array.slice(0, 16)).map(b => b.toString(16).padStart(2, '0')).join(' '));
+            
+            // Additional buffer analysis
+            _LOG("Buffer analysis:");
+            _LOG("  - Total bytes: " + parquetBuffer.byteLength);
+            _LOG("  - Last 16 bytes: " + Array.from(uint8Array.slice(-16)).map(b => b.toString(16).padStart(2, '0')).join(' '));
+            _LOG("  - Buffer constructor: " + parquetBuffer.constructor.name);
+            _LOG("  - Is ArrayBuffer: " + (parquetBuffer instanceof ArrayBuffer));
+            
+            if (magic !== 'PAR1') {
+                throw new Error("File does not appear to be a valid parquet file (missing PAR1 magic number). Magic: " + magic);
+            }
+            
+            _LOG("Valid parquet file detected, processing with hyparquet...");
+            
+            // Check if parquetReadObjects method exists
+            if (typeof hyparquet.parquetReadObjects !== 'function') {
+                throw new Error("parquetReadObjects method not found in hyparquet. Available methods: " + Object.keys(hyparquet).join(', '));
+            }
+            
+            _LOG("Calling hyparquet.parquetReadObjects...");
+            
+            // Check available methods first
+            _LOG("Available hyparquet methods: " + Object.keys(hyparquet).join(', '));
+            
+           // Try different approaches for hyparquet
+            let result;
+            try {
+                _LOG("Using original ArrayBuffer, size: " + parquetBuffer.byteLength + " bytes");
+                _LOG("ArrayBuffer constructor: " + parquetBuffer.constructor.name);
+                _LOG("ArrayBuffer isView: " + ArrayBuffer.isView(parquetBuffer));
+                _LOG("ArrayBuffer byteLength: " + parquetBuffer.byteLength);
+                
+                // Verify ArrayBuffer is valid
+                if (!(parquetBuffer instanceof ArrayBuffer)) {
+                    throw new Error("parquetBuffer is not an ArrayBuffer: " + typeof parquetBuffer);
+                }
+                // First try the standard method with ArrayBuffer
+                if (typeof hyparquet.parquetReadObjects === 'function') {
+                    _LOG("Using parquetReadObjects method with ArrayBuffer...");
+                    
+                    // Check if compressors are available
+                    if (hyparquet.compressors) {
+                        _LOG("✅ Compressors available: " + Object.keys(hyparquet.compressors).join(', '));
+                        if (hyparquet.compressors.zstd) {
+                            _LOG("✅ ZSTD compression supported!");
+                            _LOG("ZSTD compressor details:", hyparquet.compressors.zstd);
+                        }
+                        _LOG("Full compressors object:", hyparquet.compressors);
+                    } else {
+                        _LOG("⚠️ No compressors available - ZSTD files may not work");
+                        _LOG("Hyparquet object keys:", Object.keys(hyparquet));
+                        _LOG("Window compressors available:", window.compressors ? Object.keys(window.compressors) : 'None');
+                    }
+                    
+                    // Try to get compressors from multiple sources
+                    let availableCompressors = null;
+                    
+                    if (hyparquet.compressors) {
+                        availableCompressors = hyparquet.compressors;
+                        _LOG("Using compressors from hyparquet.compressors");
+                    } else if (window.compressors && window.compressors.compressors) {
+                        availableCompressors = window.compressors.compressors;
+                        _LOG("Using compressors from window.compressors.compressors");
+                    } else if (window.compressors && window.compressors.default && window.compressors.default.compressors) {
+                        availableCompressors = window.compressors.default.compressors;
+                        _LOG("Using compressors from window.compressors.default.compressors");
+                    } else {
+                        _LOG("⚠️ No compressors found anywhere - ZSTD files will fail");
+                    }
+                    
+                    result = hyparquet.parquetReadObjects({
+                        file: parquetBuffer,
+                        rowStart: 0,
+                        rowEnd: 100000,
+                        compressors: availableCompressors  // Pass the found compressors
+                    });
+                } else if (typeof hyparquet.read === 'function') {
+                    _LOG("Using read method with ArrayBuffer...");
+                    result = hyparquet.read(parquetBuffer);
+                } else if (typeof hyparquet.parse === 'function') {
+                    _LOG("Using parse method with ArrayBuffer...");
+                    result = hyparquet.parse(parquetBuffer);
+                } else {
+                    // Try alternative method names
+                    const methodNames = ['readParquet', 'parseParquet', 'load', 'fromBuffer'];
+                    let methodFound = false;
+                    
+                    for (const methodName of methodNames) {
+                        if (typeof hyparquet[methodName] === 'function') {
+                            _LOG("Using " + methodName + " method with ArrayBuffer...");
+                            result = hyparquet[methodName](parquetBuffer);
+                            methodFound = true;
+                            break;
+                        }
+                    }
+                    
+                    if (!methodFound) {
+                        throw new Error("No suitable hyparquet method found. Available: " + Object.keys(hyparquet).join(', '));
+                    }
+                }
+                
+                _LOG("Method result type: " + typeof result);
+                _LOG("Method result: " + JSON.stringify(result));
+                _LOG("Method result constructor: " + (result ? result.constructor.name : 'null/undefined'));
+                
+                if (result === null || result === undefined) {
+                    throw new Error("Method returned null or undefined");
+                }
+            } catch (callError) {
+                _LOG("Error calling hyparquet method: " + callError);
+                throw new Error("Failed to call hyparquet method: " + callError);
+            }
+            
+            // Handle both Promise and direct return
+            if (result && typeof result.then === 'function') {
+                // It's a Promise
+                _LOG("Result is a Promise, waiting for resolution...");
+                
+                // Capture 'this' reference to use inside Promise callbacks
+                const __this = this;
+                
+                result.then(function(rows) {
+                    
+                    try {
+                        
+                        // Validate that rows is an array
+                        if (!Array.isArray(rows)) {
+                            throw new Error("Expected rows to be an array, got: " + typeof rows);
+                        }
+                        
+                        if (rows.length === 0) {
+                            throw new Error("No rows found in parquet file");
+                        }
+                        
+                         
+                        // Extract column names from first row
+                        if (!rows[0] || typeof rows[0] !== 'object') {
+                            throw new Error("First row is not a valid object: " + JSON.stringify(rows[0]));
+                        }
+                        
+                        const columns = Object.keys(rows[0]);
+                        _LOG("Extracted columns: " + columns.join(', '));
+                        
+                        if (columns.length === 0) {
+                            throw new Error("No columns found in first row");
+                        }
+                        
+                        // Convert rows to array format
+                        const dataRows = [];
+                        for (let i = 0; i < rows.length; i++) {
+                            const row = [];
+                            for (let j = 0; j < columns.length; j++) {
+                                const value = rows[i][columns[j]];
+                                // Handle different data types
+                                if (value === null || value === undefined) {
+                                    row.push('');
+                                } else if (typeof value === 'object' && value.toDate) {
+                                    // Handle date objects
+                                    row.push(value.toDate().toISOString());
+                                } else if (typeof value === 'object') {
+                                    // Handle complex objects
+                                    row.push(JSON.stringify(value));
+                                } else {
+                                    row.push(String(value));
+                                }
+                            }
+                            dataRows.push(row);
+                        }
+                        
+                        _LOG("Converted " + dataRows.length + " rows with " + columns.length + " columns");
+                        
+                        // Create data array with header row
+                        const dataA = [columns];
+                        dataA.push(...dataRows);
+                        
+                        // Create table object using captured 'this' reference
+                        console.log(opt);
+                        __this.__createDataTableObject(dataA, "parquet", opt);
+                        
+                    } catch (error) {
+                        _LOG("Error in rows processing: " + error);
+                        throw new Error("Error processing parquet rows: " + error);
+                    }
+                }).catch(function(error) {
+                    _LOG("Error in hyparquet method: " + error);
+                    _LOG("Error stack: " + error.stack);
+                    _LOG("Error message: " + error.message);
+                    throw new Error("Error reading parquet data: " + error);
+                });
+            } else {
+                // It's a direct return
+                _LOG("Result is not a Promise, treating as direct return");
+                const rows = result;
+                _LOG("Direct return rows type: " + typeof rows);
+                _LOG("Direct return rows value: " + JSON.stringify(rows));
+                _LOG("Direct return rows constructor: " + (rows ? rows.constructor.name : 'null/undefined'));
+                _LOG("Direct return rows length: " + (rows ? rows.length : 'N/A'));
+                
+                try {
+                    _LOG("Parquet data read successfully (direct return), rows type: " + typeof rows);
+                    _LOG("Rows value: " + JSON.stringify(rows));
+                    
+                    // Validate that rows is an array
+                    if (!Array.isArray(rows)) {
+                        throw new Error("Expected rows to be an array, got: " + typeof rows);
+                    }
+                    
+                    if (rows.length === 0) {
+                        throw new Error("No rows found in parquet file");
+                    }
+                    
+                    _LOG("Number of rows: " + rows.length);
+                    _LOG("First row: " + JSON.stringify(rows[0]));
+                    
+                    // Extract column names from first row
+                    if (!rows[0] || typeof rows[0] !== 'object') {
+                        throw new Error("First row is not a valid object: " + JSON.stringify(rows[0]));
+                    }
+                    
+                    const columns = Object.keys(rows[0]);
+                    _LOG("Extracted columns: " + columns.join(', '));
+                    
+                    if (columns.length === 0) {
+                        throw new Error("No columns found in first row");
+                    }
+                    
+                    // Convert rows to array format
+                    const dataRows = [];
+                    for (let i = 0; i < rows.length; i++) {
+                        const row = [];
+                        for (let j = 0; j < columns.length; j++) {
+                            const value = rows[i][columns[j]];
+                            // Handle different data types
+                            if (value === null || value === undefined) {
+                                row.push('');
+                            } else if (typeof value === 'object' && value.toDate) {
+                                // Handle date objects
+                                row.push(value.toDate().toISOString());
+                            } else if (typeof value === 'object') {
+                                // Handle complex objects
+                                row.push(JSON.stringify(value));
+                            } else {
+                                row.push(String(value));
+                            }
+                        }
+                        dataRows.push(row);
+                    }
+                    
+                    _LOG("Converted " + dataRows.length + " rows with " + columns.length + " columns");
+                    
+                    // Create data array with header row
+                    const dataA = [columns];
+                    dataA.push(...dataRows);
+                    
+                    // Create table object
+                    this.__createDataTableObject(dataA, "parquet", opt);
+                    
+                } catch (error) {
+                    _LOG("Error in rows processing: " + error);
+                    throw new Error("Error processing parquet rows: " + error);
+                }
+            }
+            
+        } catch (error) {
+            _LOG("Error processing parquet data: " + error);
+            if (typeof opt !== "undefined" && opt.error) {
+                opt.error("Error processing parquet data: " + error);
+            } else {
+                _alert("Error processing parquet data: " + error);
+            }
+        }
+    };
+
+
+    /**
+     * __processGeoParquetData
+     * Processes GeoParquet data and converts it to GeoJSON format
+     * @param {ArrayBuffer} geoparquetBuffer ArrayBuffer containing GeoParquet data
+     * @param {Object} opt options object
+     * @type void
+     */
+    Data.Feed.prototype.__processGeoParquetData = function (geoparquetBuffer, opt) {
+        const __this = this;
+        
+        // Check if geoparquet library is already loaded
+        if (typeof window.geoparquet !== 'undefined') {
+            _LOG("GeoParquet library already loaded, processing data...");
+            __this.__processWithGeoParquet(geoparquetBuffer, opt, window.geoparquet);
+        } else {
+            _LOG("Loading GeoParquet library dynamically...");
+            
+            // Create script element to load geoparquet
+            const script = document.createElement('script');
+            script.type = 'module';
+            script.textContent = `
+                import { asyncBufferFromUrl, toGeoJson } from 'https://cdn.jsdelivr.net/npm/geoparquet@0.5.0/+esm';
+                
+                console.log("GeoParquet module imported");
+                console.log("Available geoparquet methods:", Object.keys({ asyncBufferFromUrl, toGeoJson }));
+                
+                // Make geoparquet available globally
+                window.geoparquet = { asyncBufferFromUrl, toGeoJson };
+                window.geoparquetLoaded = true;
+            `;
+            
+            // Listen for when geoparquet is loaded
+            const checkLoaded = setInterval(function() {
+                if (window.geoparquetLoaded && window.geoparquet) {
+                    clearInterval(checkLoaded);
+                    _LOG("GeoParquet module loaded successfully");
+                    __this.__processWithGeoParquet(geoparquetBuffer, opt, window.geoparquet);
+                }
+            }, 100);
+            
+            // Set a timeout in case loading fails
+            setTimeout(function() {
+                if (!window.geoparquetLoaded) {
+                    clearInterval(checkLoaded);
+                    _LOG("Failed to load GeoParquet module");
+                    if (typeof opt !== "undefined" && opt.error) {
+                        opt.error("Failed to load GeoParquet module");
+                    } else {
+                        _alert("Failed to load GeoParquet module");
+                    }
+                }
+            }, 10000); // 10 second timeout
+            
+            // Add the script to the document
+            document.head.appendChild(script);
+        }
+    };
+
+    /**
+     * __processWithGeoParquet
+     * Helper method to process GeoParquet data once geoparquet library is loaded
+     * @param {ArrayBuffer} geoparquetBuffer ArrayBuffer containing GeoParquet data
+     * @param {Object} opt options object
+     * @param {Object} geoparquet the loaded geoparquet module
+     * @type void
+     */
+    Data.Feed.prototype.__processWithGeoParquet = function (geoparquetBuffer, opt, geoparquet) {
+        try {
+            _LOG("Processing GeoParquet data, buffer size: " + geoparquetBuffer.byteLength + " bytes");
+            _LOG("GeoParquet object: " + JSON.stringify(geoparquet));
+            _LOG("Available geoparquet methods: " + Object.keys(geoparquet).join(', '));
+            
+            // Check for parquet magic number (PAR1)
+            if (geoparquetBuffer.byteLength < 4) {
+                throw new Error("File too small to be a valid parquet file");
+            }
+            
+            const uint8Array = new Uint8Array(geoparquetBuffer);
+            const magic = String.fromCharCode(...uint8Array.slice(0, 4));
+            _LOG("Parquet file magic number: " + magic);
+            
+            if (magic !== 'PAR1') {
+                throw new Error("File does not appear to be a valid parquet file (missing PAR1 magic number). Magic: " + magic);
+            }
+            
+            _LOG("Valid parquet file detected, processing with geoparquet...");
+            
+            // Check if toGeoJson method exists
+            if (typeof geoparquet.toGeoJson !== 'function') {
+                throw new Error("toGeoJson method not found in geoparquet. Available methods: " + Object.keys(geoparquet).join(', '));
+            }
+            
+            _LOG("Calling geoparquet.toGeoJson...");
+            
+            // Convert GeoParquet to GeoJSON
+            const geoJson = geoparquet.toGeoJson({ file: geoparquetBuffer });
+            
+            _LOG("GeoJSON conversion result type: " + typeof geoJson);
+            _LOG("GeoJSON conversion result: " + JSON.stringify(geoJson));
+            
+            // Handle both Promise and direct return
+            if (geoJson && typeof geoJson.then === 'function') {
+                // It's a Promise
+                _LOG("GeoJSON conversion is a Promise, waiting for resolution...");
+                
+                const __this = this;
+                
+                geoJson.then(function(geoJsonData) {
+                    try {
+                        _LOG("GeoJSON conversion completed successfully");
+                        _LOG("GeoJSON type: " + geoJsonData.type);
+                        _LOG("Number of features: " + (geoJsonData.features ? geoJsonData.features.length : 'unknown'));
+                        
+                        // Process the GeoJSON data
+                        __this.__processGeoJsonData(geoJsonData, opt);
+                        
+                    } catch (error) {
+                        _LOG("Error processing GeoJSON data: " + error);
+                        throw new Error("Error processing GeoJSON data: " + error);
+                    }
+                }).catch(function(error) {
+                    _LOG("Error in GeoJSON conversion: " + error);
+                    _LOG("Error stack: " + error.stack);
+                    _LOG("Error message: " + error.message);
+                    
+                    if (typeof opt !== "undefined" && opt.error) {
+                        opt.error("Error converting GeoParquet to GeoJSON: " + error);
+                    } else {
+                        _alert("Error converting GeoParquet to GeoJSON: " + error);
+                    }
+                });
+            } else {
+                // Direct return
+                _LOG("GeoJSON conversion returned directly");
+                
+                if (!geoJson) {
+                    throw new Error("GeoJSON conversion returned null or undefined");
+                }
+                
+                _LOG("GeoJSON type: " + geoJson.type);
+                _LOG("Number of features: " + (geoJson.features ? geoJson.features.length : 'unknown'));
+                
+                // Process the GeoJSON data
+                this.__processGeoJsonData(geoJson, opt);
+            }
+            
+        } catch (error) {
+            _LOG("Error processing GeoParquet data: " + error);
+            if (typeof opt !== "undefined" && opt.error) {
+                opt.error("Error processing GeoParquet data: " + error);
+            } else {
+                _alert("Error processing GeoParquet data: " + error);
+            }
+        }
+    };
 
 
     // ---------------------------------
@@ -1390,7 +2435,7 @@ $Log:data.js,v $
     Data.Feed.prototype.__createDataTableObject = function (dataA, szType, opt) {
 
         if (dataA) {
-
+            
             this.dbtable = new Data.Table().setArray(dataA);
             dataA = null;
 
@@ -3163,6 +4208,9 @@ $Log:data.js,v $
          *								   <table border='0' style='border-left: 1px solid #ddd;'>	
          *								   <tr><td><b>"csv"</b></td><td>the source is 'plain text' formatted as Comma Separated Values<br>delimiter supported: <span style='background:#dddddd'>,</span> and <span style='background:#dddddd'>;</span></td></tr>
          *								   <tr><td><b>"json"</b></td><td>the source is JSON (Javascript Object Notation)</td></tr>
+         *								   <tr><td><b>"geojson"</b></td><td>the source is a JSON object formatted in <a href="https://geojson.org/" target="_blank">GeoJson</a></td></tr>
+         *								   <tr><td><b>"geoparquet"</b></td><td>the source is a GeoParquet file (converted to GeoJSON)</td></tr>
+         *								   <tr><td><b>"parquet"</b></td><td>the source is a Parquet file</td></tr>
          *								   <tr><td><b>"JSON-stat"</b></td><td>the source is a JSON object formatted in <a href="https://json-stat.org/JSON-stat" target="_blank">JSON-stat</a></td></tr>
          *								   <tr><td><b>"jsonDB"</b></td><td>the source is in ixmaps internal data table format</td></tr>
          *								   <tr><td><b>"rss"</b></td><td>the source is an xml rss feed</td></tr>
