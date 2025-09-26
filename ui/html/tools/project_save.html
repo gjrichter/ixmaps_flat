@@ -8,15 +8,6 @@
 
 	<!-- Styles ------------------------ -->
 
-	<!-- Bootstrap core CSS -->
-	<link href="../assets/css/bootstrap.css" rel="stylesheet">
-
-	<!-- Custom styles for this template -->
-	<link href="../assets/css/font-awesome.min.css" rel="stylesheet">
-	<link href="../assets/css/icomoon.css" rel="stylesheet">
-
-	<link href="../../css/site.min.css" rel="stylesheet">
-
 	<style type="text/css">
 		body #exportdiv {
 			background: #fff;
@@ -127,7 +118,7 @@
 			<form>
 				<fieldset>
 					<span class="help-block">give a nice title</span>
-					<input id="project-title" type="text" class="input" size="40" style="font-size:1.1em"></input>
+					<input id="project-title" type="text" class="input" size="35" style="font-size:1.1em"></input>
 				</fieldset>
 				<fieldset>
 					<span class="help-block">a few words to describe the project</span>
@@ -146,7 +137,7 @@
 				<fieldset style="margin-top:-1.5em">
 					<span class="help-block">the project will contain the actual theme and map bounds</br>
 						you can redefine the project filename below as you like</span>
-					<input id="project-filename" type="text" class="input" size="50" style="font-size:1.1em"></input>
+					<input id="project-filename" type="text" class="input" size="35" style="font-size:1.1em"></input>
 				</fieldset>
 			</form>
 		</div>
@@ -168,16 +159,14 @@
     ================================================== -->
 	<!-- Placed at the end of the document so the pages load faster -->
 
-	<script src="../assets/js/jquery-3.5.1.min.js" type="text/javascript" language="JavaScript"></script>
-	<script src="../assets/js/bootstrap.min.js" type="text/javascript" language="JavaScript"></script>
-
 	<script type="text/javascript">
         
-		var ixmaps = null;
+		// Global namespace
+		window.ixmaps = window.ixmaps || {};
+
 		var szEmbedUrl = null;
 		var szAloneUrl = null;
 
-		var ixmaps = null;
 		if (window.opener) {
 			ixmaps = window.opener.ixmaps;
 		} else
@@ -396,9 +385,120 @@
 
 		$(document).ready(function() {
 
-			if (isAPIAvailable()) {
-                console.log(ixmaps);
-                alert(ixmaps.getProjectString);
+			// ===========================================
+			// Dynamically load all CSS resources
+			// ===========================================
+			function loadCSS(href) {
+				if (!href.match(/http/)) {
+					href = ixmaps.szResourceBase + href;
+				}
+				return new Promise((resolve, reject) => {
+					const link = document.createElement('link');
+					link.rel = 'stylesheet';
+					link.href = href;
+					link.onload = () => resolve();
+					link.onerror = () => reject(new Error(`Failed to load CSS: ${href}`));
+					$("#exportdiv")[0].appendChild(link);
+					//document.body.appendChild(link);
+				});
+			}
+
+			// ===========================================
+			// Dynamically load all JavaScript resources
+			// ===========================================
+			function loadScript(src) {
+				if (!src.match(/http/)) {
+					src = ixmaps.szResourceBase + src;
+				}
+				return new Promise((resolve, reject) => {
+					const script = document.createElement('script');
+					script.src = src;
+					script.onload = () => resolve();
+					script.onerror = () => reject(new Error(`Failed to load script: ${src}`));
+					$("#exportdiv")[0].appendChild(script);
+					//document.head.appendChild(script);
+				});
+			}
+
+			// ===========================================
+			// Preload images for better performance
+			// ===========================================
+			function preloadImages(imageUrls) {
+				const promises = imageUrls.map(url => {
+					return new Promise((resolve, reject) => {
+						const img = new Image();
+						img.onload = () => {
+							console.log(`Image preloaded: ${url}`);
+							resolve();
+						};
+						img.onerror = () => {
+							console.warn(`Failed to preload image: ${url}`);
+							resolve(); // Don't fail the entire preload process
+						};
+						img.src = url;
+					});
+				});
+				return Promise.all(promises);
+			}
+
+			// ===========================================
+			// Set image sources dynamically using data attributes
+			// ===========================================
+			function setImageSources() {
+				// Find all images with data-image attribute
+				const images = document.querySelectorAll('img[data-image]');
+				
+				images.forEach(img => {
+					const imageName = img.getAttribute('data-image');
+					const fullUrl = ixmaps.szResourceBase + 'ui/resources/images/' + imageName;
+					img.src = fullUrl;
+					
+					// Add error handling for individual images
+					img.onerror = () => {
+						console.warn(`Failed to load image: ${fullUrl}`);
+						// Optionally set a fallback image or hide the element
+					};
+					
+					console.log(`Set image source: ${fullUrl}`);
+				});
+			}
+
+			// ===========================================
+			// Load all resources sequentially
+			// ===========================================
+
+			async function loadAllResources() {
+				try {
+					console.log('Loading CSS resources...');
+					
+					// Load CSS files
+					//await loadCSS('ui/html/assets/css/font-awesome.min.css');
+					//await loadCSS('ui/html/assets/css/icomoon.css');
+					await loadCSS('ui/html/tools/site.css');
+					//await loadCSS('ui/html/tools/styles.css');
+					
+					console.log('Loading JavaScript resources...');
+					
+					// Load JavaScript files
+					//await loadScript('https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js');
+					//await loadScript('ui/js/htmlgui_query.js');
+					
+					// Continue with initialization after resources are loaded
+					initializeProjectSave();
+					
+				} catch (error) {
+					console.error('Error loading resources:', error);
+					alert('Failed to load required resources. Please refresh the page.');
+				}
+			}
+
+			// ===========================================
+			// Initialize project save after resources loaded
+			// ===========================================
+
+			function initializeProjectSave() {
+
+				$("#exportdiv").fadeIn();
 
 				var project = new Config(ixmaps.getProjectString());
 
@@ -413,6 +513,16 @@
 				$("#project-title").val(project.obj.metadata.title);
 				$("#project-snippet").val(project.obj.metadata.snippet);
 				$("#project-description").val(project.obj.metadata.description);
+			}
+
+			if (isAPIAvailable()) {
+                console.log(ixmaps);
+
+				$("#exportdiv").hide();
+
+				// Start loading resources
+				loadAllResources();
+
 			}
 		});
 

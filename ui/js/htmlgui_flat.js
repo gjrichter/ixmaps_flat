@@ -99,6 +99,7 @@ $Log: htmlgui_api.js,v $
  * @license MIT
  */
 
+
 /** 
  * @namespace ixmaps
  */
@@ -110,6 +111,13 @@ $Log: htmlgui_api.js,v $
         JSON_Schema: "https://gjrichter.github.io/ixmaps/schema/ixmaps/v1.json"
     };
 
+    /**
+     * Exposes the ixmaps object to the global window scope.
+     * Saves the original ixmaps object to restore later if needed.
+     * @function expose
+     * @private
+     * @returns {void}
+     */
     function expose() {
         var oldIxmaps = window.ixmaps;
 
@@ -135,8 +143,13 @@ $Log: htmlgui_api.js,v $
         expose();
     }
 
-
-    // List of file URLs and their expected types
+    /**
+     * List of file URLs and their expected types that need to be loaded for the ixmaps application.
+     * This array defines all CSS, JavaScript, HTML, and other resources required for the map interface.
+     * Resources are loaded asynchronously and processed based on their type (css, js, html, shortcut).
+     * @type {Array<{url: string, type: string}>}
+     * @private
+     */
     const fileUrls = [
         {
             url: 'ui/html/assets/css/icomoon.css',
@@ -147,23 +160,7 @@ $Log: htmlgui_api.js,v $
             type: 'css'
         },
         {
-            url: 'ui/libs/jquery/ui/css/smoothness/jquery-ui-1.8.16.custom.css',
-            type: 'css'
-        },
-        {
-            url: 'ui/css/jquery-ui.css',
-            type: 'css'
-        },
-        {
-            url: 'ui/css/custom.css',
-            type: 'css'
-        },
-        {
             url: 'ui/css/messagebox.css',
-            type: 'css'
-        },
-        {
-            url: 'ui/css/bootstrap.css',
             type: 'css'
         },
         {
@@ -189,10 +186,6 @@ $Log: htmlgui_api.js,v $
 
         {
             url: 'ui/libs/jquery/jquery-1.7.1.min.js',
-            type: 'js'
-        },
-        {
-            url: 'ui/libs/jquery/ui/js/jquery-ui-1.8.16.custom.min.js',
             type: 'js'
         },
         {
@@ -249,8 +242,30 @@ $Log: htmlgui_api.js,v $
             url: 'ui/js/htmlgui_story.js',
             type: 'js'
         },
+        
+        // for configurator only
+        // TODO: Move these configurator-specific resources to the dialog code
+        // to avoid loading them for all map instances
         {
-            url: './data.min.js/data.js',
+            url: 'ui/js/htmlgui_query.js',
+            type: 'js'
+        },
+        {
+            url: 'ui/js/tools/dialogmanager.js',
+            type: 'js'
+        },
+        {
+            url: 'ui/js/tools/colorscheme.js',
+            type: 'js'
+        },
+        {
+            url: 'ui/js/tools/colorselect.js',
+            type: 'js'
+        },
+        // ---------------------
+        
+        {
+            url: '../data.min.js/data.js',
             type: 'js'
         },
         {
@@ -281,9 +296,14 @@ $Log: htmlgui_api.js,v $
             type: 'js'
         }
 
-            //{ url: 'https://cdnjs.cloudflare.com/ajax/libs/proj4js/2.7.5/proj4.min.js', type: 'js' },
-            //{ url: 'https://unpkg.com/fzstd', type: 'js' },
-            //{ url: 'https://cdn.jsdelivr.net/npm/fzstd/umd/index.js', type: 'js' }
+        /**
+         * Commented out resources - these were previously used but are currently disabled
+         * due to compatibility issues or alternative implementations being preferred.
+         * Uncomment if needed for specific functionality.
+         */
+        //{ url: 'https://cdnjs.cloudflare.com/ajax/libs/proj4js/2.7.5/proj4.min.js', type: 'js' },
+        //{ url: 'https://unpkg.com/fzstd', type: 'js' },
+        //{ url: 'https://cdn.jsdelivr.net/npm/fzstd/umd/index.js', type: 'js' }
 
         ];
 
@@ -302,7 +322,7 @@ $Log: htmlgui_api.js,v $
             url = ixmaps.szResourceBase + url;
         }
 
-        console.log(url);
+        //console.log("- load: "+url);
 
         const response = await fetch(url);
         if (!response.ok) {
@@ -349,11 +369,15 @@ $Log: htmlgui_api.js,v $
      *
      * @async
      * @param {Array<{url: string, type: string}>} urls - An array of objects, each containing a 'url' and a 'type'.
+     * @param {string} target - The target element ID where HTML content should be inserted (for 'html' type resources).
      * @param {function} [callback] - An optional callback function to be executed after all resources are loaded successfully.
+     * @param {object} [opt] - Optional configuration object passed to the callback function.
+     * @param {function} [callback2] - An optional secondary callback function.
      * @returns {Promise<void>} A promise that resolves when all resources are loaded and processed.
      * @throws {Error} Throws an error if any resource fails to load.
      */
     async function loadResources(urls, target, callback, opt, callback2) {
+        console.log("load resources -->")
         try {
             const fetchPromises = urls.map(({
                 url,
@@ -366,8 +390,10 @@ $Log: htmlgui_api.js,v $
                     eval(file); // Execute only JavaScript code.
                 }
             }
+            
+            console.log('- all resources loaded successfully');
+            //console.log('');
 
-            console.log('All resources loaded successfully');
             if (callback) {
                 callback(opt, callback2);
             }
@@ -390,13 +416,13 @@ $Log: htmlgui_api.js,v $
     */
     const __config_map_ui = function (opt) {
 
+        $("#map-overlay").css("pointer-events", "none");
+        $("#map-overlay").css("width", "100%");
+
         // -----------------
         // map/theme legend
         // -----------------
 
-        $("#map-overlay").css("width", window.innerWidth + "px");
-        $("#map-overlay").css("height", window.innerHeight + "px");
-        $("#map-overlay").css("pointer-events", "none");
 
         if (opt.align) {
             if (opt.align.match(/left/)) {
@@ -407,6 +433,9 @@ $Log: htmlgui_api.js,v $
                 $(".map-legend").css("left", szLeft);
                 $(".map-legend").css("top", "12px");
                 $(".title-field").css("left", "100px");
+                $(".map-legend").css("background", "rgba(255,255,255,0.9");
+                $(".map-legend").css("padding", "0 1em");
+                $(".map-legend").css("border-radius", "0.5em");
             } else
             if (opt.align.match(/right/)) {
                 ixmaps.legendAlign = "right";
@@ -415,20 +444,25 @@ $Log: htmlgui_api.js,v $
                 var szRight = opt.align.split("right")[0] || "25px";
                 $(".map-legend").css("right", szRight);
                 $(".title-field").css("right", "100px");
+                $(".map-legend").css("background", "rgba(255,255,255,0.9");
+                $(".map-legend").css("padding", "0 1em");
+                $(".map-legend").css("border-radius", "0.5em");
             } else
             if ((opt.align == "center") ||
                 (opt.align == "top")) {
                 $("#map-legend").appendTo("#map-header");
                 $("#map-header").show();
-                $("#ixmap").css("top", "75px");
+                //$("#ixmap").css("top", "75px");
                 ixmaps.legendAlign = "center";
+                $(".map-legend").css("position", "relative");
                 $(".map-legend").attr("data-align", "right");
                 $(".map-legend").css("text-align", "center");
                 $(".map-legend").css("font-size", "0.7em");
+                $(".map-legend").css("margin", "auto");
                 $(".map-legend").css("margin-top", "-15px");
                 $(".map-legend").css("min-height", "77px");
                 $(".map-legend").css("width", "100%");
-                $(".map-legend").css("max-width", "100%");
+                $(".map-legend").css("max-width", "inferit");
                 $(".map-legend").css("left", "0px");
                 $(".map-legend").css("opacity", "1");
             } else
@@ -441,12 +475,14 @@ $Log: htmlgui_api.js,v $
                 $(".map-legend").css("text-align", "center");
                 $(".map-legend").css("font-size", "0.7em");
                 $(".map-legend").css("width", "100%");
-                $(".map-legend").css("max-width", "100%");
+                $(".map-legend").css("max-width", "inherit");
                 $(".map-legend").css("position", "absolute");
                 $(".map-legend").css("left", "0px");
                 $(".map-legend").css("top", "720px");
 
                 // GR 13/12/2023 HTML color maptype -> map background color 
+                // TODO: Implement dynamic background color based on maptype parameter
+                // This feature would allow setting the map background color based on URL parameters
                 //$(".map-legend").css("background", "rgba(255,255,255,0.5)");
                 //var szBackgroundcolor = decodeURIComponent($(document).getUrlParam('maptype'));
                 //if (szBackgroundcolor && (szBackgroundcolor.charAt(0) == '#')) {
@@ -462,11 +498,15 @@ $Log: htmlgui_api.js,v $
             $(".title-field").css("left", "100px");
         }
         
+        // set text align for the map !
+        $("#ixmap").parent().css("text-align", "left");
+        
         // -------------
         // context menu
         // -------------
 
-        document.addEventListener("contextmenu", function(e) {
+        // Context menu only on map div
+        document.getElementById("ixmap").addEventListener("contextmenu", function(e) {
             e.preventDefault();
             e.stopPropagation();
             $("#contextmenu")[0].style.left = e.pageX - 20 + 'px';
@@ -502,25 +542,66 @@ $Log: htmlgui_api.js,v $
         let szHTMLLegendFlag = "1";
 
         // GR 12.02.2015 define fallback default map, used if parameter SVGGIS is empty  
-        let szDefaultMap = "https://s3.eu-west-1.amazonaws.com/exp.ixmaps.com/flat/ixmaps/maps/svg/maps/generic/mercator.svg";
+        let szDefaultMap = "maps/svg/maps/generic/mercator.svg";
 
-        let szMap = null;
+        let szMap = opt.map || null;
         szMap = (szMap && (szMap != "null")) ? szMap : szDefaultMap;
 
-        map = new ixmaps.map("ixmap", {
+        let szMapSize = "fullscreen";
+        
+        // Support for multiple maps - use unique div ID if mapName is provided
+        const mapName = opt.mapName || "default";
+        const divId = opt.divId || "ixmap";
+        
+        // Create unique div ID for multiple maps
+        const uniqueDivId = mapName !== "default" ? `${divId}_${mapName}` : divId;
+        
+        // Create the map container if it doesn't exist
+        if (!document.getElementById(uniqueDivId)) {
+            const mapContainer = document.createElement('div');
+            mapContainer.id = uniqueDivId;
+            mapContainer.style.width = opt.width || '100%';
+            mapContainer.style.height = opt.height || '100%';
+            document.body.appendChild(mapContainer);
+        }
+        
+        // if both width and height are given and expressed in "px" 
+        if (opt.width || opt.height && !opt.height.match(/%/)){
+            console.log("--- opt ---");
+            console.log(opt);
+            $(`#${uniqueDivId}`).css("width",opt.width||"100%");
+            $(`#${uniqueDivId}`).css("height",opt.height||window.innerHeight+"px");
+            //$(`#${uniqueDivId}`).parent().css("width",opt.width||"100%");
+            $(`#${uniqueDivId}`).parent().css("height",opt.height||window.innerHeight+"px");
+            szMapSize = "fix";
+        }
+ 
+        map = new ixmaps.map(uniqueDivId, {
             mapService: opt.mapService || "leaflet_vt",
             maptype: opt.maptype || opt.mapType || "Stamen - toner-lite",
             svg: szMap,
-            mapsize: "fullscreen",
+            mapsize: szMapSize,
             footer: ixmaps.footer || 0,
             mode: szSvgLegendFlag,
             controls: szControls,
             silent: opt.silent || true
         });
-        var oldReady = ixmaps.onMapReady;
+        
         console.log(ixmaps);
         ixmaps.onMapReady = function (szMap) {
-            callback(new ixmaps.mapApi(szMap));
+            const mapApi = new ixmaps.mapApi(szMap);
+            
+            // Register the map instance if a name is provided
+            if (mapName !== "default") {
+                ixmaps.registerMapInstance(mapName, mapApi, {
+                    divId: uniqueDivId,
+                    mapService: opt.mapService || "leaflet_vt",
+                    maptype: opt.maptype || opt.mapType || "Stamen - toner-lite",
+                    ...opt
+                });
+            }
+            
+            callback(mapApi);
         };
 
         ixmaps.date = null;
@@ -532,6 +613,8 @@ $Log: htmlgui_api.js,v $
         ixmaps.setAutoSwitchInfo(true);
 
         // show/hide toolsbar elements
+        // TODO: Implement dynamic toolbar visibility based on user preferences
+        // This would allow showing/hiding toolbar elements based on configuration
         //__switchBannerElements();
         //setTimeout("__switchBannerElements()", 5000);
         htmlMap_enableScrollWheelZoom();
@@ -574,7 +657,7 @@ $Log: htmlgui_api.js,v $
      * </html>
      */
 
-    ixmaps.embed = function (szTargetDiv, opt, callback) {
+    ixmaps.embed = async function (szTargetDiv, opt, callback) {
 
         console.log("ixmaps.embed() ---->");
 
@@ -588,21 +671,26 @@ $Log: htmlgui_api.js,v $
                 ixmaps.szResourceBase = (scr.split("ui/js/htmlgui_flat.js")[0]);
                 break;
             }
-        }
+        }   
 
+        console.log("ixmaps.szResourceBase = " + ixmaps.szResourceBase);                        
         if (opt.mapCdn) {
             ixmaps.szResourceBase = opt.mapCdn;
-        }
+        }   
 
         var target = window.document.getElementById(szTargetDiv);
-        var szName = encodeURIComponent(opt.mapName || opt.name || "map" + String(Math.random()).split(".")[1]);
-        var szBasemap = encodeURIComponent(opt.mapService || opt.basemap || "leaflet");
-        var szMapType = encodeURIComponent(opt.mapType || opt.maptype || "CartoDB - Positron");
-
-        // Call the function with the list of file URLs and types
-        loadResources(fileUrls, szTargetDiv, __load_map, opt, callback);
-
-        return target;
+        
+        // Return a Promise that resolves when the map is ready
+        return new Promise((resolve, reject) => {
+            try {
+                // Call the function with the list of file URLs and types
+                loadResources(fileUrls, szTargetDiv, __load_map, opt, callback || ((mapApi) => {
+                    resolve(mapApi);
+                }));
+            } catch (error) {
+                reject(error);
+            }
+        });
     }
 
     /**
@@ -725,6 +813,7 @@ $Log: htmlgui_api.js,v $
         },
 
         loadMap: function (szUrl) {
+            alert(szUrl);
             ixmaps.loadMap(this.szMap, szUrl);
             return this;
         },
@@ -745,6 +834,11 @@ $Log: htmlgui_api.js,v $
 
         flyTo: function (center, zoom) {
             ixmaps.flyTo(this.szMap, center, zoom);
+            return this;
+        },
+
+        resize: function () {
+            ixmaps.resizeMap(null, false);
             return this;
         },
 
@@ -1143,9 +1237,21 @@ $Log: htmlgui_api.js,v $
     }
 
         // -------------------------------------------
-        // search tool 
+        // search tool - DISABLED
         // ------------------------------------------- 
-
+        /**
+         * Search tool implementation - Currently disabled
+         * 
+         * This section contains a complete search tool implementation using Nominatim API
+         * for geocoding and place search functionality. It has been commented out due to:
+         * - API rate limiting issues with Nominatim
+         * - Alternative search implementations being preferred
+         * - Performance considerations
+         * 
+         * To re-enable: Uncomment the entire block below and ensure proper API keys
+         * and rate limiting are configured.
+         */
+        /*
         ixmaps.search = ixmaps.search || {};
 
         ixmaps.search.show = function(fFlag) {
@@ -1345,9 +1451,106 @@ $Log: htmlgui_api.js,v $
         // END search tool 
         // ------------------------------------------- 
 
+        **/
 
+    /**
+     * Multi-Map Registry System
+     * Extends ixmaps to support multiple map instances
+     */
+    ixmaps.mapRegistry = ixmaps.mapRegistry || {};
+    ixmaps.mapInstances = ixmaps.mapInstances || {};
 
+    /**
+     * Register a new map instance
+     * @param {String} mapName - Unique name for the map
+     * @param {Object} mapInstance - The map instance to register
+     * @param {Object} options - Map configuration options
+     */
+    ixmaps.registerMapInstance = function(mapName, mapInstance, options) {
+        if (!mapName) {
+            console.error('Map name is required for registration');
+            return false;
+        }
+        
+        ixmaps.mapInstances[mapName] = {
+            instance: mapInstance,
+            options: options || {},
+            createdAt: new Date(),
+            divId: options.divId || 'ixmap',
+            mapService: options.mapService || 'leaflet_vt',
+            maptype: options.maptype || 'Stamen - toner-lite'
+        };
+        
+        console.log(`Map instance '${mapName}' registered successfully`);
+        return true;
+    };
 
+    /**
+     * Get a specific map instance by name
+     * @param {String} mapName - Name of the map to retrieve
+     * @return {Object} The map instance or null if not found
+     */
+    ixmaps.getMapInstance = function(mapName) {
+        return ixmaps.mapInstances[mapName] ? ixmaps.mapInstances[mapName].instance : null;
+    };
+
+    /**
+     * Get all registered map instances
+     * @return {Object} Object containing all map instances
+     */
+    ixmaps.getAllMapInstances = function() {
+        return ixmaps.mapInstances;
+    };
+
+    /**
+     * Remove a map instance from registry
+     * @param {String} mapName - Name of the map to remove
+     */
+    ixmaps.removeMapInstance = function(mapName) {
+        if (ixmaps.mapInstances[mapName]) {
+            delete ixmaps.mapInstances[mapName];
+            console.log(`Map instance '${mapName}' removed from registry`);
+            return true;
+        }
+        return false;
+    };
+
+    /**
+     * Create a new map with a specific name
+     * @param {String} mapName - Unique name for the new map
+     * @param {String} divId - DOM element ID to host the map
+     * @param {Object} options - Map configuration options
+     * @param {Function} callback - Callback function when map is ready
+     */
+    ixmaps.createMap = function(mapName, divId, options, callback) {
+        if (!mapName) {
+            console.error('Map name is required');
+            return null;
+        }
+        
+        if (ixmaps.mapInstances[mapName]) {
+            console.warn(`Map instance '${mapName}' already exists`);
+            return ixmaps.mapInstances[mapName].instance;
+        }
+        
+        // Create unique div ID if not provided
+        const uniqueDivId = divId || `ixmap_${mapName}_${Date.now()}`;
+        
+        // Create the map instance
+        const mapInstance = new ixmaps.map(uniqueDivId, options, function(mapApi) {
+            // Register the map instance
+            ixmaps.registerMapInstance(mapName, mapApi, {
+                ...options,
+                divId: uniqueDivId
+            });
+            
+            if (callback) {
+                callback(mapApi);
+            }
+        });
+        
+        return mapInstance;
+    };
 
 
 }(window, document));

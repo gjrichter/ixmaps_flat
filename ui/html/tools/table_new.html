@@ -15,286 +15,193 @@
   limitations under the License.
 -->
 <html>
-  <head>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css">
+    <style>
+
+        #ft-data{
+            font-family: Arial, Helvetica, sans-serif;
+            font-size: 13px;
+        }
+
+        th {
+            position: sticky;
+            background-color: white;
+            z-index: 2;
+            top: 0;
+            padding: 0.2em 0;
+            font-size: 1.2em;
+        }
+
+        tr {
+            xxborder: solid #dddddd 1px;
+        }
+
+        .td_yellow {
+            background: rgba(255, 255, 0, 0.1);
+        }
+
+        .td_red {
+            background: rgba(255, 0, 0, 0.1);
+        }
+
+        .td_blue {
+            background: rgba(0, 0, 255, 0.05);
+        }
+
+        .td_green {
+            background: rgba(0, 255, 0, 0.05);
+        }
+
+        .td_right {
+            text-align: end;
+        }
+
+        .even {
+            background: #EDF2FA;
+            background: #ffffff;
+            background: #F4F5F6;
+        }
+
+        a {
+            color: #428BCA;
+            text-decoration: none;
+        }
+
+        .wrapword {
+            white-space: -moz-pre-wrap !important;
+            /* Mozilla, since 1999 */
+            white-space: -pre-wrap;
+            /* Opera 4-6 */
+            white-space: -o-pre-wrap;
+            /* Opera 7 */
+            white-space: pre-wrap;
+            /* css-3 */
+            word-wrap: break-word;
+            /* Internet Explorer 5.5+ */
+            white-space: -webkit-pre-wrap;
+            /* Newer versions of Chrome/Safari*/
+            word-break: break-all;
+            white-space: normal;
+        }
+
+    </style>
+
+<head>
     <meta charset="UTF-8">
 
     <title>iXmaps Editor Table Viewer</title>
 
 
-	<script src = "../../../ui/libs/jquery/jquery-1.7.1.min.js"></script>
-	<script src = "../../../ui/libs/jquery/ui/js/jquery-ui-1.8.16.custom.min.js"></script>
+     <script type="text/javascript">
+        
+        ixmaps = window.ixmaps || null;
+        if ( window.opener ){
+            ixmaps = window.opener.ixmaps;
+        }else
+        if ( parent ){
+            ixmaps = parent.window.ixmaps;
+        }
+        else{
+            alert("error: missing parent window for themes !");
+        }
+        
+        ixmaps.tmp = ixmaps.tmp || {};
 
-	<style type="text/css" title="currentStyle">
-		@import "../../../ui/libs/DataTables-1.10.5/media/css/jquery.dataTables.css";
-	</style>
-    <link href="../../../ui/html/assets/css/bootstrap.css" rel="stylesheet">
- 
-	<style type="text/css">
-		table {
-			width: 100%;
-		}
-		table.dataTable thead th{
-			border: #dddddd solid 1px;
-		}
-		table.dataTable tr.even{
-			background: #f8f8f8;
-		}
-		table.dataTable tr.odd{
-			background: #ffffff;
-		}
-		table.dataTable tr.even td.sorting_1 {
-			background-color: #ededed;
-		}
-		table.dataTable tr.odd td.sorting_1 {
-			background-color: #f8f8f8;
-		}
-		tfoot input.search_init {
-			font-size: 0.9em;
-		}
-		th {
-			text-align: left;
-			vertical-align: top;
-			border: #dddddd solid 1px;
-			border-bottom: #dddddd solid 1px;
-		}
-		td {
-			text-align: left;
-			border: #dddddd solid 1px;
-			border-bottom: #dddddd solid 1px;
-			white-space: nowrap;
-		}
-		body #ft-data {
-			font: 12px/16px Helvetica; Helvetica Neue; Arial;
-			color: #333333;
-			background:#fff;
-			overflow:auto;
-			width:100%;
-			height:100%;
-			padding: 1em;
-		}
-		textarea {
-			width:90%;
-			font-size: 9px;
-		}
-		.dataTables_wrapper .dataTables_filter input {
-			margin-left: 0.5em;
-			margin-bottom: 0.5em;
-			margin-right: 0.2em;
-		}
-		.dataTables_paginate {
-			margin-top: 0em;
-		}
-		.paginate_button {
-			padding: 0.5em
-		}
-		.ftdataname {
-			left: 10px;
-			top: 15px;
-			font: 18px/24px Helvetica; Helvetica Neue; Arial;
-		}
-		/* Track */
-		::-webkit-scrollbar-track {
-			-webkit-box-shadow: inset 0 0 4px rgba(0,0,0,0.1); 
-			-webkit-border-radius: 0px;
-			border-radius: 0px;
-		}
-		/* Handle */
-		::-webkit-scrollbar-thumb {
-			-webkit-border-radius: 0px;
-			border-radius: 0px;
-			background: rgba(232,232,232,0.6); 
-			-webkit-box-shadow: inset 0 0 0px rgba(0,0,0,0.1); 
-		}
-		::-webkit-scrollbar-thumb:window-inactive {
-			background: rgba(222,222,222,0.4); 
-		}
-    </style>
+        ixmaps.__showTable = function(){
+            const data = dataSinks.add(ixmaps.tmp.tableObj,"mytable");
+            data.fShowAnalytics = true;
+            const html = data.makeDataTable(500);
+            
+            $('#ft-data-name').html("");
+            $('#ft-data').html(html);
+            
+            // Set up event listeners for the table
+            data.setupTableEventListeners(data.name);
+        }
 
-	<script type="text/javascript" language="javascript" src="../../../ui/libs/DataTables-1.10.5/media/js/jquery.dataTables.min.js"></script>
-	<script type="text/javascript" src="../../js/htmlgui_api.js" > </script>
-	
-    <script type="text/javascript">
-	
-	$(document).ready(function() {
+        $(document).ready(function() {
 
-		var themeObj =	ixmaps.parentApi.getThemeObj();
-		var tableObj = eval("ixmaps.parentApi.embeddedSVG.window."+(themeObj.coTable||"themeDataObj"));
-		var numRows = tableObj.records.length;
-		$('#ft-data-name').html(String(numRows)+" records <span style='font-size:smaller'>(please give me some time ...)</span>");
+            let themeObj = ixmaps.getThemes().at(-1);
 
-		setTimeout("__doTable()",100);
-	});
+            let tableObj = new Data.Table(null);
+            tableObj.table = themeObj.objTheme.dbTable;
+            tableObj.fields = themeObj.objTheme.dbFields;
+            tableObj.records = themeObj.objTheme.dbRecords;
+            ixmaps.tmp.tableObj = tableObj;
 
-	__doTable = function() {
-
-	  var oTable = null;
-	  var nColCount = 0;
-	  var nColSkip = 0;
-
-		var themeObj =	ixmaps.parentApi.getThemeObj();
-
-		var szTable  = "test"; // ixmaps.embeddedApi.szExternalDataTable;
-		var tableObj = eval("ixmaps.parentApi.embeddedSVG.window."+(themeObj.coTable||"themeDataObj"));
-
-		var numRows = tableObj.records.length;
-		var numCols = tableObj.fields.length;
-		
-		$('#ft-data-name').html("");
-
-		$('#ft-data').html( '<table cellpadding="0" cellspacing="0" border="0" class="display" id="example"></table>' );
-
-		var columns = [];
-		for ( i=0; i<numCols; i++ ){
-			columns.push( {"title": tableObj.fields[i].id} );			
-		}
-
-		// GR 23.02.2018 show only rows which are on the map
-		// -------------------------------------------------
-		var records = [];
-		for ( i in themeObj.indexA ){
-			if ( themeObj.itemA[themeObj.indexA[i]].dbIndex ){
-				records.push(tableObj.records[themeObj.itemA[themeObj.indexA[i]].dbIndex]);
-			}
-			if ( themeObj.itemA[themeObj.indexA[i]].dbIndexA ){
-				for ( a in themeObj.itemA[themeObj.indexA[i]].dbIndexA ) {
-					records.push(tableObj.records[themeObj.itemA[themeObj.indexA[i]].dbIndexA[a]]);
-				}
-			}
-		}
-		window.parent.document.getElementById('ui-dialog-title-table-dialog').innerHTML += ' &nbsp; <button onclick="ixmaps.dumpThemeData();"><i class="shareIcon blackHover share_bitly icon-download" title="open theme code editor" tabindex="-1" style="color:#888888"></i> <span style="font-size:0.8em;vertical-align:10%">export</span></button>';
-		// make the table
-		// ---------------
-
-		var oTable = $('#example').dataTable( {
-			"data": records,
-			"columns": columns
-		} );   
-
-		$("tfoot input").keyup( function () {
-			/* Filter on the column (the index) of this element */
-			var nSkip = ($("tfoot input").index(this)>4)?nColSkip:0;
-			oTable.fnFilter( this.value, $("tfoot input").index(this) + nSkip );
-		} );
-			
-		/*
-		 * Support functions to provide a little bit of 'user friendlyness' to the textboxes in 
-		 * the footer
-		 */
-		$("tfoot input").each( function (i) {
-			asInitVals[i] = this.value;
-		} );
-		
-		$("tfoot input").focus( function () {
-			if ( this.className == "search_init" )
-			{
-				this.className = "";
-				this.value = "";
-			}
-		} );
-		
-		$("tfoot input").blur( function (i) {
-			if ( this.value == "" )
-			{
-				this.className = "search_init";
-				this.value = asInitVals[$("tfoot input").index(this)];
-			}
-		} );
-
-	};
-
-	// end drawTable()
-
-
-	ixmaps.parentApi.dumpThemeData = function(){
-
-		var themeObj =	ixmaps.parentApi.getThemeObj();
-
-		var szTable  = "test"; // ixmaps.embeddedApi.szExternalDataTable;
-		var tableObj = eval("ixmaps.parentApi.embeddedSVG.window."+(themeObj.coTable||"themeDataObj"));
-
-		console.log(tableObj);
-
-		var numRows = tableObj.records.length;
-		var numCols = tableObj.fields.length;
-		
-		var columns = [];
-		for ( i=0; i<numCols; i++ ){
-			columns.push( {"title": tableObj.fields[i].id} );			
-		}
-
-		// GR 23.02.2018 show only rows which are on the map
-		// -------------------------------------------------
-		var records = [];
-		for ( i in themeObj.indexA ){
-			if ( themeObj.itemA[themeObj.indexA[i]].dbIndex ){
-				records.push(tableObj.records[themeObj.itemA[themeObj.indexA[i]].dbIndex]);
-			}
-			if ( themeObj.itemA[themeObj.indexA[i]].dbIndexA ){
-				for ( a in themeObj.itemA[themeObj.indexA[i]].dbIndexA ) {
-					records.push(tableObj.records[themeObj.itemA[themeObj.indexA[i]].dbIndexA[a]]);
-				}
-			}
-		}
-
-		var szText = "";
-		for ( i in columns ){
-			szText += (szText.length?";":"") + columns[i].title;	
-		}
-		szText += "\r\n";
-		for ( i in records ){
-			var szRow = "";
-			for ( ii in records[i] ){
-                if (records[i][ii].match(/;/)){
- 				   szRow += (szRow.length?";":"") + '"' + records[i][ii] + '"';
-                }else{
-				    szRow += (szRow.length?";":"") + records[i][ii];
+            // GR 23.02.2018 show only rows which are on the map
+            // -------------------------------------------------
+            var records = [];
+            for ( i in themeObj.indexA ){
+                if ( themeObj.itemA[themeObj.indexA[i]].dbIndex ){
+                    records.push(tableObj.records[themeObj.itemA[themeObj.indexA[i]].dbIndex]);
                 }
-			}
-			szText += szRow;	
-			szText += "\r\n";
-		}
+                if ( themeObj.itemA[themeObj.indexA[i]].dbIndexA ){
+                    for ( a in themeObj.itemA[themeObj.indexA[i]].dbIndexA ) {
+                        records.push(tableObj.records[themeObj.itemA[themeObj.indexA[i]].dbIndexA[a]]);
+                    }
+                }
+            }
+            tableObj.records = records;
 
-		saveTextAsFile(szText);
-	}
+            let numRows = tableObj.table.records;
+            $('#ft-data-name').html(String(numRows) + " records <span style='font-size:smaller'>(please give me some time ...)</span>");
+            
+            const _fileUrls = [
+            {
+                    url: 'ui/js/tools/dataprocess.js',
+                    type: 'js'
+                },
+                {
+                    url: 'ui/js/tools/datafacets.js',
+                    type: 'js'
+                }
+            ];
+            // this loads the resources and calls ixmaps.loadEditor as callback
+            ixmaps.loadResources(_fileUrls, null, ixmaps.__showTable);
 
-	function saveTextAsFile(szText)
-	{
-		var textToWrite = szText;
-		var textFileAsBlob = new Blob([textToWrite], {type:'text/plain'});
-		var fileNameToSaveAs = "test.csv";
+            var resize = function(resizeData){
+                $("#ft-data").css("height",(resizeData.height)+"px");
+                $("#ft-data").css("width",(resizeData.width)+"px");
+                // set dialog iframe height
+                if ( ixmaps && ixmaps.editor && ixmaps.editor.resize ){
+                    ixmaps.editor.resize();
+                }
+            }; 
+            
+            // Setup dialog resize handling
+            var setupDialogResizeHandler = function(){
+                // Try to find the dialog instance and set up resize callback
+                if (window.parent && window.parent.dialogManager) {
+                    // Find the current dialog (assuming it's the most recently created one)
+                    var openDialogs = window.parent.dialogManager.getOpenDialogs();
+                    if (openDialogs.length > 0) {
+                        var currentDialog = openDialogs[openDialogs.length - 1];
+                        currentDialog.setOnResize(function(resizeData) {
+                            console.log('Dialog resized:', resizeData);
+                            resize(resizeData); // Call your existing resize function
+                        });
+                        console.log("Dialog resize handler activated");
+                    }
+                }
+            };
+            
+            // Setup dialog resize handler after DOM is ready
+            if (document.readyState === 'loading') {
+                document.addEventListener('DOMContentLoaded', setupDialogResizeHandler);
+            } else {
+                setupDialogResizeHandler();
+            }
 
-		var downloadLink = document.createElement("a");
-		downloadLink.download = fileNameToSaveAs;
-		downloadLink.innerHTML = "Download File";
-		if (window.webkitURL != null)
-		{
-			// Chrome allows the link to be clicked
-			// without actually adding it to the DOM.
-			downloadLink.href = window.webkitURL.createObjectURL(textFileAsBlob);
-		}
-		else
-		{
-			// Firefox requires the link to be added to the DOM
-			// before it can be clicked.
-			downloadLink.href = window.URL.createObjectURL(textFileAsBlob);
-			downloadLink.onclick = destroyClickedElement;
-			downloadLink.style.display = "none";
-			document.body.appendChild(downloadLink);
-		}
 
-		downloadLink.click();
-	}
-
-	function destroyClickedElement(event)
-	{
-		document.body.removeChild(event.target);
-	}
-
-
+        });
 
     </script>
-  </head>
-  <body style="padding:0;margin:0;">
-    <div id="ft-data" style="margin:0px;padding:0px;overflow:auto">  L o a d i n g   . . . </div><div id="ft-data-name" class="ftdataname"></div>
-  </body>
+</head>
+
+<body style="padding:0;margin:0;">
+    <div id="ft-data" style="margin:0px;padding:0px;overflow:auto"> L o a d i n g . . . </div>
+    <div id="ft-data-name" class="ftdataname"></div>
+</body>
+
 </html>

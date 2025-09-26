@@ -1,0 +1,338 @@
+/* mappage.css - External styles for mappage.html */
+
+/* ===== LAYOUT CONTAINERS ===== */
+.map-header {
+    margin-left: 2px;
+    z-index: 1000;
+    display: none;
+}
+
+.map-footer {
+    margin-left: 2px;
+    z-index: 1000;
+    display: none;
+}
+
+#ixmap {
+    position: relative;
+    top: 0;
+    left: 0;
+    overflow: hidden;
+    font-size: 11px;
+    background: none;
+}
+
+/* ===== BUTTON CONTAINERS ===== */
+#onmapbuttondiv {
+    position: absolute;
+    top: 13px;
+    left: 10px;
+    opacity: 0.95;
+    width: 0;
+    line-height: 30px;
+    display: none;
+    z-index: 1000;
+}
+
+#onmapbuttondivbottom {
+    position: absolute;
+    bottom: 30px;
+    right: 10px;
+    display: inline;
+    opacity: 0.95;
+    z-index: 999;
+    display: none;
+}
+
+#onmapbuttondivzoom {
+    position: absolute;
+    bottom: 12px;
+    left: 10px;
+    z-index: 2000;
+    display: inline;
+}
+
+/* ===== TOOL BUTTONS ===== */
+.toolbutton {
+    height: 40px;
+    width: 40px;
+    display: none;
+}
+
+.toolbutton label {
+    height: 36px;
+}
+
+.toolbutton img {
+    height: 24px;
+    margin-left: -5px;
+    margin-right: -4px;
+}
+
+/* Specific button image adjustments */
+#opensidebarbuttonicon {
+    margin-left: -8px;
+    margin-right: -4px;
+    opacity: 0.8;
+}
+
+#switchmodebuttonicon {
+    margin-right: 0;
+}
+
+#switchsearchbutton {
+    vertical-align: -4px;
+}
+
+#switchsearchbuttonicon {
+    height: 29px;
+    margin-left: -3px;
+    margin-top: 2px;
+    opacity: 0.6;
+}
+
+#switchhelpbutton {
+    vertical-align: -4px;
+}
+
+#switchhelpbuttonicon {
+    height: 29px;
+    margin-left: -5px;
+    margin-top: 2px;
+    opacity: 0.6;
+}
+
+#switchinfobuttonicon {
+    margin-left: -2px;
+    margin-top: 5px;
+}
+
+.info-close-x {
+    position: relative;
+    top: -33px;
+    right: -12px;
+}
+
+#switchlegendbuttonicon {
+    height: 28px;
+    margin-top: 3px;
+    margin-left: -4px;
+    opacity: 0.8;
+}
+
+/* ===== ZOOM BUTTONS ===== */
+.zoom-button {
+    text-decoration: none;
+    border: none;
+    background: none;
+    cursor: pointer;
+    padding: 0;
+}
+
+.zoom-button-container {
+    padding: 1em 1.15em;
+    background-color: rgba(255,255,255,1);
+    border: solid black 0.1px;
+    border-radius: 0.5em;
+}
+
+.zoom-button-icon {
+    font-size: 0.9em;
+    color: #aaaaaa;
+}
+
+.zoom-button-spacer {
+    height: 0.2em;
+}
+
+/* ===== SEARCH ===== */
+.search-container {
+    position: absolute;
+    top: 11px;
+    left: 98px;
+    z-index: 2000;
+    display: none;
+    width: 0;
+}
+
+.search-box {
+    height: 24px;
+    padding: 7px;
+}
+
+/* ===== EMBED LOGO ===== */
+#embedlogo {
+    vertical-align: -2px;
+    margin-left: 5px;
+    display: none;
+}
+
+/* ===== MAP ELEMENTS ===== */
+.title-field {
+    width: 100%;
+    z-index: 1000;
+    display: none;
+}
+
+.map-legend {
+    z-index: 1000;
+    display: none;
+}
+
+.map-overlay {
+    z-index: 1000;
+    display: none;
+}
+
+#map-popup {
+    z-index: 2000;
+}
+
+#map-popout-button {
+    position: absolute;
+    top: 93%;
+    right: 10px;
+    z-index: 2000;
+    display: none;
+}
+
+.popout-button-container {
+    padding: 0.5em;
+    background-color: rgba(255,255,255,0.7);
+    border: solid black 0.1px;
+    border-radius: 0.5em;
+}
+
+.popout-button-icon {
+    font-size: 2em;
+    color: #888888;
+}
+
+/* ===== LOADING AND LOGO ===== */
+.logo-div {
+    pointer-events: none;
+    z-index: 999;
+    visibility: hidden;
+}
+
+.loading-div {
+    pointer-events: none;
+    z-index: 9999;
+}
+
+.loading-gif {
+    margin-top: 1em;
+    display: none;
+}
+
+.attribution-div {
+    user-select: none;
+}
+
+/* ===== START SCREEN ===== */
+#divstart {
+    visibility: hidden;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 1000;
+}
+
+#start-text-div {
+    position: absolute;
+    top: 45%;
+    left: 40%;
+}
+
+#start-text {
+    font-family: serif;
+    font-size: 48px;
+    color: #666666;
+    background-color: #dddddd;
+    padding: 0px 12px 3px 8px;
+    -moz-border-radius: 15px;
+    border-radius: 15px;
+    text-align: center;
+}
+
+#velo {
+    visibility: hidden;
+    background-color: #444444;
+    opacity: 0.2;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 1000;
+}
+
+/* ===== OVERLAY DIVS ===== */
+.overlay-div {
+    visibility: hidden;
+}
+
+#tooltip {
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 3000;
+}
+
+/* ===== CONTEXT MENU ===== */
+.contextmenu {
+    display: none;
+}
+
+.dropdown-menu {
+    display: inline;
+    padding-bottom: 0.5em;
+}
+
+.contextmenu-link {
+    margin-top: 0.2em;
+    margin-bottom: 0.2em;
+    border: 0;
+    color: #ccc;
+}
+
+.contextmenu-icon {
+    margin-left: 0.2em;
+}
+
+.contextmenu-separator {
+    /* Add separator styling if needed */
+}
+
+/* ===== RESPONSIVE DESIGN ===== */
+@media (max-width: 768px) {
+    .toolbutton {
+        height: 35px;
+        width: 35px;
+    }
+    
+    .toolbutton img {
+        height: 20px;
+    }
+    
+    #start-text {
+        font-size: 36px;
+    }
+}
+
+@media (max-width: 480px) {
+    .toolbutton {
+        height: 30px;
+        width: 30px;
+    }
+    
+    .toolbutton img {
+        height: 18px;
+    }
+    
+    #start-text {
+        font-size: 28px;
+    }
+} 

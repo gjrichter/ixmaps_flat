@@ -169,8 +169,14 @@ $Log: htmlgui.js,v $
 	 * @return the new ixmaps object
 	 */
 	ixmaps.map = function (szMapDiv, options, callback) {
-		
-		if (ixmaps.szGmapDiv){
+
+		// Multi-map support: Check if this specific div already has a map
+		if (ixmaps.szGmapDiv && ixmaps.szGmapDiv === szMapDiv){
+			return ixmaps.api() || ixmaps;
+		}
+
+		// For backward compatibility: if no specific div is provided and a map already exists
+		if (ixmaps.szGmapDiv && !szMapDiv){
 			return ixmaps.api() || ixmaps;
 		}
 
@@ -218,15 +224,38 @@ $Log: htmlgui.js,v $
 		aDiv.setAttribute("id", "svgmapdiv");
 		mapDiv.appendChild(aDiv);
 		
-		if (options.mapsize == "fix") {
+		if ((options.mapsize == "fix")) {
 			ixmaps.fMapSizeMode = "fix";
-			__SVGEmbedWidth = mapDiv.clientWidth;
-			__SVGEmbedHeight = mapDiv.clientHeight;
-			__SVGmapPosX = mapDiv.offsetLeft;
-			__SVGmapPosY = mapDiv.offsetTop;
+			const width = parseInt($('#' + szMapDiv).css("width"));
+			const height = parseInt($('#' + szMapDiv).css("height"));
+            console.log("--- map size = fix ---");
+			console.log(mapDiv);
+			console.log($('#' + szMapDiv).attr("style"));
+			console.log(width);
+			console.log(height);
+			__SVGEmbedWidth = width;
+			__SVGEmbedHeight = height;
+			__SVGmapPosX = 0; //mapDiv.offsetLeft;
+			__SVGmapPosY = 0; //mapDiv.offsetTop;
 			__mapTop = 0;
 			__mapLeft = 0;
 			__mapFooter = 0;
+
+			if ($("#ixmap")) {
+				$("#ixmap").css({
+					"width": (width) + "px",
+					"height": (height) + "px",
+					"overflow": "hidden"
+				});
+			}
+			if ($("#SVGMap")) {
+				$("#SVGMap").css({
+					"width": (width) + "px",
+					"height": (height) + "px",
+					"overflow": "hidden"
+				});
+			}
+	
 		}
 		if (options.mode) {
 			if (options.mode.match(/nolegend/)) {
@@ -278,7 +307,7 @@ $Log: htmlgui.js,v $
 	 * @return the initialized ixmaps object
 	 */
 	ixmaps.InitAll = function (szGmapDiv, szSvgDiv, szUrl, szMapService) {
-
+        
 		var szError = null;
         /**
 		if (!$(szGmapDiv).assertStr()) {
@@ -325,6 +354,10 @@ $Log: htmlgui.js,v $
 
 		var mapWidth = fullWidth - __mapLeft - __SVGmapPosX;
 		var mapHeight = fullHeight - __mapTop - __mapFooter - __SVGmapPosY;
+
+		ixmaps.SVGmapWidth = mapWidth;
+		ixmaps.SVGmapHeight = mapHeight;
+
 
 		this.hideLoading();
 
@@ -377,7 +410,9 @@ $Log: htmlgui.js,v $
 				'position': 'absolute',
 				'z-index': '99',
 				'top': +__SVGmapPosY + 'px',
-				'left': +__SVGmapPosX + 'px'
+				'left': +__SVGmapPosX + 'px',
+				'height': mapHeight + 'px',
+				'width': mapWidth + 'px'
 			});
 
 			$(this.svgDiv).css({
@@ -386,31 +421,67 @@ $Log: htmlgui.js,v $
 
 			// GR 09.01.2014 create without data="... attribute !
 			//				 data= will be defined by ixmaps.HTML_loadSVGMap(...); see below
-            $(this.svgDiv).load(ixmaps.szResourceBase+"maps/svg/maps/generic/mercator.svg");
-            $.when(
-                $.getScript(ixmaps.szResourceBase+"maps/svg/js/mapscript.js"),
-                $.Deferred(function(deferred) {
-                    $(deferred.resolve);
-                })
-            ).done(function() {
+			
+			// Initialize szResourceBase if not already set
+			if (!ixmaps.szResourceBase) {
+				ixmaps.szResourceBase = "../../";
+				
+				let scriptsA = document.querySelectorAll("script");
+				for (var i in scriptsA) {
+					let scr = scriptsA[i].getAttribute("src");
+					if (scr && scr.match(/htmlgui.js/)) {
+						ixmaps.szResourceBase = (scr.split("ui/js/htmlgui.js")[0]);
+						break;
+					}
+				}
+				
+				console.log("ixmaps.szResourceBase = " + ixmaps.szResourceBase);
+			}
+			
+            szUrl = szUrl || "maps/svg/maps/generic/mercator.svg";
+            if(szUrl.match("../../")){
+                szUrl = szUrl.split("../../")[1];    
+            }
+			if(szUrl.match("http")){
+				$(this.svgDiv).load(szUrl);
+			}else{
+            	$(this.svgDiv).load(ixmaps.szResourceBase+szUrl);
+			}
+            
+			console.log("Loading mapscript.js from:", ixmaps.szResourceBase+"maps/svg/js/mapscript.js");
+            
+            // Load mapscript.js with a small delay to ensure everything is ready
+            setTimeout(function() {
                 $.when(
-                    $.getScript(ixmaps.szResourceBase+"maps/svg/js/colorscheme.js"),
-                    $.getScript(ixmaps.szResourceBase+"maps/svg/js/mapscript2.js"),
-                    $.getScript(ixmaps.szResourceBase+"maps/svg/js/mapapi.js"),
-                    $.getScript(ixmaps.szResourceBase+"maps/svg/js/mapquery.js"),
-                    $.getScript(ixmaps.szResourceBase+"maps/svg/js/maptheme.js"),
-                    $.getScript(ixmaps.szResourceBase+"maps/svg/js/mapselect.js"),
-                    $.getScript(ixmaps.szResourceBase+"maps/svg/js/piechart.js"),
+                    $.getScript(ixmaps.szResourceBase+"maps/svg/js/mapscript.js"),
                     $.Deferred(function(deferred) {
                         $(deferred.resolve);
                     })
                 ).done(function() {
-                    setTimeout("initAll()", 100);
+                    $.when(
+                        $.getScript(ixmaps.szResourceBase+"maps/svg/js/colorscheme.js"),
+                        $.getScript(ixmaps.szResourceBase+"maps/svg/js/mapscript2.js"),
+                        $.getScript(ixmaps.szResourceBase+"maps/svg/js/mapapi.js"),
+                        $.getScript(ixmaps.szResourceBase+"maps/svg/js/mapquery.js"),
+                        $.getScript(ixmaps.szResourceBase+"maps/svg/js/maptheme.js"),
+                        $.getScript(ixmaps.szResourceBase+"maps/svg/js/mapselect.js"),
+                        $.getScript(ixmaps.szResourceBase+"maps/svg/js/piechart.js"),
+                        $.Deferred(function(deferred) {
+                            $(deferred.resolve);
+                        })
+                    ).done(function() {
+                        setTimeout("initAll()", 100);
+                    }).fail(function(jqXHR, textStatus, errorThrown) {
+                        console.error("Failed to load :", textStatus, errorThrown);
+                        alert("Failed to load : " + textStatus);
+                    })
+                }).fail(function(jqXHR, textStatus, errorThrown) {
+                    console.error("Failed to load mapscript.js:", textStatus, errorThrown);
+                    alert("Failed to load mapscript.js: " + textStatus);
                 });
-            });
+            }, 100);
             
 		}
-
 		// register window resize event to adapt the map always to the window size
 		// -----------------------------------------------------------------------
 		__addEvent(window, "resize", function () {
@@ -418,7 +489,11 @@ $Log: htmlgui.js,v $
 		});
 
 		//window.setTimeout("ixmaps.resizeMap(null,false)", 1000);
-
+        console.log("**********************");
+        console.log(window);
+        
+        //alert("checkpoint");
+        
 		return ixmaps;
 	};
 
@@ -545,8 +620,8 @@ $Log: htmlgui.js,v $
 	 * @type void
 	 */
 	ixmaps.resizeMap = function (mapBox, fZoomTo, fCenter) {
-		
-		if (mapBox) {
+        
+ 		if (mapBox) {
 			__SVGmapOffX = mapBox.x;
 			__SVGmapOffY = mapBox.y;
 			ixmaps.SVGmapWidth = mapBox.width;
@@ -565,7 +640,7 @@ $Log: htmlgui.js,v $
 			ixmaps.SVGmapHeight = ($("#ixmap").parent().height()||(window.innerHeight-10)) - __mapTop - __mapFooter - __SVGmapPosY - __SVGmapOffY;
             
 			
-			$("#attribution-div").css("bottom","15px");
+			//$("#attribution-div").css("bottom","15px");
 		}
 
 		if ($(this.gmapDiv)) {
@@ -635,6 +710,12 @@ $Log: htmlgui.js,v $
 		if (ixmaps.embeddedSVG && ixmaps.embeddedSVG.window.fExecuteSilent && !fForce) {
 			return;
 		}
+		console.log("szMessageszMessageszMessage");
+		console.log(szMessage);
+		console.log("szMessageszMessageszMessage");
+		if (!szMessage){
+			return;
+		}
 
 		try {
 			if (ixmaps.embeddedSVG) {
@@ -646,27 +727,9 @@ $Log: htmlgui.js,v $
 			szMessage = "..." + szMessage.slice(-25);
 		}
 
-		/**
-		if ( !$("#divloading")[0] )	{
+		if (!$("#loading-div")[0]) {
 			$(this.gmapDiv).append(
-			'<div id="divloading" style="pointer-events:none;z-index:9999">'+
-				'<div id="loading-text-div" style="position:absolute;top:47%;width:100%;opacity:1;z-index:99">'+
-					'<div id="loading-text" style="font-family:arial;font-size:48px;opacity:1;'+
-										'color: #cccccc;'+
-										'background-color: #ffffff;'+
-										'text-align:center;'+
-										'">'+
-					'</div>'+
-					'<div id="loading-gif" style="margin-top:-1em"><img src="../../ui/resources/images/loading_blue.gif" style="display:block;position:absolute;top:3em;left:45%;margin:1em auto;height:64px"/></div>'+
-					'</div>'+
-				'</div>'+
-			'</div>'
-			);
-		}
-		**/
-		if (!$("#divloading")[0]) {
-			$(this.gmapDiv).append(
-				'<div id="divloading" style="pointer-events:none;z-index:9999">' +
+				'<div id="loading-div" style="pointer-events:none;z-index:9999">' +
 				'<div id="loading-text-div" class="loading-text-div">' +
 				'<span id="loading-text" class="loading-text">.&nbsp;&nbsp;</span>' +
 				'</div>' +
@@ -703,15 +766,25 @@ $Log: htmlgui.js,v $
 		try {
 			var top = (window.innerHeight * 0.4);
 			var left = (window.innerWidth * 0.47);
+			var width = (window.innerWidth);
+			var height = (window.innerHeight);
 			var gmapDiv = this.gmapDiv;
 			if (gmapDiv && $(gmapDiv).css("visibility") == "visible") {
-				top = parseInt($(gmapDiv).css("top")) + parseInt($(gmapDiv).css("height")) / 2;
-				left = parseInt($(gmapDiv).css("left")) + parseInt($(gmapDiv).css("width")) / 2;
+				top = $(gmapDiv).offset().top;
+				left = $(gmapDiv).offset().left;
+				width =$(gmapDiv).innerWidth();
+				height = $(gmapDiv).innerHeight();
 			}
-			$("#divloading").css({
+			$(".loading-text-div").css({
 				"visibility": "visible",
-				"top": String(top + "px"),
-				"left": String(left + "px")
+				"top": String((top+height/2-20) + "px"),
+				"left": String(left + "px"),
+                "width": String(width + "px")
+			});
+			$("#attribution-div").css({
+				"visibility": "visible",
+				"top": String((top+height-35) + "px"),
+				"left": String((left+50) + "px")
 			});
 			$("#loading-image").css("visibility", "visible");
 			$("#loading-text-div").show();
@@ -1869,6 +1942,9 @@ $Log: htmlgui.js,v $
 		if (this.fMapLegendStyle.match(/hidden/)) {
 			this.extendMap();
 		}
+
+		this.htmlgui_resizeMap(null, ixmaps.SVGmapWidth, ixmaps.SVGmapHeight, null);
+
 	};
 
 	/**
@@ -1887,7 +1963,7 @@ $Log: htmlgui.js,v $
 		// hide loding image 
 		// --------------------------
 		try {
-			$("#divloading").css("visibility", "hidden");
+			$("#loading-div").css("visibility", "hidden");
 			//$("#ixmap").css("background", "#fff");
 		} catch (e) {}
 
@@ -1918,7 +1994,14 @@ $Log: htmlgui.js,v $
 	 */
 	ixmaps.htmlgui_onMapReady = function (mapwindow) {
 
-		_LOG("ready");
+		console.log("***");
+		console.log("**");
+		console.log("*");
+		_LOG("htmlgui_onMapReady");
+
+        console.log(this);
+		console.log("");
+
 		this.fSVGInitializing = false;
         
         ixmaps.resizeMap(null, false);
@@ -1940,19 +2023,16 @@ $Log: htmlgui.js,v $
 			setTimeout("ixmaps.hideLoading()", 250);
 			this.mapTool("pan");
 		}
-        console.log("^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^");
-        console.log("^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^");
-        console.log(this);
-        console.log("^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^");
-        console.log("^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^");
         
 		// enable access to the SVG map
 		// ----------------------------
+		/*
 		this.embeddedSVG = new Object({
 			window: mapwindow
 		});
+		*/
 		try {
-			this.embeddedSVG.window._TRACE("==> htmlgui: onMapReady() ! ==>   ==>   ==>   ==>   ==>   ==>   ==>   ==>");
+			this.embeddedSVG.window._TRACE("access to SVG map verified !");
 		} catch (e) {}
 		if (this.parentApi && this.parentApi.setEmbeddedSVG) {
 			this.parentApi.setEmbeddedSVG(this.embeddedSVG);
@@ -2750,7 +2830,7 @@ $Log: htmlgui.js,v $
 		if (!ixmaps.fSilent)
 		ixmaps.showLoadingArray(["loading data ...", " ... "]);
 		
-		$.getScript(ixmaps.szResourceBase+"data.min.js/data.js")
+		$.getScript(ixmaps.szResourceBase+"../data.min.js/data.js")
 			.done(function (script, textStatus) {
 
 				// a) data is loaded by a specific data provider function
@@ -2980,7 +3060,7 @@ $Log: htmlgui.js,v $
 					});
 				});
 			} else {
-				$.getScript(ixmaps.szResourceBase+"data.min.js/data.js")
+				$.getScript("../../../data.min.js/data.js")
 					.done(function (script, textStatus) {
 						// load the data using data.js
 						Data.object({

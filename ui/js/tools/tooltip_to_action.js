@@ -144,7 +144,7 @@ window.ixmaps = window.ixmaps || {};
 			// id is from a map shape, create sintetic chart id
 			//
 			if (!szId.match(/\:\:/)) {
-				var obj = ixmaps.embeddedSVG.window.SVGDocument.getElementById(szItem);
+				var obj = ixmaps.embeddedSVG.window.map.SVGDocument.getElementById(szItem);
 				var szChartId = szItem.match(/::/) ? szId : obj.parentNode.getAttribute("id");
 				var szIdA = szChartId.split("#");
 				if (szIdA.length > 1) {

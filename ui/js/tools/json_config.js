@@ -11,8 +11,9 @@
 		 * @throws 
 		 * @return A new Config object
 		 */
+
         if (typeof(Config) === 'undefined'){
-            function Config(definition) {
+            Config = function(definition) {
                 this.obj = null;
                 this.szConfig = null;
 
@@ -23,8 +24,8 @@
                     this.obj = definition;
                     //this.szConfig = JSON.stringify(definition);
                 }
-            }
-        }
+            };
+		}
 
 		Config.prototype.parse = function(szConfigDef) {
 			var szRaw = szConfigDef.replace(/\n\t+/g, '');

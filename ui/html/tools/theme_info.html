@@ -49,6 +49,10 @@
         td {
             padding-right: 0.5em;
         }
+        h3.header {
+            font-size: 28px;
+            margin-top: 0;
+        }
 
     </style>
 </head>
@@ -72,7 +76,7 @@
     <script src="../assets/js/bootstrap.min.js"></script>
 
     <script type="text/javascript">
-        var api = null;
+        var api = window.ixmaps;
         if (window.opener) {
             api = window.opener.ixmaps;
         } else
@@ -90,12 +94,15 @@
 
             var themeObj = themeObjA[i];
 
-            szInfo += "<h1>Theme "+(Number(i)+1)+"</h1>";
+            szInfo += "<h3 class='header'>Theme "+(Number(i)+1)+"</h3>";
 			
             szInfo += "<table cellpadding='0' style='margin-top:5px;' > ";
+            szInfo += "<tr><td><b>id: </b></td><td>" + themeObj.szId + "</td></tr>";
             szInfo += "<tr><td><b>title: </b></td><td>" + themeObj.szTitle + "</td></tr>";
             szInfo += "<tr><td><b>data: </b></td><td>" + themeObj.coTable + "</td></tr>";
-            szInfo += "<tr><td><b>rows: </b></td><td>" + themeObj.objTheme.dbTable.records + "</td></tr>";
+            if (themeObj.objTheme && themeObj.objTheme.dbTable){
+                szInfo += "<tr><td><b>rows: </b></td><td>" + themeObj.objTheme.dbTable.records + "</td></tr>";
+            }
             szInfo += "<tr><td><b>load: </b></td><td>" + themeObj.timeLoading + " ms</td></tr>";
             if (themeObj.timeAggregating) {
                 szInfo += "<tr><td><b>aggregate: </b></td><td>" + themeObj.timeAggregating + " ms</td></tr>";
@@ -187,8 +194,9 @@
                 szInfo += "</table> ";
 
             }
-
-            szInfo += "<hr> ";
+            if (themeObjA.length > 1){
+                szInfo += "<br><hr><br> ";
+            }
  
         }
 

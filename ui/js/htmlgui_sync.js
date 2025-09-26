@@ -713,6 +713,8 @@ $Log: htmlgui_sync.js,v $
 
 		try {
 			ixmaps.embeddedSVG.window._TRACE("");
+			ixmaps.embeddedSVG.window._TRACE("htmlgui: sync ================>\n");
+			/**
 			ixmaps.embeddedSVG.window._TRACE("htmlgui: sync ================>\n"
                                              + arrayPtLatLon[0].lat + ", "
                                              + arrayPtLatLon[0].lng + ", \n"
@@ -720,6 +722,7 @@ $Log: htmlgui_sync.js,v $
                                              + arrayPtLatLon[1].lng + "\n"
                                              + "zoom:" + nZoom + "\n"
                                              + "fPan:" + fPan);
+			**/								 
 		} catch (e) {}
 
 		// get the HTML map center

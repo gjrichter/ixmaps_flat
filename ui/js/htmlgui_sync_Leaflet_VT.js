@@ -340,7 +340,7 @@ $Log: htmlgui_sync_Leaflet.js,v $
 			name: "MapBox - OSM",
 			myname: "MapBox - OSM",
 			minZoom: 2,
-			attribution: '<a href="https://www.mapbox.com/about/maps">© Mapbox</a> <a href="http://openstreetmap.org/copyright">© OpenStreetMap</a> | <a href="http://mapbox.com/map-feedback/" class="mapbox-improve-map">Improve this map</a>',
+			attribution: '<a href="https://www.mapbox.com/about/maps">ï¿½ Mapbox</a> <a href="http://openstreetmap.org/copyright">ï¿½ OpenStreetMap</a> | <a href="http://mapbox.com/map-feedback/" class="mapbox-improve-map">Improve this map</a>',
 			subdomains: ['a', 'b', 'c', 'd']
 		});
 
@@ -453,7 +453,7 @@ $Log: htmlgui_sync_Leaflet.js,v $
 			myname: "OpenTopoMap",
 			minZoom: 2,
 			maxZoom: 17,
-			attribution: "Kartendaten: © <a href='https://openstreetmap.org/copyright' target='_blank'>OpenStreetMap</a>-Mitwirkende, SRTM | Kartendarstellung: © <a href='http://opentopomap.org' target='_blank'>OpenTopoMap</a> (<a href='https://creativecommons.org/licenses/by-sa/3.0/' target='_blank'>CC-BY-SA</a>)",
+			attribution: "Kartendaten: ï¿½ <a href='https://openstreetmap.org/copyright' target='_blank'>OpenStreetMap</a>-Mitwirkende, SRTM | Kartendarstellung: ï¿½ <a href='http://opentopomap.org' target='_blank'>OpenTopoMap</a> (<a href='https://creativecommons.org/licenses/by-sa/3.0/' target='_blank'>CC-BY-SA</a>)",
 			subdomains: ['a', 'b', 'c']
 		});
 
@@ -594,14 +594,14 @@ $Log: htmlgui_sync_Leaflet.js,v $
 			name: "MapTiler - Positron",
 			myname: "MapTiler - Positron",
 			minZoom: 2,
-			attribution: "&copy; <a href='https://www.maptiler.com/copyright/' target='_blank'>© MapTiler</a> <a href='https://www.openstreetmap.org/copyright' target='_blank'>© OpenStreetMap contributors</a>",
+			attribution: "&copy; <a href='https://www.maptiler.com/copyright/' target='_blank'>ï¿½ MapTiler</a> <a href='https://www.openstreetmap.org/copyright' target='_blank'>ï¿½ OpenStreetMap contributors</a>",
 			subdomains: ['a', 'b', 'c', 'd']
 		});
 		__addTileLayer("https://api.maptiler.com/maps/darkmatter/{z}/{x}/{y}.png?key=LudxviPEVIlE5TvReqTC", {
 			name: "MapTiler - Dark Matter",
 			myname: "MapTiler - Dark Matter",
 			minZoom: 2,
-			attribution: "&copy; <a href='https://www.maptiler.com/copyright/' target='_blank'>© MapTiler</a> <a href='https://www.openstreetmap.org/copyright' target='_blank'>© OpenStreetMap contributors</a>",
+			attribution: "&copy; <a href='https://www.maptiler.com/copyright/' target='_blank'>ï¿½ MapTiler</a> <a href='https://www.openstreetmap.org/copyright' target='_blank'>ï¿½ OpenStreetMap contributors</a>",
 			subdomains: ['a', 'b', 'c', 'd']
 		});
 
@@ -780,6 +780,12 @@ $Log: htmlgui_sync_Leaflet.js,v $
 					animate: false
 				}
 			);
+			
+			// GR 15/09/2025 bounds with area = 0 -> center 
+			if ((arrayPtLatLon[0].lat == arrayPtLatLon[1].lat) ||
+				(arrayPtLatLon[0].lng == arrayPtLatLon[1].lng)	) {
+				fZoomTo = false;
+			}
 
 			// restore old zoom, in case we emulate setCenter()
 			if (typeof (fZoomTo) != "undefined" && !fZoomTo) {

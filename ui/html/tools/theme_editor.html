@@ -22,8 +22,8 @@
 
 <body id="theme-editor" >
 
-	<div id="editor-div" >
-		<pre id="editor" style="height:100%;width:100%;border:#eee solid 1px;" >loading ...</pre>
+	<div id="editor-div" style="width:100%;height:100px;">
+		<pre id="editor" style="width:100%;border:#eee solid 1px;" >loading ...</pre>
 	</div>
 
 	<div id="editor-apply" style="margin-top:0.5em;margin-left:0em">
@@ -51,7 +51,12 @@
 	else{
 		alert("error: missing parent window for themes !");
 	}
-        
+     
+	console.log("---------->>>>>")
+	console.log("initialize theme editor");
+	console.log(ixmaps);
+	console.log("---------->>>>>")
+
    	/**************************************************************** 
 	 *
 	 * apply new theme definition after editing
@@ -66,13 +71,14 @@
 			ixmaps.parentApi.error("no theme defined!");
 			return;
 		}
-
 		var szThemeDef = ixmaps.editor.getValue();
+
+		console.log(szThemeDef);
 
 		var theme = new Config(szThemeDef);
 		var themeDefObj = theme.obj;
         
-        
+        console.log(ixmaps);
 
 		// remove previous theme representation from map
 		ixmaps.embeddedSVG.window.map.Api.removeTheme(ixmaps.editorThemeId);
@@ -94,10 +100,14 @@
 	 ****************************************************************/
 	
 	ixmaps.loadEditor = function(){
+
+		console.log("loadEditor");
+
 		if ( typeof(ace) === 'undefined' ){
 			setTimeout("ixmaps.loadEditor();",500);
 			return;
 		};
+		$("#editor-div").css("height","600px");
         ixmaps.editor = ace.edit("editor-div");
  
 		// enable autocompletion and snippets
@@ -128,33 +138,56 @@
 		ixmaps.editor.getSession().setMode("ace/mode/json");
 		ixmaps.editor.setTheme("ace/theme/dawn");
 
+		console.log("ready to load the theme");
+
 		if ( ixmaps.getThemeObj(ixmaps.editorThemeId) ){
 			var themeObj =	ixmaps.getThemeDefinitionObj(ixmaps.editorThemeId);
 			ixmaps.editor.setValue(new Config(themeObj).getPrettyString());
-			try	{
-				ixmaps.editor.getSession().getSelection().selectionLead.setPosition(0,0);
-			} catch (e){}
+			ixmaps.editor.gotoLine(1);
+			$("#editor-div").fadeIn();
+
 		}else{
 			ixmaps.editor.setValue("");
 		}
-		$("#editor-apply-button").button();
+
+		//$("#editor-apply-button").button();
+		$("#editor-div").height("600px");
 		$("#editor-div").show();
+
 	};
 
-	var resize = function(){
-		var height = (window.parent.$("#editor").height() || ($(window.parent).height()+60) || ($(window).height()+60) );
-		$("#editor-div").css("height",(height-120)+"px");
+	var resize = function(resizeData){
+		$("#editor-div").css("height",(resizeData.height-120)+"px");
+		$("#editor-div").css("width",(resizeData.width-50)+"px");
 		// set dialog iframe height
-		//window.parent.window.document.getElementById('dialogframe').style.height = String((height-50)+"px");
 		if ( ixmaps && ixmaps.editor && ixmaps.editor.resize ){
 			ixmaps.editor.resize();
 		}
 	}; 
-	window.onresize=function(){
-		resize();
-	}; 
-
-	resize();
+	
+	// Setup dialog resize handling
+	var setupDialogResizeHandler = function(){
+		// Try to find the dialog instance and set up resize callback
+		if (window.parent && window.parent.dialogManager) {
+			// Find the current dialog (assuming it's the most recently created one)
+			var openDialogs = window.parent.dialogManager.getOpenDialogs();
+			if (openDialogs.length > 0) {
+				var currentDialog = openDialogs[openDialogs.length - 1];
+				currentDialog.setOnResize(function(resizeData) {
+					console.log('Dialog resized:', resizeData);
+					resize(resizeData); // Call your existing resize function
+				});
+				console.log("Dialog resize handler activated");
+			}
+		}
+	};
+	
+	// Setup dialog resize handler after DOM is ready
+	if (document.readyState === 'loading') {
+		document.addEventListener('DOMContentLoaded', setupDialogResizeHandler);
+	} else {
+		setupDialogResizeHandler();
+	}
 
    	/**************************************************************** 
 	 *
@@ -176,6 +209,9 @@
     var themeObj = ixmaps.getThemeObj(ixmaps.editor.szThemeId);
 
 	if(themeObj){
+
+		$("#editor-div").hide();
+
 		ixmaps.editorThemeId = themeObj.szId;
 
 		// we must define the resources for this html page here because it is not loaded as iframe
@@ -199,21 +235,38 @@
 				type: 'js'
 			},
 			{
-				url: 'https://cdnjs.cloudflare.com/ajax/libs/ace/1.4.8/ace.js',
+				url: 'https://cdnjs.cloudflare.com/ajax/libs/ace/1.43.2/ace.min.js',
 				type: 'js'
 			},
 			{
-				url: 'https://cdnjs.cloudflare.com/ajax/libs/ace/1.4.8/ext-language_tools.js',
+				url: 'https://cdnjs.cloudflare.com/ajax/libs/ace/1.43.2/ext-language_tools.min.js',
+				type: 'js'
+			},
+			{
+				url: 'https://cdnjs.cloudflare.com/ajax/libs/ace/1.43.2/mode-json.min.js',
+				type: 'js'
+			},
+			{
+				url: 'https://cdnjs.cloudflare.com/ajax/libs/ace/1.43.2/theme-dawn.min.js',
+				type: 'js'
+			},
+			{
+				url: 'https://cdnjs.cloudflare.com/ajax/libs/ace/1.43.2/theme-github.min.js',
+				type: 'js'
+			},
+			{
+				url: 'https://cdnjs.cloudflare.com/ajax/libs/ace/1.43.2/theme-cloud9_day.min.js',
+				type: 'js'
+			},
+			{
+				url: 'https://cdnjs.cloudflare.com/ajax/libs/ace/1.43.2/theme-dreamweaver.min.js',
 				type: 'js'
 			}
+						
 		];
 		// this loads the resources and calls ixmaps.loadEditor as callback
 		ixmaps.loadResources(editor_fileUrls, null, ixmaps.loadEditor);
 	}
-
-
-
-
     
     </script>
 

@@ -362,7 +362,7 @@ window.ixmaps = window.ixmaps || {};
 
 		var szHtml = "";
 
-		node = ixmaps.embeddedSVG.window.SVGDocument.getElementById("legend:setactive:" + szLayerName + ((szLayerName != szCategoryName) ? ("::" + szCategoryName) : ""));
+		node = ixmaps.embeddedSVG.window.map.SVGDocument.getElementById("legend:setactive:" + szLayerName + ((szLayerName != szCategoryName) ? ("::" + szCategoryName) : ""));
 		if (node) {
 			node = node.childNodes.item(1);
 		}
@@ -371,7 +371,7 @@ window.ixmaps = window.ixmaps || {};
 		// ------------------------------------------------------
 
 		if (!node) {
-			node = ixmaps.embeddedSVG.window.SVGDocument.getElementById(szLayerName + ((szLayerName != szCategoryName) ? ("::" + szCategoryName) : ""));
+			node = ixmaps.embeddedSVG.window.map.SVGDocument.getElementById(szLayerName + ((szLayerName != szCategoryName) ? ("::" + szCategoryName) : ""));
 		}
 
 		if (node) {
@@ -382,7 +382,7 @@ window.ixmaps = window.ixmaps || {};
 			var fill = node.style.getPropertyValue("fill");
 			if (fill && fill.match(/url/)) {
 				pattern = (fill.replace(/\"/g, "").split("#")[1].split("\)")[0] + ":antizoomandpan");
-				pattern = ixmaps.embeddedSVG.window.SVGDocument.getElementById(pattern);
+				pattern = ixmaps.embeddedSVG.window.map.SVGDocument.getElementById(pattern);
 				if (pattern) {
 					pattern = pattern.cloneNode(true);
 					szPatternId = pattern.getAttributeNS(null, "id") + ":antizoomandpan";
@@ -480,7 +480,7 @@ window.ixmaps = window.ixmaps || {};
 		var szLegend = "";
 
 		// try to get description from SVG legend
-		var description = ixmaps.embeddedSVG.window.SVGDocument.getElementById("legend:collapsable:documentinfo");
+		var description = ixmaps.embeddedSVG.window.map.SVGDocument.getElementById("legend:collapsable:documentinfo");
 		if (description) {
 			var title = description.childNodes.item(1);
 			szLegend += "<h3>" + title.childNodes.item(1).nodeValue + "</h3>";

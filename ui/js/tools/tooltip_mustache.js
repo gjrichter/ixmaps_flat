@@ -149,7 +149,7 @@ window.ixmaps = window.ixmaps || {};
 		xPos = xPos > window.innerWidth / 2 ? (xPos - width - 30) : xPos + 30;
 		yPos = yPos > window.innerHeight / 2 ? (yPos - height) : (yPos + 20);
         
-        yPos = Math.min(Math.max(10,yPos),window.innerHeight-height);
+        yPos = Math.min(Math.max(10,yPos),window.innerHeight-height-5);
         
 		window.document.getElementById("tooltipDiv").style.left = xPos + "px";
 		window.document.getElementById("tooltipDiv").style.top = yPos + "px";
@@ -165,8 +165,10 @@ window.ixmaps = window.ixmaps || {};
 		if (window.document.getElementById("tooltipChartContainer")) {
 			window.document.getElementById("tooltipChartContainer").scrollLeft = 200;
 		}
-		// tooltip ready, return true!
+		
+		// tooltip ready, show and return true!
 
+		window.document.getElementById("tooltip").style.display = "inline";
 		return true;
 	}
 
@@ -236,6 +238,7 @@ window.ixmaps = window.ixmaps || {};
 			szId = themeObj.szId+":"+szId;
 		}
 		
+		console.log("=== tooltip_mustache ===");
 		console.log("=== theme ===");
 		console.log(themeObj.szId);
 		console.log(themeObj.szFlag);
@@ -266,7 +269,7 @@ window.ixmaps = window.ixmaps || {};
 			return;
 		}
 		if (!szId.match(/\:\:/)) {
-			var obj = ixmaps.embeddedSVG.window.SVGDocument.getElementById(szItem);
+			var obj = ixmaps.embeddedSVG.window.map.SVGDocument.getElementById(szItem);
 			var szChartId = szItem.match(/::/) ? szId : obj.parentNode.getAttribute("id");
 			var szIdA = szChartId.split("#");
 			if (szIdA.length > 1) {
@@ -511,7 +514,7 @@ window.ixmaps = window.ixmaps || {};
 	 */
 	
 	var __add_data = function(themeObj,szItem){
-		
+        
 		var suffix = "";
 		var szHtml = "";
 
@@ -531,7 +534,7 @@ window.ixmaps = window.ixmaps || {};
 
 		themeObj = origThemeObj;
 		var	fThemeData = false;
-		
+        
 		// ------------------------------------------
 		//
 		// add data table ? 
@@ -539,12 +542,12 @@ window.ixmaps = window.ixmaps || {};
 		// ------------------------------------------
 
 		if (themeObj.fShowData) {
-			
+            
 			// get the data, and make tooltip content
 			// ---------------------------------------
 			//
 			var data = ixmaps.map().getData(szItem);
-
+            
 			if (data) {
 
 				szHtml += "<table class='tooltip' style='font-size:0.85em;spacing:0.5em;min-width:300px'>"
@@ -609,8 +612,7 @@ window.ixmaps = window.ixmaps || {};
 			}
 
 		}
-		
-		var obj = ixmaps.embeddedSVG.window.SVGDocument.getElementById(szItem);
+		var obj = ixmaps.embeddedSVG.window.map.SVGDocument.getElementById(szItem);
 		if ( 0 && obj ){
 
 			var szId =  ixmaps.embeddedSVG.window.map.Api.getShapeId(obj);

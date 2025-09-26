@@ -1,0 +1,455 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>iXmaps Theme Configurator</title>
+    <meta name="description" content="Configure and customize map themes with an intuitive interface">
+    
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <!-- Custom CSS -->
+    <link href="./theme_configurator.css" rel="stylesheet">
+</head>
+<body>
+    <div id="app" class="theme-configurator">
+        <!-- Header -->
+        <header class="config-header">
+            <div class="container">
+                <h1 class="config-title">
+                    <i class="fas fa-palette me-2"></i>
+                    Theme Configurator
+                </h1>
+                <p class="config-subtitle">Configure and customize your map themes</p>
+            </div>
+        </header>
+
+        <!-- Main Content -->
+        <main class="config-main">
+            <div class="container">
+                <!-- Progress Indicator -->
+                <div class="progress-section mb-4">
+                    <div class="progress-indicator">
+                        <div class="progress-step active" data-step="1">
+                            <div class="step-icon">
+                                <i class="fas fa-map"></i>
+                            </div>
+                            <span class="step-label">Map & Data</span>
+                        </div>
+                        <div class="progress-step" data-step="2">
+                            <div class="step-icon">
+                                <i class="fas fa-link"></i>
+                            </div>
+                            <span class="step-label">Binding</span>
+                        </div>
+                        <div class="progress-step" data-step="3">
+                            <div class="step-icon">
+                                <i class="fas fa-chart-bar"></i>
+                            </div>
+                            <span class="step-label">Theme</span>
+                        </div>
+                        <div class="progress-step" data-step="4">
+                            <div class="step-icon">
+                                <i class="fas fa-paint-brush"></i>
+                            </div>
+                            <span class="step-label">Styling</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Step 1: Map and Data Sources -->
+                <section id="step-1" class="config-step active">
+                    <div class="step-header">
+                        <h2>Map and Data Sources</h2>
+                        <p>Define where to load maps and data</p>
+                    </div>
+
+                    <div class="row g-4">
+                        <!-- Map Configuration -->
+                        <div class="col-lg-6">
+                            <div class="config-card">
+                                <div class="card-header">
+                                    <h3><i class="fas fa-map-marked-alt me-2"></i>Map Source</h3>
+                                </div>
+                                <div class="card-body">
+                                    <div class="form-group">
+                                        <label for="map-source" class="form-label">SVG Map URL</label>
+                                        <div class="input-group">
+                                            <input type="text" id="map-source" class="form-control" 
+                                                   placeholder="Enter SVG map URL..." 
+                                                   aria-describedby="map-help">
+                                            <button class="btn btn-outline-secondary" type="button" id="edit-map-btn">
+                                                <i class="fas fa-edit"></i>
+                                            </button>
+                                        </div>
+                                        <div class="form-text" id="map-help">
+                                            Provide the URL to your SVG map file
+                                        </div>
+                                    </div>
+
+                                    <div class="map-layers mt-3">
+                                        <label class="form-label">Map Layers</label>
+                                        <select id="map-layers" class="form-select" size="4">
+                                            <option value="">Loading layers...</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Data Configuration -->
+                        <div class="col-lg-6">
+                            <div class="config-card">
+                                <div class="card-header">
+                                    <h3><i class="fas fa-database me-2"></i>Data Source</h3>
+                                </div>
+                                <div class="card-body">
+                                    <div class="form-group">
+                                        <label for="data-source" class="form-label">Data Source</label>
+                                        <div class="input-group">
+                                            <input type="text" id="data-source" class="form-control" 
+                                                   placeholder="Define data source..." 
+                                                   aria-describedby="data-help">
+                                            <button class="btn btn-outline-secondary" type="button" id="edit-data-btn">
+                                                <i class="fas fa-edit"></i>
+                                            </button>
+                                        </div>
+                                        <div class="form-text" id="data-help">
+                                            Specify your data source (CSV, JSON, API, etc.)
+                                        </div>
+                                    </div>
+
+                                    <div class="data-fields mt-3">
+                                        <label class="form-label">Data Fields</label>
+                                        <select id="data-fields" class="form-select" multiple size="4">
+                                            <option value="">Select fields to visualize...</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="step-actions">
+                        <button class="btn btn-primary" id="next-step-1">
+                            Next: Data Binding <i class="fas fa-arrow-right ms-2"></i>
+                        </button>
+                    </div>
+                </section>
+
+                <!-- Step 2: Data Binding -->
+                <section id="step-2" class="config-step">
+                    <div class="step-header">
+                        <h2>Data Binding</h2>
+                        <p>Connect your data to map features</p>
+                    </div>
+
+                    <div class="row g-4">
+                        <div class="col-lg-6">
+                            <div class="config-card">
+                                <div class="card-header">
+                                    <h3><i class="fas fa-link me-2"></i>Lookup Configuration</h3>
+                                </div>
+                                <div class="card-body">
+                                    <div class="form-group mb-3">
+                                        <label for="lookup-field" class="form-label">Lookup Field</label>
+                                        <select id="lookup-field" class="form-select">
+                                            <option value="">Select lookup field...</option>
+                                        </select>
+                                        <div class="form-text">
+                                            Field that matches map features to data records
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label class="form-label">Coordinate Fields</label>
+                                        <div class="row g-2">
+                                            <div class="col-6">
+                                                <input type="text" id="lat-field" class="form-control" 
+                                                       placeholder="Latitude field">
+                                            </div>
+                                            <div class="col-6">
+                                                <input type="text" id="lon-field" class="form-control" 
+                                                       placeholder="Longitude field">
+                                            </div>
+                                        </div>
+                                        <div class="form-text">
+                                            Use coordinate fields if no lookup field is available
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-lg-6">
+                            <div class="config-card">
+                                <div class="card-header">
+                                    <h3><i class="fas fa-info-circle me-2"></i>Preview</h3>
+                                </div>
+                                <div class="card-body">
+                                    <div id="binding-preview" class="preview-area">
+                                        <div class="preview-placeholder">
+                                            <i class="fas fa-map-marked-alt fa-3x text-muted mb-3"></i>
+                                            <p class="text-muted">Binding preview will appear here</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="step-actions">
+                        <button class="btn btn-outline-secondary" id="prev-step-2">
+                            <i class="fas fa-arrow-left me-2"></i> Previous
+                        </button>
+                        <button class="btn btn-primary" id="next-step-2">
+                            Next: Theme Configuration <i class="fas fa-arrow-right ms-2"></i>
+                        </button>
+                    </div>
+                </section>
+
+                <!-- Step 3: Theme Configuration -->
+                <section id="step-3" class="config-step">
+                    <div class="step-header">
+                        <h2>Theme Configuration</h2>
+                        <p>Choose and configure your visualization type</p>
+                    </div>
+
+                    <div class="row g-4">
+                        <div class="col-lg-8">
+                            <div class="config-card">
+                                <div class="card-header">
+                                    <h3><i class="fas fa-chart-bar me-2"></i>Theme Type</h3>
+                                </div>
+                                <div class="card-body">
+                                    <div class="theme-type-selector">
+                                        <div class="theme-options">
+                                            <div class="theme-option" data-type="choropleth">
+                                                <div class="theme-icon">
+                                                    <i class="fas fa-shapes"></i>
+                                                </div>
+                                                <div class="theme-info">
+                                                    <h4>Choropleth</h4>
+                                                    <p>Color-coded areas based on data values</p>
+                                                </div>
+                                            </div>
+                                            <div class="theme-option" data-type="bubble">
+                                                <div class="theme-icon">
+                                                    <i class="fas fa-circle"></i>
+                                                </div>
+                                                <div class="theme-info">
+                                                    <h4>Bubble Chart</h4>
+                                                    <p>Size and color-coded circles</p>
+                                                </div>
+                                            </div>
+                                            <div class="theme-option" data-type="symbol">
+                                                <div class="theme-icon">
+                                                    <i class="fas fa-star"></i>
+                                                </div>
+                                                <div class="theme-info">
+                                                    <h4>Symbol Chart</h4>
+                                                    <p>Custom symbols with dynamic properties</p>
+                                                </div>
+                                            </div>
+                                            <div class="theme-option" data-type="hexbin">
+                                                <div class="theme-icon">
+                                                    <i class="fas fa-bezier-curve"></i>
+                                                </div>
+                                                <div class="theme-info">
+                                                    <h4>Hexbin</h4>
+                                                    <p>Hexagonal grid aggregation</p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-lg-4">
+                            <div class="config-card">
+                                <div class="card-header">
+                                    <h3><i class="fas fa-cog me-2"></i>Theme Settings</h3>
+                                </div>
+                                <div class="card-body">
+                                    <div class="form-group mb-3">
+                                        <label for="classification" class="form-label">Classification</label>
+                                        <select id="classification" class="form-select">
+                                            <option value="equidistant">Equidistant</option>
+                                            <option value="quantile">Quantile</option>
+                                            <option value="logarithmic">Logarithmic</option>
+                                            <option value="categorical">Categorical</option>
+                                        </select>
+                                    </div>
+
+                                    <div class="form-group mb-3">
+                                        <label for="num-classes" class="form-label">Number of Classes</label>
+                                        <select id="num-classes" class="form-select">
+                                            <option value="3">3</option>
+                                            <option value="4" selected>4</option>
+                                            <option value="5">5</option>
+                                            <option value="6">6</option>
+                                            <option value="7">7</option>
+                                        </select>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label for="color-scheme" class="form-label">Color Scheme</label>
+                                        <div id="color-scheme-picker" class="color-picker">
+                                            <!-- Color scheme will be populated here -->
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="step-actions">
+                        <button class="btn btn-outline-secondary" id="prev-step-3">
+                            <i class="fas fa-arrow-left me-2"></i> Previous
+                        </button>
+                        <button class="btn btn-primary" id="next-step-3">
+                            Next: Styling <i class="fas fa-arrow-right ms-2"></i>
+                        </button>
+                    </div>
+                </section>
+
+                <!-- Step 4: Styling -->
+                <section id="step-4" class="config-step">
+                    <div class="step-header">
+                        <h2>Styling & Effects</h2>
+                        <p>Customize the visual appearance of your theme</p>
+                    </div>
+
+                    <div class="row g-4">
+                        <div class="col-lg-6">
+                            <div class="config-card">
+                                <div class="card-header">
+                                    <h3><i class="fas fa-eye me-2"></i>Visual Effects</h3>
+                                </div>
+                                <div class="card-body">
+                                    <div class="form-check form-switch mb-3">
+                                        <input class="form-check-input" type="checkbox" id="show-values">
+                                        <label class="form-check-label" for="show-values">
+                                            Show Values
+                                        </label>
+                                    </div>
+
+                                    <div class="form-check form-switch mb-3">
+                                        <input class="form-check-input" type="checkbox" id="enable-shadow">
+                                        <label class="form-check-label" for="enable-shadow">
+                                            Enable Shadow
+                                        </label>
+                                    </div>
+
+                                    <div class="form-check form-switch mb-3">
+                                        <input class="form-check-input" type="checkbox" id="enable-glow">
+                                        <label class="form-check-label" for="enable-glow">
+                                            Enable Glow Effect
+                                        </label>
+                                    </div>
+
+                                    <div class="form-group mb-3">
+                                        <label for="opacity" class="form-label">Opacity</label>
+                                        <input type="range" class="form-range" id="opacity" min="0" max="1" step="0.1" value="0.8">
+                                        <div class="d-flex justify-content-between">
+                                            <small>0%</small>
+                                            <small id="opacity-value">80%</small>
+                                            <small>100%</small>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-lg-6">
+                            <div class="config-card">
+                                <div class="card-header">
+                                    <h3><i class="fas fa-text-width me-2"></i>Text & Labels</h3>
+                                </div>
+                                <div class="card-body">
+                                    <div class="form-group mb-3">
+                                        <label for="title" class="form-label">Theme Title</label>
+                                        <input type="text" id="title" class="form-control" placeholder="Enter theme title...">
+                                    </div>
+
+                                    <div class="form-group mb-3">
+                                        <label for="description" class="form-label">Description</label>
+                                        <textarea id="description" class="form-control" rows="3" placeholder="Describe your theme..."></textarea>
+                                    </div>
+
+                                    <div class="form-group mb-3">
+                                        <label for="units" class="form-label">Units</label>
+                                        <input type="text" id="units" class="form-control" placeholder="e.g., %, $, km">
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label for="label-position" class="form-label">Label Position</label>
+                                        <select id="label-position" class="form-select">
+                                            <option value="center">Center</option>
+                                            <option value="top">Top</option>
+                                            <option value="bottom">Bottom</option>
+                                            <option value="left">Left</option>
+                                            <option value="right">Right</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="step-actions">
+                        <button class="btn btn-outline-secondary" id="prev-step-4">
+                            <i class="fas fa-arrow-left me-2"></i> Previous
+                        </button>
+                        <button class="btn btn-success" id="apply-theme">
+                            <i class="fas fa-check me-2"></i> Apply Theme
+                        </button>
+                    </div>
+                </section>
+            </div>
+        </main>
+
+        <!-- Footer -->
+        <footer class="config-footer">
+            <div class="container">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div class="footer-info">
+                        <span class="text-muted">iXmaps Theme Configurator</span>
+                    </div>
+                    <div class="footer-actions">
+                        <button class="btn btn-outline-secondary btn-sm" id="reset-config">
+                            <i class="fas fa-undo me-1"></i> Reset
+                        </button>
+                        <button class="btn btn-outline-primary btn-sm" id="save-config">
+                            <i class="fas fa-save me-1"></i> Save
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </footer>
+
+        <!-- Loading Overlay -->
+        <div id="loading-overlay" class="loading-overlay d-none">
+            <div class="loading-content">
+                <div class="spinner-border text-primary" role="status">
+                    <span class="visually-hidden">Loading...</span>
+                </div>
+                <p class="mt-3">Processing your theme...</p>
+            </div>
+        </div>
+
+        <!-- Toast Notifications -->
+        <div class="toast-container position-fixed bottom-0 end-0 p-3">
+            <!-- Toast notifications will be inserted here -->
+        </div>
+    </div>
+
+    <!-- Bootstrap 5 JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- Custom JavaScript -->
+    <script src="./theme_configurator.js" type="module"></script>
+</body>
+</html>

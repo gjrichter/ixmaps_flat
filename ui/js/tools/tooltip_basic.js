@@ -234,7 +234,7 @@ window.ixmaps = window.ixmaps || {};
 			return;
 		}
 		if (!szId.match(/\:\:/)) {
-			var obj = ixmaps.embeddedSVG.window.SVGDocument.getElementById(szItem);
+			var obj = ixmaps.embeddedSVG.window.map.SVGDocument.getElementById(szItem);
 			var szChartId = szItem.match(/::/) ? szId : obj.parentNode.getAttribute("id");
 			var szIdA = szChartId.split("#");
 			if (szIdA.length > 1) {
@@ -434,7 +434,7 @@ window.ixmaps = window.ixmaps || {};
 			// then we have to get the id for tyhe data in another way
 			//
 			if (!szId.match(/chart/i)) {
-				var obj = ixmaps.embeddedSVG.window.SVGDocument.getElementById(szId);
+				var obj = ixmaps.embeddedSVG.window.map.SVGDocument.getElementById(szId);
 				var szChartId = szId.match(/::/) ? szId : obj.parentNode.getAttribute("id");
 				var szIdA = szChartId.split("#");
 				if (szIdA.length > 1) {
@@ -514,7 +514,7 @@ window.ixmaps = window.ixmaps || {};
 
 		}
 		
-		var obj = ixmaps.embeddedSVG.window.SVGDocument.getElementById(szItem);
+		var obj = ixmaps.embeddedSVG.window.map.SVGDocument.getElementById(szItem);
 		if ( obj && !fThemeChart && !fThemeData ){
 
 			var szId =  ixmaps.embeddedSVG.window.map.Api.getShapeId(obj);

@@ -1,7 +1,7 @@
 <!DOCTYPE HTML>
 <html>
 
-<head>
+<head id="theme-configurator-head">
     <meta charset="UTF-8">
     <title>iXmaps Theme Configurator</title>
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -9,79 +9,74 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
 
     <meta http-equiv="X-UA-Compatible" content="IE=9" />
-    
+    <!-- 
     <base href="https://gjrichter.github.io/ixmaps_flat/ui/libs/jquery/ui" />
-
-    <!-- Custom styles -->
-    <link href="../../../ui/html/assets/css/font-awesome.min.css" rel="stylesheet">
-    <link href="../../../ui/html/assets/css/icomoon.css" rel="stylesheet">
-
-    <link href="../../../ui/css/site.min.css" rel="stylesheet">
-    <link href="../../../ui/html/assets/css/styles.css" rel="stylesheet">
+    -->
+    <!-- Custom styles will be loaded dynamically -->
 
     <style type="text/css" media="screen">
-        .map-config {
+        .theme-configurator .map-config {
             background-color: #2AA2DE;
         }
 
-        hr.separator {
-            display: none;
+        .theme-configurator hr.separator {
+            display: inlinee;
             color: black;
             margin: -0.8em 0.9em 1em 0.9em;
-            height: 0px;
+            height: 2px;
         }
 
-        #xcolor-label>span {
+        .theme-configurator #xcolor-label>span {
             padding: 6px 12px;
         }
 
-        .exact-value {
+        .theme-configurator .exact-value {
             margin: 0.2em 0em;
             padding: 1em;
             width: 100%;
         }
 
-        option,
-        optgroup {
+        .theme-configurator option,
+        .theme-configurator optgroup {
             xxcolor: #666666;
             font-size: 1.2em;
         }
 
-        optgroup,
-        label {
+        .theme-configurator optgroup,
+        .theme-configurator label {
             color: #dddddd;
             padding-left: 0.2em;
             font-size: 14px;
         }
 
-        #chartValueOptions option,
-        optgroup {
+        .theme-configurator #chartValueOptions option,
+        .theme-configurator optgroup {
             color: #bbbbbb;
         }
 
-        select.form-control {
+        .theme-configurator select.form-control {
             padding: 5px;
         }
 
-        input.form-control {
+        .theme-configurator input.form-control {
             padding: 8px;
         }
 
-        input::placeholder {
+        .theme-configurator input::placeholder {
             color: #dddddd;
         }
 
-        .form-control::placeholder {
+        .theme-configurator .form-control::placeholder {
             color: #dddddd;
         }
 
-        input,
-        select,
-        .form-group {
+        .theme-configurator input,
+        .theme-configurator select,
+        .theme-configurator .form-group {
             margin-bottom: 1em;
         }
 
-        h3 {
+        .theme-configurator h3 {
             margin-top: 0.3em;
             margin-bottom: 0.2em;
             padding-bottom: 0.2em;
@@ -93,7 +88,7 @@
             font-size: 36px;
         }
 
-        h5 {
+        .theme-configurator h5 {
             color: #ddd;
             margin-top: -1em;
             margin-bottom: 0.2em;
@@ -102,57 +97,60 @@
             font-size: 14px;
         }
 
-        .colorlist {
+        .theme-configurator .colorlist {
             padding: 0px;
             margin: 0px;
             margin-left: -5px;
             border: 0;
         }
 
-        .colorlistitem {
+        .theme-configurator .colorlistitem {
             padding: 1px;
             margin: 3px;
             border: 0;
             font-family: monospace;
-            font-size: 24px;
+            font-size: 12px;
             line-height: 1em;
         }
 
-        .colorlistitem>a {
+        .theme-configurator .colorlistitem>a {
             text-decoration: none;
-            padding: 3px;
-            margin: 3px;
             border: 0;
         }
 
-        .colorlistitem>a:hover {
+        .theme-configurator .colorlistitem > a > span{
+            padding: 6px 12px;
+        }
+
+        .theme-configurator .colorlistitem>a:hover {
             text-decoration: none;
             background: #fd8;
             xborder: #aaa solid 1px;
         }
 
-        .colpick {
+        .theme-configurator .colpick {
             z-index: 9999;
         }
 
-        .colpick_submit {
+        .theme-configurator .colpick_submit {
             top: 145px;
         }
 
-        h3.disabled {
+        .theme-configurator h3.disabled {
             color: #dddddd;
         }
 
-        h3.enabled {
+        .theme-configurator h3.enabled {
             color: #48A542;
         }
 
-        .control-alert {
+        .theme-configurator .control-alert {
             border-color: #ff8888;
             border-width: 1px;
         }
 
-        .help {
+        .theme-configurator .help {
+            line-height: 1.2em;
             color: #444444;
             margin-left: 0px;
             padding-left: 0;
@@ -160,7 +158,7 @@
             display: none;
         }
 
-        .calendar {
+        .theme-configurator .calendar {
             color: black;
             background-color: transparent;
             padding: 0;
@@ -170,16 +168,17 @@
             margin-right: 10px;
         }
 
-        .calendar .years .plus em,
-        .calendar .years .minus em {
+        .theme-configurator .calendar .years .plus em,
+        .theme-configurator .calendar .years .minus em {
             font-size: 1.2em;
+            font-style: normal;
             user-select: none;
             position: relative;
             display: inline-block;
             width: 32px;
             height: 32px;
             margin-top: 2px;
-            padding-top: 4px;
+            padding: 1px 0 0 2px;
             cursor: pointer;
             color: #888;
             border: 1px solid #aaa;
@@ -188,39 +187,40 @@
             -moz-border-radius: 50%;
         }
 
-        .calendar .years .minus em {
+        .theme-configurator .calendar .years .minus em {
             font-size: 1.2em;
-            padding-top: 4px;
+            padding: 0px;
+            vertical-align: middle;
         }
 
-        .calendar .years .plus em:active,
-        .calendar .years .plus em:hover,
-        .calendar .years .minus em:active,
-        .calendar .years .minus em:hover {
+        .theme-configurator .calendar .years .plus em:active,
+        .theme-configurator .calendar .years .plus em:hover,
+        .theme-configurator .calendar .years .minus em:active,
+        .theme-configurator .calendar .years .minus em:hover {
             border-color: #e9573f
         }
         
-        input.form-control, select.form-control {
+        .theme-configurator input.form-control, select.form-control {
             font-size: 13px;
         }
 
-        a:hover {
+        .theme-configurator a:hover {
             cursor: pointer;
         }
 
-        .checkbox {
+        .theme-configurator .checkbox {
             margin: 1.8em 0;
 
         }
 
-        .btn-link {
+        .theme-configurator .btn-link {
             --bs-btn-font-weight: 400;
             --bs-btn-color: #3bafda;
             text-decoration: none;
         }
 
 
-        .rich-select {
+        .theme-configurator .rich-select {
             height: 81px;
             /* 75px + 6 */
             position: relative;
@@ -230,18 +230,18 @@
             background: none;
         }
 
-        .rich-select-dropdown {
+        .theme-configurator .rich-select-dropdown {
             border: solid 1px #888;
             border-radius: .25rem;
         }
 
-        .rich-select-dropdown:focus-within {
+        .theme-configurator .rich-select-dropdown:focus-within {
             border-color: #80bdff;
             outline: 0;
             box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, .25);
         }
 
-        .rich-select-dropdown-button {
+        .theme-configurator .rich-select-dropdown-button {
             opacity: 0;
             width: 0;
             height: 0;
@@ -249,8 +249,8 @@
             padding: 0;
         }
 
-        .rich-select-dropdown-button+label,
-        .rich-select-option>input[type=radio] {
+        .theme-configurator .rich-select-dropdown-button+label,
+        .theme-configurator .rich-select-option>input[type=radio] {
             position: absolute;
             display: block;
             right: .5rem;
@@ -262,12 +262,12 @@
             appearance: none;
         }
 
-        .rich-select-dropdown-button+label {
+        .theme-configurator .rich-select-dropdown-button+label {
             top: .5rem;
             padding: 25px 10px;
         }
 
-        .rich-select-dropdown-button+label::before {
+        .theme-configurator .rich-select-dropdown-button+label::before {
             position: absolute;
             top: 50%;
             right: 0;
@@ -280,16 +280,16 @@
             background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 4 5'%3e%3cpath fill='%23343a40' d='M2 5L0 3h4z'/%3e%3c/svg%3e");
         }
 
-        .rich-select-dropdown>.rich-select-option>.rich-select-option-body {
+        .theme-configurator .rich-select-dropdown>.rich-select-option>.rich-select-option-body {
             display: none;
         }
 
-        .rich-select-dropdown>.rich-select-option input[type=radio]:checked+.rich-select-option-body {
+        .theme-configurator .rich-select-dropdown>.rich-select-option input[type=radio]:checked+.rich-select-option-body {
             display: inline-block;
             width: 100%;
         }
 
-        .rich-select-options {
+        .theme-configurator .rich-select-options {
             display: none;
             position: absolute;
             background-color: #fff;
@@ -303,21 +303,21 @@
             box-shadow: rgba(0, 0, 0, 0.4) 5px 8px 15px;
         }
 
-        .rich-select-option {
+        .theme-configurator .rich-select-option {
             padding: 0 8px;
         }
 
-        .rich-select-options>.rich-select-option:hover {
+        .theme-configurator .rich-select-options>.rich-select-option:hover {
             background-color: #f1f1f1;
         }
 
-        .rich-select-option-body label {
+        .theme-configurator .rich-select-option-body label {
             width: 100%;
             padding: 2px;
             margin-bottom: 0;
         }
 
-        .rich-select-option-body img {
+        .theme-configurator .rich-select-option-body img {
             height: 75px;
             width: 75px;
             min-height: 75px;
@@ -326,7 +326,7 @@
             margin-right: .5rem;
         }
 
-        .rich-select-option-body>button {
+        .theme-configurator .rich-select-option-body>button {
             width: 100%;
             text-align: left;
             padding: 2px;
@@ -335,43 +335,44 @@
             background: none;
         }
 
-        .rich-select-dropdown-button:checked~.rich-select-options {
+        .theme-configurator .rich-select-dropdown-button:checked~.rich-select-options {
             display: inline-block;
         }
 
-        .rich-select-option-body div {
+        .theme-configurator .rich-select-option-body div {
             float: left;
             margin-top: 1.5em;
             width: 60px;
             line-height: 0.9em;
         }
 
-        .rich-select-option-body img {
+        .theme-configurator .rich-select-option-body img {
             float: left;
         }
 
         
-        #color-select-div {
-            border: solid black 1px;
+        .theme-configurator #color-select-div {
+            xborder: solid black 1px;
             border-radius: 0.5em;
-            padding: 0.3em 0em;
+            padding: 0;
         }
         
-        .row {
+        .theme-configurator .row {
             width: 100%;
         }
         
-        .apply {
+        .theme-configurator .apply {
             font-size: 0.5em;
         }
+
     </style>
     
     
 </head>
 
-<body id="theme-editor">
+<body id="theme-configurator-body">
 
-    <div id="workspace" style="overflow-x:hidden;height:100%;margin-right:5px;">
+    <div id="workspace" class="theme-configurator hidden" style="overflow-x:hidden;height:100%;margin-right:5px;">
 
         <div class="container map-config">
 
@@ -444,7 +445,7 @@
                             <div class="input-group">
                                 <input id="define-data" type="text" class="form-control" placeholder="define data source ..." aria-label="data...">
                                 <span class="input-group-btn">
-                                    <button class="btn btn-secondary" type="button" onclick="ixmaps.loadStoryTool('../../../app/Editor/dialog_data_load.html')">edit</button>
+                                    <button class="btn btn-secondary" type="button" onclick="ixmaps.loadStoryTool('../../app/Editor/dialog_data_load.html')">edit</button>
                                 </span>
                             </div>
                         </div>
@@ -650,14 +651,14 @@
                 <div class="row">
                     <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6">
                         <div class="form-group">
-                            <label for="theme-type-select">you can either select a new basic type</label>
+                            <label for="theme-type-select">select a new basic type</label>
                             <div class="rich-select custom-select">
                                 <div class="rich-select-dropdown">
                                     <div class="rich-select-option">
                                         <input type="radio" name="game" id="Dots" checked="">
                                         <div class="rich-select-option-body">
                                             <label tabindex="-1">
-                                                <img src="../../../ui/resources/images/points.png" alt="">
+                                                <img data-image="points.png" alt="">
                                                 <div>Dots</div>
                                             </label>
                                         </div>
@@ -666,7 +667,7 @@
                                         <input type="radio" name="game" id="sized-Bubbles">
                                         <div class="rich-select-option-body">
                                             <label tabindex="-1">
-                                                <img src="../../../ui/resources/images/bubbles.png" alt="">
+                                                <img data-image="bubbles.png" alt="">
                                                 <div>sized Bubbles</div>
                                             </label>
                                         </div>
@@ -675,7 +676,7 @@
                                         <input type="radio" name="game" id="HexBin">
                                         <div class="rich-select-option-body">
                                             <label tabindex="-1">
-                                                <img src="../../../ui/resources/images/hexbin.png" alt="">
+                                                <img data-image="hexbin.png" alt="">
                                                 <div>HexBin</div>
                                             </label>
                                         </div>
@@ -684,7 +685,7 @@
                                         <input type="radio" name="game" id="HexBinSized">
                                         <div class="rich-select-option-body">
                                             <label tabindex="-1">
-                                                <img src="../../../ui/resources/images/hexbin_size.png" alt="">
+                                                <img data-image="hexbin_size.png" alt="">
                                                 <div>HexBin sized</div>
                                             </label>
                                         </div>
@@ -693,7 +694,7 @@
                                         <input type="radio" name="game" id="Waffle">
                                         <div class="rich-select-option-body">
                                             <label tabindex="-1">
-                                                <img src="../../../ui/resources/images/waffle_grid.png" alt="">
+                                                <img data-image="waffle_grid.png" alt="">
                                                 <div>Waffle Grid</div>
                                             </label>
                                         </div>
@@ -705,7 +706,7 @@
                                     <div class="rich-select-option">
                                         <div class="rich-select-option-body">
                                             <label for="Dots" tabindex="-1" onclick="document.getElementById('rich-select-dropdown-button').click();ixmaps.editor.setChartStyle('CHART|DOT|RAW|FAST')">
-                                                <img src="../../../ui/resources/images/points.png" alt="">
+                                                <img data-image="points.png" alt="">
                                                 <div>Dots</div>
                                             </label>
                                         </div>
@@ -713,7 +714,7 @@
                                     <div class="rich-select-option">
                                         <div class="rich-select-option-body">
                                             <label for="sized-Bubbles" tabindex="-1" onclick="document.getElementById('rich-select-dropdown-button').click();ixmaps.editor.setChartStyle('CHART|BUBBLE|SIZE')">
-                                                <img src="../../../ui/resources/images/bubbles.png" alt="">
+                                                <img data-image="bubbles.png" alt="">
                                                 <div>sized Bubbles</div>
                                             </label>
                                         </div>
@@ -721,7 +722,7 @@
                                     <div class="rich-select-option">
                                         <div class="rich-select-option-body">
                                             <label for="HexBin" tabindex="-1" onclick="document.getElementById('rich-select-dropdown-button').click();ixmaps.editor.setChartStyle('CHART|SYMBOL|GRIDSIZE|FAST|AGGREGATE|SUM|DOPACITY')">
-                                                <img src="../../../ui/resources/images/hexbin.png" alt="">
+                                                <img data-image="hexbin.png" alt="">
                                                 <div>HexBin</div>
                                             </label>
                                         </div>
@@ -729,7 +730,7 @@
                                     <div class="rich-select-option">
                                         <div class="rich-select-option-body">
                                             <label for="HexBinSized" tabindex="-1" onclick="document.getElementById('rich-select-dropdown-button').click();ixmaps.editor.setChartStyle('CHART|BUBBLE|SIZE|FAST|AGGREGATE|RELOCATE|SUM')">
-                                                <img src="../../../ui/resources/images/hexbin_size.png" alt="">
+                                                <img data-image="hexbin_size.png" alt="">
                                                 <div>HexBin sized</div>
                                             </label>
                                         </div>
@@ -737,7 +738,7 @@
                                     <div class="rich-select-option">
                                         <div class="rich-select-option-body">
                                             <label for="Waffle" tabindex="-1" onclick="document.getElementById('rich-select-dropdown-button').click();ixmaps.editor.setChartStyle('CHART|WAFFLE|GRIDSIZE|AGGREGATE|FAST|RECT|SUM')">
-                                                <img src="../../../ui/resources/images/waffle_grid.png" alt="">
+                                                <img data-image="waffle_grid.png" alt="">
                                                 <div>Waffle Grid</div>
                                             </label>
                                         </div>
@@ -748,7 +749,7 @@
                     </div>
                     <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6">
                         <div class="form-group">
-                            <label for="theme-type-select">or modify the chart type</label>
+                            <label for="theme-type-select">modify the actual type</label>
                             <div id="theme-type-menu-text"></div>
                             <div class="btn btn-outline-dark" style="float:left;margin-top:0.4em;padding:1.8em 1em"  onclick="ixmaps.editor.makeChartMenueHTML(null,'myMenuTarget');">
                                 <span>
@@ -810,9 +811,9 @@
             <!-- -----------------------	-->
             <!-- colorscheme and classes    -->
             <!-- -----------------------	-->
-
+            <!--
             <hr class="separator">
-
+            -->
             <div class="container" style="padding-bottom:1.5em;">
 
                 <h3 id="chartColor-title" style="color:#dddddd">color
@@ -834,10 +835,7 @@
                                     <span id="xcolor-label" style="font-size:11px;line-height:15px;background-color:white;"></span>
                                 </a>
                             </div>
-                            <div id="color-select-div" style="width:58%;margin-top:1em;display:none">
-                                <div style="float:left;margin:0 0 0.3em 0.5em;color:#aaaaaa;"><b>colorschemes</b></div>
-                                <div style="float:right;margin:-0.1em 0.3em 0.3em 0.5em">
-                                    <a href="javascript:$('#color-select-div').hide()">close</a></div>
+                            <div id="color-select-div" style="width:240px;margin-top:1em;display:none">
                                 <div id="color-select-div-workspace" style="clear:both;max-height:300px;overflow:auto;"></div>
                             </div>
                         </div>
@@ -903,8 +901,9 @@
             <!-- --------------------------------- -->
             <!-- chart style					   -->
             <!-- --------------------------------- -->
-
+            <!--
             <hr class="separator">
+            -->
 
             <div class="container" style="padding-bottom:1.5em;">
 
@@ -1108,6 +1107,7 @@
                                 <option value="SIZEP3">by value - cubic</option>
                                 <option value="SIZEP4">by value - power of 4</option>
                                 <option value="SIZELOG">by value - logarithmical</option>
+                                <option value="SIZEP">by size power</option>
                                 <option value="NOSIZE">don't size</option>
                             </select>
                         </div>
@@ -1170,7 +1170,131 @@
                             </div> <input class="form-control" type="text" id="chartRangeScaleValue" placeholder="1 ... " onkeypress="setChartRangeScale()">
                         </div>
                     </div>
+
+                    <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6">
+                        <div class="form-group">
+                            <label for="chartSizePowerValue">size power</label>
+                            <!-- help -->
+                            <a onclick="$(this).siblings('.help').toggle('fast');">
+                                <span style="font-size:14px;float:right;margin-right:0.2em;padding-top:0.2em"><span class="fa fa-info fa-fw" style="font-size:14px;color:#dddddd;float:right;padding-top:0.3em"></span></span></a>
+                            <div class="help">
+                                <p>The size power defines a factor for a function which calculates the size from the value. Here some examples:</p>
+                                <ul>
+                                    <li> 1 defines a linear relation between value and size</li>
+                                    <li> 2 defines a relation between the surface of a symbol (circle, square, ...) and the value</li>
+                                    <li> 3 defines a relation between the volume of a symbol (sfere, column,...) and the value</li>
+                                    <li> 0.1 defines a log10 relation between the size and the value</li>
+                                    <li> 0.2 defines a log10 relation between the surface  and the value</li>
+                                </ul>
+                            </div> <input class="form-control" type="text" id="chartSizePowerValue" placeholder="1 ... " onkeypress="setChartSizePower()">
+                        </div>
+                    </div>
+               </div>
+            </div>
+
+
+            <!-- --------------------------------- -->
+            <!-- aggregation                       -->
+            <!-- --------------------------------- -->
+
+            <hr class="separator">
+
+            <div class="container" style="padding-bottom:1.5em;">
+                <h3 id="chartAggregationTitle" class="disabled">aggregation
+                    <span class="pull-right apply">
+                        <a href='javascript:ixmaps.editor.applyChanges();'>
+                            <button type="button" class="btn btn-link btn-md">
+                                apply changes <i class="icon icon-loop2" title="refresh" tabindex="-1" style="padding:0.25em"></i>
+                            </button>
+                        </a>
+                    </span>
+                </h3>
+
+                <div class="row">
+                    <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6">
+                        <div class="form-group">
+                            <label for="chartAggregationMode">aggregate by</label>
+                            <select id="chartAggregationMode" class="form-control" name="chartAggregationMode" onchange="ixmaps.editor.setAggregationMode()">
+                                <option value="">---</option>
+                                <option value="AGGREGATE">data field</option>
+                                <option value="AGGREGATE|RECT">rectangular grid</option>
+                                <option value="AGGREGATE|HEX">hexagonal grid</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="chartAggregationFieldList">aggregation field</label>
+                            <select id="chartAggregationFieldList" class="form-control" name="chartAggregationFieldList" onchange="ixmaps.editor.setAggregationMode()">
+                                <option value="">---</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6">
+                        <div class="form-group">
+                            <label for="chartAggregationWidth">grid width</label>
+                            <input type="text" id="chartAggregationWidth" class="form-control" placeholder="0.1 ... 3" onkeypress="setGridWidth()">
+                            <label for="chartAggregationType">grid units</label>
+                            <select id="chartAggregationType" class="form-control" name="chartAggregationType" onchange="ixmaps.editor.setAggregationMode()">
+                                <option value="">---</option>
+                                <option value="pixel">screen pixel</option>
+                                <option value="meter">meter</option>
+                            </select>
+                        </div>
+                    </div>
                 </div>
+
+                <div class="row">
+                    <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6">
+                        <div class="form-group">
+                            <label for="chartAggregationCalc">aggregated value</label>
+                            <select id="chartAggregationCalc" class="form-control" name="chartAggregationMode">
+                                <option value="">---</option>
+                                <option value="SUM">sum</option>
+                                <option value="MEAN">mean</option>
+                                <option value="MIN">min</option>
+                                <option value="MAX">max</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6">
+                        <div class="form-group">
+                            <label for="theme-values-checkbox">relocate</label>
+                            <div class="checkbox">
+                                <label class="toggle">
+                                    <input type="checkbox" id="theme-relocate-checkbox" onchange="toggle_relocate()">
+                                    <span class="handle"></span>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6">
+                        <div class="form-group">
+                            <label id="chartAggregationCenterX">grid offset X</label>
+                            <div class="calendar">
+                                <div class="years clearfix">
+                                    <div class="unit minus" onclick="changeGridOffsetX(-10)"><em>-</em></div>
+                                    <div class="monyear" style="padding:0em 0em 0em 1.2em"><input class="form-control" style="width:90%" type="text" id="chartAggregationCenterXValue" placeholder="1 ... " onkeypress="setGridOffsetX()"></div>
+                                    <div class="unit plus" onclick="changeGridOffsetX(10)"><em>+</em></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6">
+                        <div class="form-group">
+                            <label id="chartAggregationCenterY">grid offset Y</label>
+                            <div class="calendar">
+                                <div class="years clearfix">
+                                    <div class="unit minus" onclick="changeGridOffsetY(-10)"><em>-</em></div>
+                                    <div class="monyear" style="padding:0em 0em 0em 1.2em"><input class="form-control" style="width:90%" type="text" id="chartAggregationCenterYValue" placeholder="1 ... " onkeypress="setGridOffsetY()"></div>
+                                    <div class="unit plus" onclick="changeGridOffsetY(10)"><em>+</em></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
             </div>
 
             <!-- --------------------------------- -->
@@ -1181,7 +1305,7 @@
 
             <div class="container" style="padding-bottom:1.5em;">
 
-                <h3 id="chartOpacityTitle" class="disabled">opacity
+                <h3 id="chartOpacityTitle" class="disabled">dyn. opacity
                     <span class="pull-right apply">
                         <a href='javascript:ixmaps.editor.applyChanges();'>
                             <button type="button" class="btn btn-link btn-md">
@@ -1237,109 +1361,7 @@
                     </div>
                 </div>
             </div>
-
-            <!-- --------------------------------- -->
-            <!-- aggregation                       -->
-            <!-- --------------------------------- -->
-
-            <hr class="separator">
-
-            <div class="container" style="padding-bottom:1.5em;">
-                <h3 id="chartAggregationTitle" class="disabled">aggregation
-                    <span class="pull-right apply">
-                        <a href='javascript:ixmaps.editor.applyChanges();'>
-                            <button type="button" class="btn btn-link btn-md">
-                                apply changes <i class="icon icon-loop2" title="refresh" tabindex="-1" style="padding:0.25em"></i>
-                            </button>
-                        </a>
-                    </span>
-                </h3>
-
-                <div class="row">
-                    <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6">
-                        <div class="form-group">
-                            <label for="chartAggregationMode">aggregate by</label>
-                            <select id="chartAggregationMode" class="form-control" name="chartAggregationMode" onchange="ixmaps.editor.setAggregationMode()">
-                                <option value="">---</option>
-                                <option value="AGGREGATE">data field</option>
-                                <option value="AGGREGATE|RECT">rectangular grid</option>
-                                <option value="AGGREGATE|HEX">hexagonal grid</option>
-                            </select>
-                        </div>
-                        <div class="form-group">
-                            <label for="chartAggregationFieldList">aggregation field</label>
-                            <select id="chartAggregationFieldList" class="form-control" name="chartAggregationFieldList">
-                                <option value="">---</option>
-                            </select>
-                        </div>
-                    </div>
-                    <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6">
-                        <div class="form-group">
-                            <label for="chartAggregationWidth">grid width</label>
-                            <input type="text" id="chartAggregationWidth" class="form-control" placeholder="0.1 ... 3">
-                            <label for="chartAggregationType">grid units</label>
-                            <select id="chartAggregationType" class="form-control" name="chartAggregationType">
-                                <option value="">---</option>
-                                <option value="pixel">screen pixel</option>
-                                <option value="meter">meter</option>
-                            </select>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="row">
-                    <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6">
-                        <div class="form-group">
-                            <label for="chartAggregationCalc">aggregated value</label>
-                            <select id="chartAggregationCalc" class="form-control" name="chartAggregationMode">
-                                <option value="">---</option>
-                                <option value="SUM">sum</option>
-                                <option value="MEAN">mean</option>
-                            </select>
-                        </div>
-                    </div>
-                    <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6">
-                        <div class="form-group">
-                            <label for="theme-values-checkbox">relocate</label>
-                            <div class="checkbox">
-                                <label class="toggle">
-                                    <input type="checkbox" id="theme-relocate-checkbox" onchange="toggle_relocate()">
-                                    <span class="handle"></span>
-                                </label>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="row">
-                    <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6">
-                        <div class="form-group">
-                            <label id="chartAggregationCenterX">grid offset X</label>
-                            <div class="calendar">
-                                <div class="years clearfix">
-                                    <div class="unit minus" onclick="changeGridOffsetX(-10)"><em>-</em></div>
-                                    <div class="monyear" style="padding:0em 0em 0em 1.2em"><input class="form-control" style="width:90%" type="text" id="chartAggregationCenterXValue" placeholder="1 ... " onkeypress="setGridOffsetX()"></div>
-                                    <div class="unit plus" onclick="changeGridOffsetX(10)"><em>+</em></div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6">
-                        <div class="form-group">
-                            <label id="chartAggregationCenterY">grid offset Y</label>
-                            <div class="calendar">
-                                <div class="years clearfix">
-                                    <div class="unit minus" onclick="changeGridOffsetY(-10)"><em>-</em></div>
-                                    <div class="monyear" style="padding:0em 0em 0em 1.2em"><input class="form-control" style="width:90%" type="text" id="chartAggregationCenterYValue" placeholder="1 ... " onkeypress="setGridOffsetY()"></div>
-                                    <div class="unit plus" onclick="changeGridOffsetY(10)"><em>+</em></div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-            </div>
-
+            
             <!-- -----------------------	-->
             <!-- title and descriptions     -->
             <!-- -----------------------	-->
@@ -1521,34 +1543,7 @@
         <!--                                                                    -->
         <!-- ------------------------------------------------------------------ -->
 
-        <!-- Bootstrap core JS-->
-        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
-    
-        <script src="../../../ui/libs/colpick-jQuery-Color-Picker-master/js/colpick.js"></script>
-        <link href="../../../ui/libs/colpick-jQuery-Color-Picker-master/css/colpick.css" rel="stylesheet" />
-
-        <script type="text/javascript">
-            /* get ixmaps api from parent window/frame */
-
-            ixmaps = ixmaps || null;
-            
-            if (!ixmaps){
-                if (window.opener) {
-                    parent = window.opener;
-                    ixmaps = window.opener.ixmaps;
-                } else
-                if (parent) {
-                    ixmaps = parent.window.ixmaps;
-                } else {
-                    alert("error: missing parent window for themes !");
-                }
-            }
-
-        </script>
-
-        <script src="../../../ui/js/htmlgui_query.js"></script>
-        <script src="../../../ui/js/tools/colorscheme.js"></script>
-        <script src="../../../ui/js/tools/colorselect.js"></script>
+        <!-- Resources will be loaded dynamically in document.ready -->
 
         <script type="text/javascript">
             /**
@@ -1653,11 +1648,15 @@
 
             ixmaps.setColorScheme = function(szColorscheme) {
 
-                ixmaps.editorColorschemeType = "colorscheme";
+                ixmaps.editor.colorschemeType = "colorscheme";
 
-                ixmaps.editorColorscheme = szColorscheme;
+                ixmaps.editor.colorscheme = szColorscheme;
                 ixmaps.map().changeThemeStyle(ixmaps.editor.themeId, "colorscheme:" + szColorscheme, "set");
                 ixmaps.setColors(szColorscheme);
+                setTimeout(() => {
+                    ixmaps.editor.loadTheme(ixmaps.editor.themeId);
+                    },1000);
+
                 //$("#color-select-div").hide();
             };
 
@@ -1850,7 +1849,7 @@
                 if (event.keyCode == 13) {
                     var newOpacity = Number($("#chartOpacityValue").val());
                     if (!isNaN(newOpacity)) {
-                        ixmaps.changeThemeStyle(ixmaps.editor.themeId, 'fillopacity:' + String(newOpacity), 'set');
+                        ixmaps.map().changeThemeStyle(ixmaps.editor.themeId, 'fillopacity:' + String(newOpacity), 'set');
                     } else {
                         alert("Input type error: only numbers allowed!");
                     }
@@ -1865,7 +1864,7 @@
                     nOpacity = (nOpacity * 1.5).toPrecision(2);
                 }
                 $("#chartOpacityValue").val(nOpacity)
-                ixmaps.changeThemeStyle(null,ixmaps.editor.themeId, 'fillopacity:' + String(nOpacity), 'set');
+                ixmaps.map().changeThemeStyle(ixmaps.editor.themeId, 'fillopacity:' + String(nOpacity), 'set');
             }
 
             function setNormalSizeValue() {
@@ -1879,7 +1878,18 @@
                 if (event.keyCode == 13) {
                     var newScale = Number($("#chartRangeScaleValue").val());
                     if (!isNaN(newScale)) {
-                        ixmaps.changeThemeStyle(ixmaps.editor.themeId, 'rangescale:' + String(newScale), 'set');
+                        ixmaps.map().changeThemeStyle(ixmaps.editor.themeId, 'rangescale:' + String(newScale), 'set');
+                    } else {
+                        alert("Input type error: only numbers allowed!");
+                    }
+                }
+            }
+
+            function setChartSizePower() {
+                if (event.keyCode == 13) {
+                    var newValue = Number($("#chartSizePowerValue").val());
+                    if (!isNaN(newValue)) {
+                        ixmaps.map().changeThemeStyle(ixmaps.editor.themeId, 'sizepow:' + String(newValue), 'set');
                     } else {
                         alert("Input type error: only numbers allowed!");
                     }
@@ -1897,18 +1907,33 @@
                 }
             }
 
+            function setGridWidth() {
+                if (event.keyCode == 13) {
+                    var newGridWidth = Number($("#chartAggregationWidth").val());
+                    if (!isNaN(newGridWidth)) {
+                        if ($("#chartAggregationType").val() == "pixel"){
+                            ixmaps.map().changeThemeStyle(ixmaps.editor.themeId, 'gridwidthpx:' + String(newGridWidth), 'set');
+                        }else{
+                            ixmaps.map().changeThemeStyle(ixmaps.editor.themeId, 'gridwidth:' + String(newGridWidth), 'set');
+                        }
+                    } else {
+                        alert("Input type error: only numbers allowed!");
+                    }
+                }
+            }
+
             function changeGridOffsetX(nDelta) {
                 var nOffset = Number($("#chartAggregationCenterXValue").val());
                 nOffset = nOffset + nDelta;
                 $('#chartAggregationCenterXValue').val(nOffset);
-                ixmaps.changeThemeStyle(ixmaps.editor.themeId, 'gridoffsetx:' + String(nOffset), 'set');
+                ixmaps.map().changeThemeStyle(ixmaps.editor.themeId, 'gridoffsetx:' + String(nOffset), 'set');
             }
 
             function setGridOffsetY() {
                 if (event.keyCode == 13) {
                     var newOffsetY = Number($("#chartAggregationCenterYValue").val());
                     if (!isNaN(newOffsetY)) {
-                        ixmaps.changeThemeStyle(ixmaps.editor.themeId, 'gridoffsety:' + String(newOffsetY), 'set');
+                        ixmaps.map().changeThemeStyle(ixmaps.editor.themeId, 'gridoffsety:' + String(newOffsetY), 'set');
                     } else {
                         alert("Input type error: only numbers allowed!");
                     }
@@ -1929,7 +1954,7 @@
 
             ixmaps.editor = ixmaps.editor || {};
 
-            ixmaps.editorColorscheme = "#ffeeee,#dd0000,dynamic,cold";
+            ixmaps.editor.colorscheme = "#ffeeee,#dd0000,dynamic,cold";
 
             ixmaps.editor.setSelectColorScheme = function() {
                 var objTheme = ixmaps.getThemeObj(ixmaps.editor.themeId);
@@ -1938,12 +1963,12 @@
 
                     if (isNaN(colorArgA[0])) {
                         ixmaps.setColors(colorArgA.join('|'), "directly_defined_colors", 7);
-                        ixmaps.editorColorschemeType = "directly_defined_colors";
+                        ixmaps.editor.colorschemeType = "directly_defined_colors";
                     } else {
                         colorArgA.shift();
                         ixmaps.setColors(colorArgA.join('|'), 7);
                     }
-                    ixmaps.editorColorscheme = colorArgA.join('|');
+                    ixmaps.editor.colorscheme = colorArgA.join('|');
                 }
             };
 
@@ -2173,10 +2198,10 @@
                     case "CHART|BUBBLE|SIZE":
                         ixmaps.editor.themeObj.style.type = szValue + szCategorical;
                         ixmaps.editor.themeObj.style.fillopacity = "0.7";
-                        ixmaps.editor.themeObj.style.colorscheme[0] = "1";
+                        //ixmaps.editor.themeObj.style.colorscheme[0] = "1";
                         ixmaps.editor.themeObj.style.gridwidth = null;
                         ixmaps.editor.themeObj.style.gridwidthpx = null;
-                        ixmaps.editor.themeObj.style.sizefield = null;
+                        //ixmaps.editor.themeObj.style.sizefield = null;
                         break
                     case "CHART|SYMBOL|GRIDSIZE|FAST|AGGREGATE|SUM|DOPACITY":
                         ixmaps.editor.themeObj.style.type = szValue + szCategorical;
@@ -2251,8 +2276,13 @@
                 }
                 
                 // apply changes
-                ixmaps.embeddedApiA[ixmaps.editor.themeId].embeddedSVG.window.map.Api.clearAll();
-                ixmaps.embeddedApiA[ixmaps.editor.themeId].embeddedSVG.window.map.Api.newMapThemeByObj(ixmaps.editor.themeObj);
+                ixmaps.replaceTheme(ixmaps.editor.themeId,ixmaps.editor.themeObj);
+                setTimeout(() => {
+                    ixmaps.editor.loadTheme(ixmaps.editor.themeId);
+                    },1000);
+
+                //ixmaps.embeddedApiA[ixmaps.editor.themeId].embeddedSVG.window.map.Api.clearAll();
+                //ixmaps.embeddedApiA[ixmaps.editor.themeId].embeddedSVG.window.map.Api.newMapThemeByObj(ixmaps.editor.themeObj);
                 
                 if (ixmaps.editor.themeObj.style.type.match(/CHART/)) {
                     $("#chartSize").show();
@@ -2547,15 +2577,8 @@
                 // get actual theme
                 // if no theme given, preset with default theme values
                 // -----------------------------------------------------
-                console.log(ixmaps);
+ 
                 var objTheme = ixmaps.editor.themeObj = ixmaps.getThemeDefinitionObj(ixmaps.editor.themeId);
-                var objThemeObj = ixmaps.getThemeObj(ixmaps.editor.themeId);
-                
-                console.log("********************")
-                console.log(objThemeObj);
-                console.log("********************")
-                
-                console.log(ixmaps);
                 
                 if (!objTheme || !objTheme.style) {
                     return;
@@ -2578,20 +2601,21 @@
                     $("#config-lookup").show();
                 }
 
+                // ------------------------------
+                // get data fields
+                // ------------------------------
+
                 var szData = objTheme.style.dbtable;
                 console.log(szData);
                 console.log(ixmaps.embeddedSVG);
                 ixmaps.editor.dataObj = eval("ixmaps.embeddedSVG.window." + (szData || "themeDataObj"));
                
-                // ------------------------------
-                // get data fields
-                // ------------------------------
-
                 if (ixmaps.editor.dataObj && ixmaps.editor.dataObj.fields) {
                     var fields = ixmaps.editor.dataObj.fields.slice();
                     fields.splice(0, 0, {
                         id: "$item$"
                     });
+                    var objThemeObj = ixmaps.getThemeObj(ixmaps.editor.themeId);
                     var szFieldsA = objThemeObj.szFieldsA;
                     for (i in fields) {
                         delete fields[i].selected;
@@ -2892,6 +2916,8 @@
 
                 $("#theme-distribution-select").prev().css("color", color_selected);
 
+                console.log("let's get the colors");
+                console.log("--------------------")
                 if (objTheme.style.type.match(/CATEGORICAL/) || objTheme.style.label) {
 
                     $("#theme-classes-select").hide();
@@ -2901,13 +2927,18 @@
 
                     nClasses = szLabelA.length;
 
-                    if (ixmaps.editorColorschemeType && (ixmaps.editorColorschemeType == "directly_defined_colors")) {
-                        var colorsA = ixmaps.editorColorscheme.split('|');
+                    if (ixmaps.editor.colorschemeType && (ixmaps.editor.colorschemeType == "directly_defined_colors")) {
+                        var colorsA = ixmaps.editor.colorscheme.split('|');
                     } else {
-                        var colorA = ixmaps.getColorScheme(ixmaps.editorColorscheme, nClasses);
+                        var colorA = ixmaps.getColorScheme(ixmaps.editor.colorscheme, nClasses);
                         var colorsA = szUserColorA || ixmaps.getColorsFromColorScheme(colorA.join('|'));
                     }
                     $("#chartLabelParam").show();
+
+                    console.log(ixmaps.editor.colorscheme);
+                    console.log(colorsA);
+                    console.log("--------------------")
+                    ixmaps.editor.colorsA = colorsA;
 
                     var output = $("#theme-exact-label")[0];
                     var szHTML = "<label style='color:#444'>colors and label:</label>";
@@ -2915,8 +2946,13 @@
                     for (i in szLabelA) {
 
                         szHTML += '<div class="input-group" style="margin-bottom:0.5em;width:100%">';
+
+                        szHTML += '<input type="color" class="color-box" style="border: none;margin: 0;height: 3em;" value="' + colorsA[c] +
+                            '">';
+                        /**    
                         szHTML += '<a class="input-group-addon color-box" id="btnGroupAddon" style="width:2.3em;background:' + colorsA[c] +
                             '"></a>';
+                        **/    
                         szHTML += "<input class='form-control' type='text' id='chartLabel" + i + "' value=\"" + szLabelA[i] + "\" onchange=\"ixmaps.editor.setNewLabel(" + i + ")\">";
                         szHTML += '</div>';
 
@@ -2930,7 +2966,7 @@
                         }
                     }
                     output.innerHTML = szHTML;
-
+                    /**
                     $('.color-box').colpick({
                         onBeforeShow: function(el) {
                             $(this).colpickSetColor(__rgbStringToHex($(this).css("background-color")));
@@ -2946,6 +2982,7 @@
                             //ixmaps.onChartChange();
                         }
                     });
+                    */
 
                 }
 
@@ -2998,6 +3035,12 @@
                     } else
                     if (objTheme.style.type.match(/MEAN/)) {
                         $("#chartAggregationCalc").val("MEAN");
+                    } else
+                    if (objTheme.style.type.match(/MIN/)) {
+                        $("#chartAggregationCalc").val("MIN");
+                    } else
+                    if (objTheme.style.type.match(/MAX/)) {
+                        $("#chartAggregationCalc").val("MAX");
                     } else {
                         $("#chartAggregationCalc").val("SUM");
                     }
@@ -3080,6 +3123,13 @@
                     $("#chartSizeTitle").css("color", color_selected);
                     $("#chartSizeList").prev().css("color", color_selected);
                     $("#chartSizeList").val("NOSIZE");
+                }
+                if (objTheme.style.sizepow){
+                    $("#chartSizeTitle").css("color", color_selected);
+                    $("#chartSizeList").prev().css("color", color_selected);
+                    $("#chartSizePowerValue").prev().prev().prev().css("color", color_selected);
+                    $("#chartSizePowerValue").val(objTheme.style.sizepow);
+                    $("#chartSizeList").val("SIZEP");
                 }
 
                 $("#chartRangeScaleValue").val(objTheme.style.rangescale);
@@ -3174,9 +3224,14 @@
 
             ixmaps.editor.applyChanges = function() {
 
+                console.log("%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%");
+                console.log("%%%%  applyChanges()         %%%%");
+                console.log("%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%");
+
+
                 // theme
                 // ------------------------------------
-                var objTheme = __map.getThemeDefinitionObj(ixmaps.editor.themeId) || ixmaps.editor.themeObj;
+                var objTheme = ixmaps.getThemeDefinitionObj(ixmaps.editor.themeId) || ixmaps.editor.themeObj;
 
                 objTheme.style.dbtableUrl = $("#define-data").val();
                 objTheme.layer = $("#map-layer-select").val();
@@ -3198,12 +3253,28 @@
                     return;
                 }
 
-                if (szUserColorA) {
-                    objTheme.style.colorscheme = szUserColorA;
+                // colorscheme
+                // check if we have user defined colors
+                // ------------------------------------
+                console.log("actual style.colorscheme");
+                console.log(objTheme.style.colorscheme);
+                var szUserColorA = new Array();
+                $(".color-box").each(function(index) {
+                    szUserColorA.push($(this).val());
+                });
+                console.log("user colors");
+                console.log(szUserColorA);
+                if (szUserColorA.length) {
+                    for (var i in szUserColorA){
+                        ixmaps.editor.colorsA[i] = szUserColorA[i];
+                        //objTheme.style.label[i] = szUserLabelA[i];
+                    }
+                    console.log("new colors to set");
+                    console.log(ixmaps.editor.colorsA);
+                    objTheme.style.colorscheme = ixmaps.editor.colorsA;
                     objTheme.style.values = szValueA;
-                    objTheme.style.label = szUserLabelA;
                 }
-
+ 
                 var fValues = objTheme.style.type.match(/VALUES/);
                 
                 objTheme.style.title = $("#theme-title-definition").val();
@@ -3221,6 +3292,7 @@
                 }
 
                 objTheme.style.type = __removeTypeFlag(objTheme.style.type, "AGGREGATE");
+                objTheme.style.type = __removeTypeFlag(objTheme.style.type, "HEX");
                 objTheme.style.type = __removeTypeFlag(objTheme.style.type, "RECT");
                 objTheme.style.type = __removeTypeFlag(objTheme.style.type, "RELOCATE");
                 objTheme.style.type = __removeTypeFlag(objTheme.style.type, "VALUES");
@@ -3244,6 +3316,7 @@
 
                 objTheme.style.type = __removeTypeFlag(objTheme.style.type, "SIZE");
                 objTheme.style.type = __removeTypeFlag(objTheme.style.type, "LINEAR");
+                objTheme.style.type = __removeTypeFlag(objTheme.style.type, "SIZEP");
                 objTheme.style.type = __removeTypeFlag(objTheme.style.type, "SIZEP1");
                 objTheme.style.type = __removeTypeFlag(objTheme.style.type, "SIZEP2");
                 objTheme.style.type = __removeTypeFlag(objTheme.style.type, "SIZEP3");
@@ -3253,7 +3326,7 @@
 
                 if ($("#chartSizeList").val() != "") {
                     objTheme.style.type += "|" + $("#chartSizeList").val();
-                    objTheme.style.sizepow = null;
+                    objTheme.style.sizepow = Number($("#chartSizePowerValue").val()) || 1;
                 }
 
                 objTheme.style.type = __removeTypeFlag(objTheme.style.type, "GLOW");
@@ -3283,11 +3356,19 @@
 
                     objTheme.style.type = __removeTypeFlag(objTheme.style.type, "SUM");
                     objTheme.style.type = __removeTypeFlag(objTheme.style.type, "MEAN");
+                    objTheme.style.type = __removeTypeFlag(objTheme.style.type, "MAX");
+                    objTheme.style.type = __removeTypeFlag(objTheme.style.type, "MIN");
                     if ($("#chartAggregationCalc").val() == "SUM") {
                         objTheme.style.type += "|SUM";
                     } else
                     if ($("#chartAggregationCalc").val() == "MEAN") {
                         objTheme.style.type += "|MEAN";
+                    } else
+                    if ($("#chartAggregationCalc").val() == "MAX") {
+                        objTheme.style.type += "|MAX";
+                    } else
+                    if ($("#chartAggregationCalc").val() == "MIN") {
+                        objTheme.style.type += "|MIN";
                     } else {}
 
                     objTheme.style.type = __removeTypeFlag(objTheme.style.type, "RELOCATE");
@@ -3330,9 +3411,12 @@
 
                 // make the new theme
                 // -----------------------------
-                __map.replaceTheme(objTheme.style.name,objTheme);
-
-                ixmaps.editor.alert('<b>generating theme ...</b><img src="../../../ui/resources/images/loading_blue.gif" id="load-file-spinner" style="height:48px;margin:-0.4em 0 0 0;">', "generating-on-bottom", "default");
+                ixmaps.replaceTheme(ixmaps.editor.themeId,objTheme);
+                setTimeout(() => {
+                    ixmaps.editor.loadTheme(ixmaps.editor.themeId);
+                    },1000);
+                
+                ixmaps.editor.alert('<b>generating theme ...</b><img src="../../ui/resources/images/loading_blue.gif" id="load-file-spinner" style="height:48px;margin:-0.4em 0 0 0;">', "generating-on-bottom", "default");
             };
 
 
@@ -3584,6 +3668,12 @@
                 }
                 if (szMerkFlag.match(/MEAN/)) {
                     szOrigFlagKeep += "|MEAN";
+                }
+                if (szMerkFlag.match(/MAX/)) {
+                    szOrigFlagKeep += "|MAX";
+                }
+                if (szMerkFlag.match(/MIN/)) {
+                    szOrigFlagKeep += "|MIN";
                 }
                 if (szMerkFlag.match(/DIFFERENCE/)) {
                     szOrigFlagKeep += "|DIFFERENCE";
@@ -3846,36 +3936,184 @@
 
             $(document).ready(function() {
                 
-                // resize();
-                
-	            var themes = ixmaps.getThemes();
-                for ( i in themes ){
-                    if ( !themes[i].szFlag.match(/FEATURE/) ){
-                        ixmaps.editor.themeId = themes[i].szId;
+                // ===========================================
+                // Dynamically load all CSS resources
+                // ===========================================
+                function loadCSS(href) {
+                    if (!href.match(/http/)) {
+                        href = ixmaps.szResourceBase + href;
+                    }
+                    return new Promise((resolve, reject) => {
+                        const link = document.createElement('link');
+                        link.rel = 'stylesheet';
+                        link.href = href;
+                        link.onload = () => resolve();
+                        link.onerror = () => reject(new Error(`Failed to load CSS: ${href}`));
+                        $(".theme-configurator")[0].appendChild(link);
+                        //document.body.appendChild(link);
+                    });
+                }
+
+                // ===========================================
+                // Dynamically load all JavaScript resources
+                // ===========================================
+                function loadScript(src) {
+                    if (!src.match(/http/)) {
+                        src = ixmaps.szResourceBase + src;
+                    }
+                    return new Promise((resolve, reject) => {
+                        const script = document.createElement('script');
+                        script.src = src;
+                        script.onload = () => resolve();
+                        script.onerror = () => reject(new Error(`Failed to load script: ${src}`));
+                        $(".theme-configurator")[0].appendChild(script);
+                        //document.head.appendChild(script);
+                    });
+                }
+
+                // ===========================================
+                // Preload images for better performance
+                // ===========================================
+                function preloadImages(imageUrls) {
+                    const promises = imageUrls.map(url => {
+                        return new Promise((resolve, reject) => {
+                            const img = new Image();
+                            img.onload = () => {
+                                console.log(`Image preloaded: ${url}`);
+                                resolve();
+                            };
+                            img.onerror = () => {
+                                console.warn(`Failed to preload image: ${url}`);
+                                resolve(); // Don't fail the entire preload process
+                            };
+                            img.src = url;
+                        });
+                    });
+                    return Promise.all(promises);
+                }
+
+                // ===========================================
+                // Set image sources dynamically using data attributes
+                // ===========================================
+                function setImageSources() {
+                    // Find all images with data-image attribute
+                    const images = document.querySelectorAll('img[data-image]');
+                    
+                    images.forEach(img => {
+                        const imageName = img.getAttribute('data-image');
+                        const fullUrl = ixmaps.szResourceBase + 'ui/resources/images/' + imageName;
+                        img.src = fullUrl;
+                        
+                        // Add error handling for individual images
+                        img.onerror = () => {
+                            console.warn(`Failed to load image: ${fullUrl}`);
+                            // Optionally set a fallback image or hide the element
+                        };
+                        
+                        console.log(`Set image source: ${fullUrl}`);
+                    });
+                }
+
+                // ===========================================
+                // Load all resources sequentially
+                // ===========================================
+                async function loadAllResources() {
+                    try {
+                        console.log('Loading CSS resources...');
+                        
+                        // Load CSS files
+                        await loadCSS('ui/html/assets/css/font-awesome.min.css');
+                        await loadCSS('ui/html/assets/css/icomoon.css');
+                        await loadCSS('ui/html/tools/site.css');
+                        await loadCSS('ui/html/tools/styles.css');
+                        
+                        console.log('Loading JavaScript resources...');
+                        
+                        // Load JavaScript files
+                        await loadScript('https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js');
+                        await loadScript('ui/js/htmlgui_query.js');
+                        await loadScript('ui/js/tools/colorscheme.js');
+                        await loadScript('ui/js/tools/colorselect.js');
+                        
+                        console.log('Preloading images...');
+                        
+                        // Preload chart style images
+                        const chartImages = [
+                            ixmaps.szResourceBase + 'ui/resources/images/points.png',
+                            ixmaps.szResourceBase + 'ui/resources/images/bubbles.png',
+                            ixmaps.szResourceBase + 'ui/resources/images/hexbin.png',
+                            ixmaps.szResourceBase + 'ui/resources/images/hexbin_size.png',
+                            ixmaps.szResourceBase + 'ui/resources/images/waffle_grid.png'
+                        ];
+                        await preloadImages(chartImages);
+                        
+                        // Set image sources dynamically after preloading
+                        setImageSources();
+                        
+                        console.log('All resources loaded successfully');
+                        
+                        // Initialize ixmaps API from parent window/frame
+                        ixmaps = ixmaps || null;
+                        
+                        if (!ixmaps){
+                            if (window.opener) {
+                                parent = window.opener;
+                                ixmaps = window.opener.ixmaps;
+                            } else
+                            if (parent) {
+                                ixmaps = parent.window.ixmaps;
+                            } else {
+                                alert("error: missing parent window for themes !");
+                                return;
+                            }
+                        }
+
+                        // Continue with initialization after resources are loaded
+                        initializeThemeConfigurator();
+                        
+                    } catch (error) {
+                        console.error('Error loading resources:', error);
+                        alert('Failed to load required resources. Please refresh the page.');
                     }
                 }
-  
-                // ===========================
-                // do this on every new theme  
-                // ===========================
 
-                 ixmaps.htmlgui_onDrawTheme = function() {
-                    setTimeout(() => {ixmaps.editor.loadTheme(ixmaps.editor.themeId)}, 10);
-                };
+                // ===========================================
+                // Initialize theme configurator after resources loaded
+                // ===========================================
+                function initializeThemeConfigurator() {
+                    // resize();
 
-                // ===========================
-                // first time   
-                // ===========================
-                
-                console.log("init theme configurator: "+ixmaps.editor.themeId);
-                
-                __map = ixmaps;
-                
-                ixmaps.editor.loadTheme(ixmaps.editor.themeId);
+                    var themes = ixmaps.getThemes();
+                    for ( i in themes ){
+                        if ( !themes[i].szFlag.match(/FEATURE/) ){
+                            ixmaps.editor.themeId = themes[i].szId;
+                        }
+                    }
+      
+                    // ===========================
+                    // do this on every new theme  
+                    // ===========================
+                    /**
+                    ixmaps.htmlgui_onDrawTheme = function() {
+                        setTimeout(() => {ixmaps.editor.loadTheme(ixmaps.editor.themeId)}, 10);
+                    };
+                    **/
+                    // ===========================
+                    // first time   
+                    // ===========================
+                    
+                    console.log("init theme configurator: "+ixmaps.editor.themeId);
+                    
+                    ixmaps.editor.loadTheme(ixmaps.editor.themeId);
+
+                    $(".theme-configurator").fadeIn();
+                }
+
+                // Start loading resources
+                loadAllResources();
 
             });
 
-            ixmaps.editor.loadTheme(ixmaps.editor.themeId);
        </script>
 
 </body>

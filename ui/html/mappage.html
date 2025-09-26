@@ -1,151 +1,379 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <style>
+        /* Extracted common styles */
+        .hidden {
+            display: none;
+        }
+        .z-index-1000 {
+            z-index: 1000;
+        }
+        .z-index-2000 {
+            z-index: 2000;
+        }
+        .z-index-9999 {
+            z-index: 9999;
+        }
+        .tool-button {
+            height: 40px;
+            width: 40px;
+            display: none;
+        }
+        .tool-button-label {
+            height: 36px;
+        }
+        .icon-margin {
+            margin-left: -5px;
+            margin-right: -4px;
+        }
+        .overlay-element {
+            z-index: 1000;
+            display: none;
+        }
+        .pointer-events-none {
+            pointer-events: none;
+        }
+        /* Complete style strings used more than 3 times */
+        .context-icon-margin {
+            margin-left: 0.2em;
+        }
+        /* Complete style strings used 2 times or more */
+        .button-reset {
+            text-decoration: none;
+            border: none;
+            background: none;
+            cursor: pointer;
+            padding: 0;
+        }
+        .zoom-button-container {
+            padding: 1em 1.15em;
+            background-color: rgba(255,255,255,1);
+            border: solid black 0.1px;
+            border-radius: 0.5em;
+        }
+        .zoom-icon {
+            font-size: 0.9em;
+            color: #aaaaaa;
+        }
+        .button-vertical-align {
+            vertical-align: -4px;
+        }
+        .search-help-icon {
+            height: 29px;
+            margin-left: -5px;
+            margin-top: 2px;
+            opacity: 0.6;
+        }
+        .visibility-hidden {
+            visibility: hidden;
+        }
+        .context-menu-button {
+            font-family: Verdana, Arial, Helvetica, sans-serif;
+            font-size: 14px;
+            background: none;
+            border: none;
+            color:#444444;
+            text-decoration: none;
+            cursor: pointer;
+            padding: 0.2em 20px;
+            margin: 0;
+            xfont: inherit;
+            text-align: left;
+            width: 100%;
+            border-radius: 0.2em;
+        }
+        .context-menu-button:hover {
+            background-color: #f0f0f0;
+        }
+        .context-menu-button:active {
+            background-color: #e0e0e0;
+        }
+        .context-menu-button:focus {
+            outline: none;
+        }
+        .footer-button {
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 0;
+            margin: 0;
+            text-decoration: none;
+            color: #428bca;
+            font-family: helvetica, arial, sans-serif;
+            font-size: 12px;
+        }
+        .footer-button:hover {
+            color: #0066cc;
+            background-color: #ffff00;
+        }
+        .start-button {
+            font-family: serif;
+            font-size: 48px;
+            color: #666666;
+            background-color: #dddddd;
+            padding: 0px 12px 3px 8px;
+            border-radius: 15px;
+            text-align: center;
+            border: none;
+            cursor: pointer;
+        }
+        .start-button:hover {
+            background-color: #cccccc;
+        }
+        .fullscreen-button-nav {
+            position: absolute;
+            top: 93%;
+            right: 10px;
+        }
+        .fullscreen-button-container {
+            padding: 0.5em;
+            background-color: rgba(255,255,255,0.7);
+            border: solid black 0.1px;
+            border-radius: 0.5em;
+        }
+        .fullscreen-icon {
+            font-size: 2em;
+            color: #888888;
+        }
+        .start-overlay {
+            visibility: hidden;
+            position: absolute;
+            top: 0px;
+            left: 0px;
+            width: 100%;
+            height: 100%;
+            z-index: 1000;
+        }
+        .velo-overlay {
+            visibility: hidden;
+            background-color: #444444;
+            opacity: 0.2;
+            position: absolute;
+            top: 0px;
+            left: 0px;
+            width: 100%;
+            height: 100%;
+            z-index: 1000;
+        }
+    dialog[open] {
+      border: 1px solid #dddddd;
+      border-radius: 6px;
+      padding: 0;
+      box-shadow: 0 2px 10px rgba(30,40,120,0.2);
+      resize: both;
+      overflow: auto;
+      min-width: 200px;
+      max-width: 800px;    
+      xxmin-height: 100px;
+      position: fixed;
+      margin: 0; /* prevent default dialog centering offset */
+      z-index: 999999;    
+    }
+    .dialog-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: none;
+      color: #888888;
+      padding: 10px 30px 1px 15px;
+      cursor: move;
+      border-top-left-radius: 6px;
+      border-top-right-radius: 6px;
+      user-select: none;
+      font-family:Arial, Helvetica, sans-serif;
+      font-weight: normal;
+      letter-spacing: 0.02em;
+    }
+    .close-btn {
+      background: transparent;
+      border: solid white 1px;
+      color: black;
+      font-size: 1.3em;
+      margin-left: 10px;
+      cursor: pointer;
+      padding: 3px 8px;
+      border-radius: 3px;
+      transition: background 0.2s;
+    }
+    .close-btn:hover, .close-btn:focus {
+      background: #ffffff;
+      outline: none;
+    }
+    .close-btn:hover {
+      border: solid black 1px;
+      outline: none;
+    }
+    .dialog-body {
+      padding: 1em;
+      background: white;
+      color: #222;
+    }
+    .dialog-footer {
+      padding: 0.5em 1em;
+      background: #f5f5fa;
+      border-bottom-right-radius: 6px;
+      border-bottom-left-radius: 6px;
+      text-align: right;
+    }
+        
+        
+        
+    </style>
+</head>
 
+<body>
 
     <!-- header -->
-    <div id="map-header" class="map-header" style="margin-left:2px;z-index:1000;display:none;">
-    </div>
+    <header id="map-header" class="map-header z-index-1000 hidden" style="margin-left:2px;">
+    </header>
 
     <!--========================================================================= 
 		the map space
 	<!--========================================================================= -->
 
-    <div id="ixmap" style="position:relative;top:0px;left:0px;overflow:hidden;font-size:11px;background:none;">
+    <main id="ixmap" style="position:relative;top:0px;left:0px;overflow:hidden;font-size:11px;background:none;">
 
-        <div id="onmapbuttondiv" style="position:absolute;top:13px;left:10px;opacity:0.95;width:0px;line-height:30px;display:none;z-index:1000">
+        <nav id="onmapbuttondiv" class="z-index-1000 hidden" style="position:absolute;top:13px;left:10px;opacity:0.95;width:0px;line-height:30px;">
 
-            <button type="button" id="opensidebarbutton" title="open sidebar" class="toolbutton shadow" style="height:40px;width:40px;display:none">
-                <label for="opensidebarbutton" style="height:36px;">
-                    <img id="opensidebarbuttonicon" src="https://gjrichter.github.io/ixmaps_flat/ui/resources/images/list-grey.png" style="height:24px;margin-left:-8px;margin-right:-4px;opacity:0.8" />
+            <button type="button" id="opensidebarbutton" title="open sidebar" class="toolbutton shadow tool-button">
+                <label for="opensidebarbutton" class="tool-button-label">
+                    <img id="opensidebarbuttonicon" src="https://gjrichter.github.io/ixmaps_flat/ui/resources/images/list-grey.png" style="height:24px;margin-left:-8px;margin-right:-4px;opacity:0.8" alt="open sidebar"/>
                 </label>
             </button>
 
-            <button type="button" id="switchmodebutton" title="info/pan" class="toolbutton shadow" style="height:40px;width:40px;display:none;">
-                <label for="switchmodebutton" style="height:36px;">
-                    <img id="switchmodebuttonicon" src="https://gjrichter.github.io/ixmaps_flat/ui/resources/images/mano.png" style="height:24px;margin-left:-5px;margin-right:0px;" />
+            <button type="button" id="switchmodebutton" title="info/pan" class="toolbutton shadow tool-button">
+                <label for="switchmodebutton" class="tool-button-label">
+                    <img id="switchmodebuttonicon" src="https://gjrichter.github.io/ixmaps_flat/ui/resources/images/mano.png" style="height:24px;margin-left:-5px;margin-right:0px;" alt="switch mode info/pan"/>
                 </label>
             </button>
 
-            <button type="button" id="switchtoolsbutton" title="show toolbar" class="toolbutton shadow" style="height:40px;width:40px;display:none;">
-                <label for="switchtoolsbutton" style="height:36px;">
-                    <img id="switchmodebuttonicon" src="https://gjrichter.github.io/ixmaps_flat/ui/resources/images/gear_empty.png" style="height:24px;margin-left:-5px;margin-right:-4px;" />
+            <button type="button" id="switchtoolsbutton" title="show toolbar" class="toolbutton shadow tool-button">
+                <label for="switchtoolsbutton" class="tool-button-label">
+                    <img id="switchtoolsbuttonicon" src="https://gjrichter.github.io/ixmaps_flat/ui/resources/images/gear_empty.png" class="icon-margin" style="height:24px;" alt="show toolbar"/>
                 </label>
             </button>
 
-            <button type="button" id="switchsearchbutton" title="show searchbar" class="toolbutton shadow" style="height:40px;width:40px;display:none;vertical-align:-4px;">
-                <label for="switchsearchbutton" style="height:36px;">
-                    <img id="switchsearchbuttonicon" src="https://gjrichter.github.io/ixmaps_flat/ui/resources/images/search.png" style="height:29px;margin-left:-3px;margin-top:2px;opacity:0.6" />
+            <button type="button" id="switchsearchbutton" title="show searchbar" class="toolbutton shadow tool-button button-vertical-align">
+                <label for="switchsearchbutton" class="tool-button-label">
+                    <img id="switchsearchbuttonicon" src="https://gjrichter.github.io/ixmaps_flat/ui/resources/images/search.png" class="search-help-icon" style="margin-left:-3px;" alt="show searchbar"/>
                 </label>
             </button>
 
-            <button type="button" id="switchhelpbutton" title="show searchbar" class="toolbutton shadow" style="height:40px;width:40px;display:none;vertical-align:-4px;">
-                <label for="switchhelpbutton" style="height:36px;">
-                    <img id="switchhelpbuttonicon" src="https://gjrichter.github.io/ixmaps_flat/ui/resources/images/info_gray.png" style="height:29px;margin-left:-5px;margin-top:2px;opacity:0.6" />
+            <button type="button" id="switchhelpbutton" title="show searchbar" class="toolbutton shadow tool-button button-vertical-align">
+                <label for="switchhelpbutton" class="tool-button-label">
+                    <img id="switchhelpbuttonicon" src="https://gjrichter.github.io/ixmaps_flat/ui/resources/images/info_gray.png" class="search-help-icon" style="margin-left:-5px;" alt="show help"/>
+                </label>
+            </button>
+            
+            <button type="button" id="switchinfobutton" title="end info window mode" class="toolbutton shadow tool-button">
+                <label for="switchinfobutton" class="tool-button-label">
+                    <img id="switchinfobuttonicon" src="https://gjrichter.github.io/ixmaps_flat/ui/resources/images/info_window.png" style="height:24px;margin-left:-2px;margin-top:5px;" alt="show info" /><span style="position:relative;top:-33px;right:-12px">&nbsp;x</span>
                 </label>
             </button>
 
-            <button type="button" id="switchinfobutton" title="end info window mode" class="toolbutton shadow" style="height:40px;width:40px;display:none;">
-                <label for="switchinfobutton" style="height:36px;">
-                    <img id="switchinfobuttonicon" src="https://gjrichter.github.io/ixmaps_flat/ui/resources/images/info_window.png" style="height:24px;margin-left:-2px;margin-top:5px;" /><span style="position:relative;top:-33px;right:-12px">&nbsp;x</span>
-                </label>
-            </button>
-
-            <button type="button" id="switchsplitterbutton" title="end info window mode" class="toolbutton shadow" style="height:40px;width:40px;display:none;">
-                <label for="switchsplitterbutton" style="height:36px;">
-                    <img id="switchsplitterbuttonicon" src="https://gjrichter.github.io/ixmaps_flat/ui/resources/images/splitter.png" style="height:24px;margin-left:-5px;margin-right:-4px;" />
+            <button type="button" id="switchsplitterbutton" title="end info window mode" class="toolbutton shadow tool-button">
+                <label for="switchsplitterbutton" class="tool-button-label">
+                    <img id="switchsplitterbuttonicon" src="https://gjrichter.github.io/ixmaps_flat/ui/resources/images/splitter.png" class="icon-margin" style="height:24px;" alt="show/hide splitter"/>
                 </label>
             </button>
 
 
 
             <span id="embedlogo" style="vertical-align:-2px;margin-left:5px;display:none;">
-                <img id="logo" src="../resources/images/ixmaps_logo_grey_transparent.png" height="20px">
+                <img id="logo" src="../resources/images/ixmaps_logo_grey_transparent.png" height="20px" alt="ixmaps logo">
             </span>
 
-        </div>
+        </nav>
 
-        <div class="search-container" style="position:absolute;top:11px;left:98px;z-index:2000;display:none;width:0;">
+        <aside class="search-container z-index-2000 hidden" style="position:absolute;top:11px;left:98px;width:0;">
             <input class="search-box" type="text" placeholder="trova ..." style="height:24px;padding:7px;" />
-        </div>
+        </aside>
         <div class="result-list"></div>
 
-        <div id="onmapbuttondivbottom" style="position:absolute;bottom:30px;right:10px;display:inline;opacity:0.95;z-index:999;display:none">
+        <nav id="onmapbuttondivbottom" class="z-index-999 hidden" style="position:absolute;bottom:30px;right:10px;display:inline;opacity:0.95;">
 
-            <button type="button" id="switchlegendbutton" title="switch legend display" style="height:40px;width:40px;display:none;">
-                <label for="switchlegendbutton" style="height:36px;">
-                    <img id="switchlegendbuttonicon" src="https://gjrichter.github.io/ixmaps_flat/ui/resources/images/dialog_gray.png" style="height:28px;margin-top:3px;margin-left:-4px;opacity:0.8" />
+            <button type="button" id="switchlegendbutton" title="switch legend display" class="tool-button">
+                <label for="switchlegendbutton" class="tool-button-label">
+                    <img id="switchlegendbuttonicon" src="https://gjrichter.github.io/ixmaps_flat/ui/resources/images/dialog_gray.png" style="height:28px;margin-top:3px;margin-left:-4px;opacity:0.8" alt="switch legend display"/>
                 </label>
             </button>
 
-        </div>
-        <div id="onmapbuttondivzoom" style="position:absolute;bottom:12px;left:10px;z-index:2000;display:inline;">
-            <a href="javascript:ixmaps.zoomIn()" style="text-decoration:none">
-                <div style="padding:1em 1.15em;background-color:rgba(255,255,255,1);border:solid black 0.1px;border-radius:0.5em;">
-                    <i class="icon icon-context icon-plus" title="Layer" tabindex="-1" style="font-size:0.9em;color:#aaaaaa"></i>
+        </nav>
+        <nav id="onmapbuttondivzoom" class="z-index-2000" style="position:absolute;bottom:12px;left:10px;display:inline;">
+            <button type="button" onclick="ixmaps.zoomIn()" class="button-reset">
+                <div class="zoom-button-container">
+                    <i class="icon icon-context icon-plus" title="Zoom In" tabindex="-1" class="zoom-icon"></i>
                 </div>
-            </a>
+            </button>
             <div style="height:0.2em"></div>
-            <a href="javascript:ixmaps.zoomOut()" style="text-decoration:none">
-                <div style="padding:1em 1.15em;background-color:rgba(255,255,255,1);border:solid black 0.1px;border-radius:0.5em;">
-                    <i class="icon icon-context icon-minus" title="Layer" tabindex="-1" style="font-size:0.9em;color:#aaaaaa"></i>
+            <button type="button" onclick="ixmaps.zoomOut()" class="button-reset">
+                <div class="zoom-button-container">
+                    <i class="icon icon-context icon-minus" title="Zoom Out" tabindex="-1" class="zoom-icon"></i>
                 </div>
-            </a>
-        </div>
+            </button>
+        </nav>
 
         <!-- title -->
-        <div id="title" class="title-field" style="width:100%;z-index:1000;display:none;">
-        </div>
+        <section id="title" class="title-fields overlay-element">
+        </section>
 
         <!-- legend -->
-        <div id="map-legend" class="map-legend disable-select" style="z-index:1000;display:none;">
-        </div>
+        <aside id="map-legend" class="map-legend disable-select overlay-element">
+        </aside>
 
         <!-- overlay -->
-        <div id="map-overlay" class="map-overlay" style="z-index:1000;display:none;">
+        <div id="map-overlay" class="map-overlay overlay-element">
         </div>
 
         <!-- popup -->
-        <div id="map-popup" class="map-overlay" style="z-index:2000;display:none;">
+        <div id="map-popup" class="map-overlay z-index-2000 hidden">
         </div>
 
         <!-- fullscreen button -->
-        <div id="map-popout-button" class="map-overlay" style="position:absolut;top:93%;right:10px;z-index:2000;display:none;">
-            <div style="padding:0.5em;background-color:rgba(255,255,255,0.7);border:solid black 0.1px;border-radius:0.5em;">
-                <a href="javascript:ixmaps.popOutEmbed()" style="text-decoration:none"><i class="icon icon-context icon-enlarge2" title="Layer" tabindex="-1" style="font-size:2em;color:#888888"></i></a>
+        <nav id="map-popout-button" class="map-overlay z-index-2000 hidden fullscreen-button-nav">
+            <div class="fullscreen-button-container">
+                <button type="button" onclick="ixmaps.popOutEmbed()" class="button-reset"><i class="icon icon-context icon-enlarge2" title="Fullscreen" tabindex="-1" class="fullscreen-icon"></i></button>
             </div>
 
+        </nav>
+        
+        <div id="map-dialog">
         </div>
-
-    </div>
+    
+    </main>
 
     <!-- footer -->
-    <div id="map-footer" class="map-footer" style="margin-left:2px;z-index:1000;display:none;">
+    <footer id="map-footer" class="map-footer overlay-element" style="margin-left:2px;">
         <a href="http://ixmaps.com" target="_blank">powered by iXmaps </a> |
-        <a href="javascript:ixmaps.popupShare()">share this map</a> |
-        <a href="javascript:ixmaps.popOutEmbed()">view fullscreen</a>
-    </div>
+        <button type="button" onclick="ixmaps.popupShare()" class="footer-button">share this map</button> |
+        <button type="button" onclick="ixmaps.popOutEmbed()" class="footer-button">view fullscreen</button>
+    </footer>
 
     <!--========================================================================= 
 		loading, messages, help etc
 	<!--========================================================================= -->
 
-    <div id="divlogo" style="pointer-events:none;z-index:999;visibility:hidden;">
+    <div id="logo-div" class="logo-div pointer-events-none z-index-999 visibility-hidden">
         <div id="logo-image">
             <span>application:</span>
-            <img alt="logo" src="../resources/images/ixmaps_logo_grey_transparent.png" />
+            <img src="../resources/images/ixmaps_logo_grey_transparent.png" alt="ixmaps logo"/>
         </div>
-    </div>
+    </div>  
 
-    <div id="divloading" style="pointer-events:none;z-index:9999">
+    <div id="loading-div" class="loading-div pointer-events-none z-index-9999">
         <div id="loading-text-div" class="loading-text-div">
             <span id="loading-text" class="loading-text">.&nbsp;&nbsp;</span><br>
-            <div id="loading-gif" class="loading" style="margin-top:1em;display:none">
+            <div id="loading-gif" class="spinner" style="margin-top:1em;display:none;">
             </div>
         </div>
     </div>
 
-    <div id="attribution-div" style="user-select: none">
+    <div id="attribution-div" class="attribution-div" style="user-select: none">
         <span id="attribution"></span>
         <span>|</span>
-        <span class="map-footer"><a href="javascript:ixmaps.popupTools()">tools</a></span>
+        <span class="map-footer"><button type="button" onclick="ixmaps.popupTools()" class="footer-button">tools</button></span>
     </div>
 
     <div id="divstart" style="	visibility:hidden;
@@ -164,7 +392,6 @@
 								-moz-border-radius: 15px;
 								border-radius: 15px;
 								text-align:center">start</a>
-            </p>
         </div>
     </div>
     <div id="velo" style="	visibility:hidden;
@@ -181,82 +408,88 @@
     <!--========================================================================= 
 		overlay divs for help, tools, etc.
 	<!--========================================================================= -->
+    <div id="help" class="hidden visibility-hidden">
+    </div>
+    <div id="legend" class="hidden visibility-hidden">
+    </div>
+    <div id="sidebar" class="hidden visibility-hidden">
+    </div>
+    <div id="projects" class="hidden visibility-hidden;">
+    </div>
+    <div id="tooltip" class="hidden visibility-hidden;" style="position:absolute;top:0;left:0;background:#ffffff;padding:0.2em 0.5em 0.3em 0.5em;border:solid black 1px; border-radius: 0.2em;z-index:3000">
+    </div>
 
-    <div id="help" style="visibility:hidden">
-    </div>
-    <div id="dialog" style="visibility:hidden">
-    </div>
-    <div id="legend" style="visibility:hidden">
-    </div>
-    <div id="sidebar" style="visibility:hidden">
-    </div>
-    <div id="projects" style="visibility:hidden;">
-    </div>
+    <dialog id="myDialog" aria-label="Draggable Non-modal Dialog" style="top: 100px; left: 100px;z-index:1000">
+        <div class="dialog-header" id="dialogHeader">
+          Draggable Header
+        </div>
+        <div class="dialog-body">
+        </div>
+        <button class="close-btn" style="position:absolute;top:0em;right:0em;" aria-label="Close dialog" onclick="document.getElementById('myDialog').close();">&times;</button>
 
-    <div id="tooltip" style="position:absolute;top:0;left:0;z-index:3000">
-    </div>
+    </dialog>
+
     <!--========================================================================= 
 		context menu
 	<!--========================================================================= -->
 
-    <div id="contextmenu" class="contextmenu" style="display:none;" onmouseover="__contextmenuOver($(this))" onmouseout="__contextmenuOut($(this))" onclick="__contextmenuOut($(this))">
+    <div id="contextmenu" class="contextmenu hidden" style="" onmouseover="__contextmenuOver($(this))" onmouseout="__contextmenuOut($(this))" onclick="__contextmenuOut($(this))">
         <ul class="dropdown-menu" style="display:inline;padding-bottom:0.5em">
 
             <li><a href="http://www.ixmaps.com" target="_blank" style="margin-top:0.2em;margin-bottom:0.2em;border:0;color:#ccc">iXmaps</a></li>
 
-            <li><a href="javascript:ixmaps.popupTools()">
-                    <i class="icon icon-context icon-cog" title="Layer" tabindex="-1" style="margin-left:0.2em"></i>
-                    &nbsp;open tools</a></li>
-            <li><a href="javascript:ixmaps.popupThemeEditor()">
-                    <i class="icon icon-context icon-pencil" title="Layer" tabindex="-1" style="margin-left:0.2em"></i>
-                    &nbsp;edit theme</a></li>
-            <li><a href="javascript:ixmaps.popupThemeConfigurator()">
-                    <i class="icon icon-context icon-menu" title="Layer" tabindex="-1" style="margin-left:0.2em"></i>
-                    &nbsp;config theme</a></li>
-            <li><a href="javascript:ixmaps.popupThemeFacets()">
-                    <i class="icon icon-context icon-filter" title="Layer" tabindex="-1" style="margin-left:0.2em"></i>
-                    &nbsp;filter theme</a></li>
-            <li><a href="javascript:ixmaps.popupShare()">
-                    <i class="icon icon-context icon-share2" title="Layer" tabindex="-1" style="margin-left:0.2em"></i>
-                    &nbsp;share map</a></li>
+            <li><button type="button" onclick="ixmaps.popupTools()" class="context-menu-button">
+                    <i class="icon icon-context icon-cog" title="Layer" tabindex="-1" class="context-icon-margin"></i>
+                    &nbsp;open tools</button></li>
+            <li><button type="button" onclick="ixmaps.popupThemeEditor()" class="context-menu-button">
+                    <i class="icon icon-context icon-pencil" title="Layer" tabindex="-1" class="context-icon-margin"></i>
+                    &nbsp;edit theme</button></li>
+            <li><button type="button" onclick="ixmaps.popupThemeConfigurator()" class="context-menu-button">
+                    <i class="icon icon-context icon-menu" title="Layer" tabindex="-1" class="context-icon-margin"></i>
+                    &nbsp;config theme</button></li>
+            <li><button type="button" onclick="ixmaps.popupThemeFacets()" class="context-menu-button">
+                    <i class="icon icon-context icon-filter" title="Layer" tabindex="-1" class="context-icon-margin"></i>
+                    &nbsp;filter theme</button></li>
+            <li><button type="button" onclick="ixmaps.popupShare()" class="context-menu-button">
+                    <i class="icon icon-context icon-share2" title="Layer" tabindex="-1" class="context-icon-margin"></i>
+                    &nbsp;share map</button></li>
 
             <li class="contextmenu-separator"></li>
 
-            <li><a href="javascript:ixmaps.popOutView()">
-                    <i class="icon icon-context icon-share" title="Layer" tabindex="-1" style="margin-left:0.2em"></i>
-                    &nbsp;open in viewer</a></li>
-            <li><a href="javascript:ixmaps.popOutEdit()">
-                    <i class="icon icon-context icon-share" title="Layer" tabindex="-1" style="margin-left:0.2em"></i>
-                    &nbsp;open in editor</a></li>
-            <li><a href="javascript:ixmaps.popOutProject()">
-                    <i class="icon icon-context icon-share" title="Layer" tabindex="-1" style="margin-left:0.2em"></i>
-                    &nbsp;explore project</a></li>
+            <li><button type="button" onclick="ixmaps.popOutView()" class="context-menu-button">
+                    <i class="icon icon-context icon-share" title="Layer" tabindex="-1" class="context-icon-margin"></i>
+                    &nbsp;open in viewer</button></li>
+            <li><button type="button" onclick="ixmaps.popOutEdit()" class="context-menu-button">
+                    <i class="icon icon-context icon-share" title="Layer" tabindex="-1" class="context-icon-margin"></i>
+                    &nbsp;open in editor</button></li>
+            <li><button type="button" onclick="ixmaps.popOutProject()" class="context-menu-button">
+                    <i class="icon icon-context icon-share" title="Layer" tabindex="-1" class="context-icon-margin"></i>
+                    &nbsp;explore project</button></li>
 
             <li class="contextmenu-separator"></li>
 
-            <li><a href="javascript:ixmaps.copyThemeToClipboard()">
-                    <i class="icon icon-context icon-scissors" title="Layer" tabindex="-1" style="margin-left:0.2em"></i>
-                    &nbsp;copy theme</a></li>
-            <li><a href="javascript:ixmaps.pasteThemeFromClipboard()">
-                    <i class="icon icon-context icon-paste" title="Layer" tabindex="-1" style="margin-left:0.2em"></i>
-                    &nbsp;paste theme</a></li>
+            <li><button type="button" onclick="ixmaps.copyThemeToClipboard()" class="context-menu-button">
+                    <i class="icon icon-context icon-scissors" title="Layer" tabindex="-1" class="context-icon-margin"></i>
+                    &nbsp;copy theme</button></li>
+            <li><button type="button" onclick="ixmaps.pasteThemeFromClipboard()" class="context-menu-button">
+                    <i class="icon icon-context icon-paste" title="Layer" tabindex="-1" class="context-icon-margin"></i>
+                    &nbsp;paste theme</button></li>
 
             <li class="contextmenu-separator"></li>
 
-            <li><a href="javascript:ixmaps.popupProject()">
-                    <i class="icon icon-context icon-download" title="Layer" tabindex="-1" style="margin-left:0.2em"></i>
-                    &nbsp;save project</a></li>
+            <li><button type="button" onclick="ixmaps.popupProject()" class="context-menu-button">
+                    <i class="icon icon-context icon-download" title="Layer" tabindex="-1" class="context-icon-margin"></i>
+                    &nbsp;save project</button></li>
 
         </ul>
-        </ul>
-        </ul>
-        </ul>
+
         <a href="#" style="border:0"></a>
     </div>
 
     <!--========================================================================= -->
-
-
+        
+</body> 
+</html>
 
 
 

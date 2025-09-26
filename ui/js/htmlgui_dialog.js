@@ -27,139 +27,182 @@ $Log: htmlgui.js,v $
 
 	ixmaps.onDialogClose = null;
 	ixmaps.beforeDialogTool = "";
-	ixmaps.openDialog = function(event,szElement,szUrl,szTitle,szPosition,nMaxWidth,nMaxHeight,nOpacity){
 
- 		ixmaps.beforeDialogTool = ixmaps.getMapTool();
-		console.log("** "+ixmaps.beforeDialogTool+" **");
+	// Dialog utility functions
+	ixmaps.dialogUtils = {
+		/**
+		 * Get dialog statistics
+		 * @returns {Object} Dialog statistics
+		 */
+		getStats: function() {
+			if (!window.dialogManager) {
+				return { error: 'DialogManager not available' };
+			}
+			return window.dialogManager.getStats();
+		},
 
-		if ( typeof($("#"+szElement)[0]) != "undefined" ){
-			if ( $("#"+szElement)[0].innerHTML.length > 10 ){
-				$("#"+szElement)[0].innerHTML = "";
-				$("#"+szElement).dialog( "destroy" );
-				//ixmaps.mapTool(ixmaps.beforeDialogTool);
-				return;
+		/**
+		 * Close all dialogs
+		 * @returns {boolean} Success status
+		 */
+		closeAll: function() {
+			if (!window.dialogManager) {
+				console.error('DialogManager not available');
+				return false;
 			}
-		}
-		// GR 05.06.2014 restore input mode after dialog closed
-		var offsetLeft = null;
-		var offsetTop  = null;
-		if ( event && (typeof(event) != "undefined") ){
-			if ( $(event.currentTarget) ){
-				offsetLeft = $(event.currentTarget).offset().left + $(event.currentTarget).innerWidth();
-				offsetTop  = $(event.currentTarget).offset().top  + $(event.currentTarget).innerHeight();
-			}
-		}
+			window.dialogManager.closeAllDialogs();
+			return true;
+		},
 
-		var dialogWidth  = nMaxWidth?nMaxWidth:450;
-		var dialogHeight = Math.min(ixmaps.SVGmapHeight-30,nMaxHeight?nMaxHeight:ixmaps.SVGmapHeight-30);
+		/**
+		 * Check if dialog limit is reached
+		 * @param {number} maxDialogs - Maximum allowed dialogs
+		 * @returns {boolean} True if limit reached
+		 */
+		isLimitReached: function(maxDialogs = 10) {
+			if (!window.dialogManager) {
+				return false;
+			}
+			return window.dialogManager.isMaxDialogsReached(maxDialogs);
+		},
 
-		var nPosition = [450,50];
-
-		if ( !szPosition ){
-			szPosition = "center";
+		/**
+		 * Get dialog by element ID
+		 * @param {string} elementId - Element ID
+		 * @returns {Object|null} Dialog instance or null
+		 */
+		getByElement: function(elementId) {
+			if (!window.dialogManager) {
+				return null;
+			}
+			const dialogs = window.dialogManager.getOpenDialogs();
+			return dialogs.find(dialog => dialog.element === elementId) || null;
 		}
-
-		if ( szPosition ){
-			if ( szPosition == "left" ){
-				nPosition = [0,50];
-			}
-			else
-			if ( szPosition == "centerleft" ){
-				nPosition = [50,50];
-			}
-			else
-			if ( szPosition == "right" ){
-				nPosition = [window.innerWidth-dialogWidth-50,50];
-			}
-			else
-			if ( szPosition == "center" ){
-				nPosition = [window.innerWidth/2-dialogWidth/2,50];
-			}
-			else
-			if ( szPosition == "auto" && offsetLeft && offsetTop ){
-				nPosition = [Math.max(10,offsetLeft-dialogWidth-5),offsetTop+10];
-			}
-			else
-			if ( szPosition.match(/,/) ){
-				var szValueA = szPosition.split(",");
-				nPosition = [Number(szValueA[0]),Number(szValueA[1])];
-			}
-			else{
-				nPosition = [window.innerWidth/2-dialogWidth/2,50];
-			}
-		}
-		// GR 18.02.2014 limit width again
-		if ( dialogWidth > window.innerWidth-nPosition[0] ){
-			dialogWidth = Math.min(window.innerWidth-20,dialogWidth);
-			// for 1 line dialogs add a line to avoid scrollbars
-			dialogHeight += 26;
-		}
-		// if no spez. host element given, create randomone
-		if ( typeof($("#"+szElement)[0]) == "undefined" ){
-			if ( !szElement ){
-				szElement = "dialog-"+String(Math.random()).substr(2,10);
-			}
-			var dialogDiv = document.createElement("div");
-			dialogDiv.setAttribute("id",szElement);
-			$("#dialog")[0].parentNode.appendChild(dialogDiv);
-		}
-
-		$("#"+szElement).css("visibility","visible");
-	    $("#"+szElement).dialog({	draggable: true,
-									resizable: true,
-									    width: dialogWidth,
-									   height: dialogHeight,
-									    title: szTitle,
-			                         position: nPosition,
-								        close: function(event, ui) {
-				$("#"+szElement)[0].innerHTML = "";
-				$("#"+szElement).dialog("destroy");
-				//ixmaps.mapTool(ixmaps.beforeDialogTool);
-				if (ixmaps.onDialogClose){
-					ixmaps.onDialogClose();
-				}
-			}
-			});
-		// GR 18.02.2014 set correct height
-		if (dialogHeight<=100){
-			$("#"+szElement).parent().css("height",String(dialogHeight-60)+"px");
-		}else{
-			$("#"+szElement).parent().css("height",String(dialogHeight)+"px");
-		}
-		
-		// GR 13.10.2011 set opacity
-		if (nOpacity){
-			$("#"+szElement).parent().css("opacity",String(nOpacity));
-		}
-		// make close button visible in any case
-		$(".ui-dialog-titlebar-close").css("z-index","10000");
-		
-		$("#"+szElement).parent().css("z-index","10000");
-		// load content
-		if ( typeof(szUrl) == "string" && szUrl.length ){
-			if ( 1 || (szUrl.substr(0,4) == "http") ){
- 				$("#"+szElement).load(szUrl, function (response, status, xhr) {
- 					if (status == "error") {
-						var msg = "Sorry but there was an error: ";
-						$("#story").append(msg + xhr.status + "<br><br> '" + szStoryRoot + szUrl + "'<br><br> " + xhr.statusText);
-					}else{
-                        console.log($("#"+szElement));
-                    }
-				});
-			}else
-			if ( (szUrl.substr(0,1) == ".") ){
-				$("#"+szElement)[0].innerHTML = 
-					"<div overflow=\"auto\">"+
-					"<iframe style=\"width:100%;height:"+(dialogHeight-75)+"px;\" id=\"dialogframe\" src=\""+szUrl+"\" frameborder=\"0\" marginwidth=\"0px\" />"+
-					"</div>";
-			}else{
-				$("#"+szElement)[0].innerHTML = 
-					"<div overflow=\"auto\"><span style=\"color:#888\">"+szUrl+"</span></div>";
-			}
-		}
-		return 	$("#"+szElement)[0];
 	};
-	ixmaps.openSidebar = function(event,szElement,szUrl,szTitle,szPosition,nMinWidth,nMinHeight){
+	
+	ixmaps.openDialog = function(szElement, szUrl, szTitle, szPosition, nWidth, nHeight, nOpacity) {
+		// Input validation
+		if (!szUrl || !szTitle) {
+			console.error('openDialog: Missing required parameters (szUrl, szTitle)');
+			return null;
+		}
+
+		// Check if dialogManager is available
+		if (!window.dialogManager) {
+			console.error('openDialog: dialogManager not available');
+			return null;
+		}
+
+		console.log('openDialog:', { szElement, szUrl, szTitle });
+
+		// Get count of open dialogs for logging/monitoring
+		const openDialogsCount = window.dialogManager.getOpenDialogs().length;
+		console.log(`Currently open dialogs: ${openDialogsCount}`);
+
+		// Validate dimensions
+		const width = nWidth && nWidth > 0 ? `${nWidth}px` : '400px';
+		const height = nHeight && nHeight > 0 ? `${nHeight}px` : '300px';
+
+		// Calculate position with offset for multiple dialogs
+		const positionOffset = openDialogsCount * 10;
+		const position = {
+			top: `${10 + positionOffset}px`,
+			left: `${10 + positionOffset}px`
+		};
+
+		try {
+			const dialog = window.dialogManager.createDialog({
+				title: szTitle,
+				position: position,
+				width: width,
+				height: height,
+				element: szElement, // Store element reference
+				opacity: nOpacity || 1
+			});
+
+			dialog.show();
+			
+			dialog.loadContent(szUrl, {
+				showLoading: true,
+				loadingText: 'Loading content...',
+				timeout: 15000,
+				successHandler: function(dialogInstance, html) {
+					console.log('Dialog content loaded successfully');
+					// Execute any scripts in the loaded content
+					ixmaps.dialogExecScripts(szElement);
+				},
+				errorHandler: function(dialogInstance, error) {
+					console.error('Failed to load dialog content:', error);
+					dialogInstance.showError(`Failed to load content: ${error.message}`);
+					return false; // Prevent default error display
+				}
+			});
+
+			return dialog;
+		} catch (error) {
+			console.error('Error creating dialog:', error);
+			return null;
+		}
+	};
+
+    ixmaps.dialogExecScripts = function(szElement) {
+        if (!szElement) {
+            console.warn('dialogExecScripts: No element specified');
+            return;
+        }
+
+        const element = document.getElementById(szElement);
+        if (!element) {
+            console.warn(`dialogExecScripts: Element '${szElement}' not found`);
+            return;
+        }
+
+        const scripts = element.querySelectorAll('script');
+        if (scripts.length === 0) {
+            console.log('dialogExecScripts: No scripts found in element');
+            return;
+        }
+
+        console.log(`dialogExecScripts: Executing ${scripts.length} script(s)`);
+
+        scripts.forEach((script, index) => {
+            try {
+                const newScript = document.createElement('script');
+                
+                // Copy attributes
+                Array.from(script.attributes).forEach(attr => {
+                    newScript.setAttribute(attr.name, attr.value);
+                });
+
+                if (script.src) {
+                    // Handle external scripts
+                    newScript.onload = () => {
+                        console.log(`External script loaded: ${script.src}`);
+                    };
+                    newScript.onerror = () => {
+                        console.error(`Failed to load external script: ${script.src}`);
+                    };
+                } else {
+                    // Handle inline scripts
+                    newScript.textContent = script.textContent;
+                }
+
+                // Append to head to execute
+                document.head.appendChild(newScript);
+                
+                // Clean up the original script
+                script.remove();
+                
+                console.log(`Script ${index + 1} executed successfully`);
+            } catch (error) {
+                console.error(`Error executing script ${index + 1}:`, error);
+            }
+        });
+    };
+    
+	ixmaps.openSidebar = function(szElement,szUrl,szTitle,szPosition,nMinWidth,nMinHeight){
+		const sidebarwidth = 400;
+
 		if ( typeof($("#"+szElement)[0]) == "undefined" ){
 			szElement = "dialog";
 		}
@@ -170,39 +213,243 @@ $Log: htmlgui.js,v $
 			return;
 		}
 		$("#"+szElement).css({
-			"visibility":"visible",	
+			"visibility":"visible",
+			"display"	:"inline",	
 			"position"	:"absolute",
-			"top"		:"30px;",
-			"left"		:"10px;",
+			"top"		:"0px",
+			"left"		:"0px",
 			"z-index"	:"1000",
-			"width"		:"370px",
-			"height"	:(ixmaps.SVGmapHeight-30) +"px",
+			"width"		:(sidebarwidth)+"px",
+			"height"	:(ixmaps.SVGmapHeight) +"px",
 			"background-color":"#fff",
 			"border-right":"solid 1px #ddd",
 			"border-bottom":"solid 1px #ddd"
 		});
+		let width = parseFloat($("#ixmap").css("width"));
+		$("#ixmap").css({
+			"left": sidebarwidth+"px",
+			"width": (width-sidebarwidth)+"px"
+		});
+
 		if ( typeof(szUrl) == "string" && szUrl.length ){
 			$("#"+szElement)[0].innerHTML = 
-				"<div id=\"sidebarclosebutton\" style=\position:absolute;top:1px;left:370px;background-color:#fff;border-right:solid;border-bottom:solid;border-color:#ddd;border-width:1;\">" + 
+				"<div id=\"sidebarclosebutton\" style=\"position:absolute;top:1px;left:"+sidebarwidth+"px;background-color:#fff;border-right:solid;border-bottom:solid;border-color:#ddd;border-width:1px;\">" + 
 				"<a style=\"font-family:verdana;font-size:16px;color:#888\" href=\"javascript:ixmaps.closeSidebar();\">&nbsp;x&nbsp;</a></div>" +
-				//"<button type=\"button\" id=\"closetools\" style=\"position:absolute;top:6px;left:368px;background-color:#fff;height:23px;\"><label for=\"popuptools\"></label></button>" +
-				"<iframe src=\""+szUrl+"\" width=\"100%\" height=\"100%\" frameborder=\"0\" marginwidth=\"0px\" />";
+				"<div id='"+szElement+"-content' style='padding:10px;height:"+(ixmaps.SVGmapHeight-60)+"px;overflow:auto;'>"+
+				"</div>";
 
+			// Use the new loadSidebarContent function
+			ixmaps.loadSidebarContent(szElement + "-content", szUrl, {
+				showLoading: true,
+				loadingText: 'Loading sidebar content...',
+				complete: function(response, status, xhr) {
+					console.log('Sidebar content loaded successfully');
+				},
+				error: function(xhr, status, errorMsg) {
+					console.error('Failed to load sidebar content:', errorMsg);
+				}
+			});
 		}
-		$( "#closetools" ).button({ icons:{primary:'ui-icon-close'}}).click(function(e){
-							ixmaps.openSidebar(e,'dialog','','','auto',350,800);
-							});
+							
 		ixmaps.sidebar = $("#"+szElement)[0];
 	};
+
+	
 	ixmaps.resizeDialog = function(newWidth,newHeight){
 		$("#item").parent().css("width", newWidth);
 		$("#item").parent().css("height", newHeight);
 	};
+
+	/**
+	 * Load content into sidebar from URL
+	 * @param {string} sidebarElement - ID of the sidebar element
+	 * @param {string} url - URL to load content from
+	 * @param {Object} options - Loading options
+	 */
+	ixmaps.loadSidebarContent = function(sidebarElement, url, options = {}) {
+		// Input validation
+		if (!sidebarElement || !url) {
+			console.error('loadSidebarContent: Missing required parameters (sidebarElement, url)');
+			return;
+		}
+
+		// Check if jQuery is available
+		if (!window.jQuery) {
+			console.error('loadSidebarContent: jQuery not available');
+			return;
+		}
+
+		// Get sidebar element
+		const sidebar = document.getElementById(sidebarElement);
+		if (!sidebar) {
+			console.error(`loadSidebarContent: Sidebar element '${sidebarElement}' not found`);
+			return;
+		}
+
+		// Default options
+		const {
+			data = null,
+			complete = null,
+			error = null,
+			showLoading = true,
+			loadingText = 'Loading sidebar content...',
+			timeout = 15000
+		} = options;
+
+		// Show loading state if enabled
+		if (showLoading) {
+			sidebar.innerHTML = `
+				<div style="text-align: center; padding: 40px; color: #666;">
+					<div style="margin-bottom: 20px;">
+						<div style="width: 40px; height: 40px; border: 4px solid #f3f3f3; border-top: 4px solid #3498db; border-radius: 50%; animation: spin 1s linear infinite; margin: 0 auto;"></div>
+					</div>
+					<div>${loadingText}</div>
+				</div>
+				<style>
+					@keyframes spin {
+						0% { transform: rotate(0deg); }
+						100% { transform: rotate(360deg); }
+					}
+				</style>
+			`;
+		}
+
+		// Use jQuery load method with timeout
+		const loadPromise = new Promise((resolve, reject) => {
+			$(sidebar).load(url, data, function(response, status, xhr) {
+				if (status === "error") {
+					reject({
+						status: xhr.status,
+						statusText: xhr.statusText,
+						response: response
+					});
+				} else {
+					resolve({
+						response: response,
+						status: status,
+						xhr: xhr
+					});
+				}
+			});
+		});
+
+		// Handle timeout
+		const timeoutPromise = new Promise((_, reject) => {
+			setTimeout(() => reject(new Error('Request timeout')), timeout);
+		});
+
+		// Race between load and timeout
+		Promise.race([loadPromise, timeoutPromise])
+			.then((result) => {
+				// Execute scripts in loaded content
+				ixmaps.executeSidebarScripts(sidebar);
+				
+				// Call complete callback if provided
+				if (complete && typeof complete === 'function') {
+					complete(result.response, result.status, result.xhr);
+				}
+				
+				console.log('Sidebar content loaded successfully');
+			})
+			.catch((error) => {
+				let errorMsg;
+				
+				if (error.status) {
+					// jQuery error
+					errorMsg = `Error loading content: ${error.status} ${error.statusText}`;
+				} else {
+					// Timeout or other error
+					errorMsg = `Error loading content: ${error.message}`;
+				}
+				
+				// Show error state
+				sidebar.innerHTML = `
+					<div style="text-align: center; padding: 40px; color: #dc3545;">
+						<div style="margin-bottom: 20px; font-size: 48px;">⚠️</div>
+						<h3>Error Loading Content</h3>
+						<p>${errorMsg}</p>
+						<button onclick="this.parentElement.innerHTML=''" 
+								style="padding: 8px 16px; background: #dc3545; color: white; border: none; border-radius: 4px; cursor: pointer; margin-top: 15px;">
+							Clear Error
+						</button>
+					</div>
+				`;
+				
+				// Call error callback if provided
+				if (error && typeof error === 'function') {
+					error(error.status ? error : { status: 0, statusText: error.message });
+				}
+				
+				console.error('Failed to load sidebar content:', errorMsg);
+			});
+	};
+
+	/**
+	 * Execute scripts in sidebar content
+	 * @param {HTMLElement} sidebar - Sidebar element
+	 */
+	ixmaps.executeSidebarScripts = function(sidebar) {
+		if (!sidebar) {
+			console.warn('executeSidebarScripts: No sidebar element provided');
+			return;
+		}
+
+		const scripts = sidebar.querySelectorAll('script');
+		if (scripts.length === 0) {
+			console.log('executeSidebarScripts: No scripts found in sidebar');
+			return;
+		}
+
+		console.log(`executeSidebarScripts: Executing ${scripts.length} script(s)`);
+
+		scripts.forEach((script, index) => {
+			try {
+				const newScript = document.createElement('script');
+				
+				// Copy attributes
+				Array.from(script.attributes).forEach(attr => {
+					newScript.setAttribute(attr.name, attr.value);
+				});
+
+				if (script.src) {
+					// Handle external scripts
+					newScript.onload = () => {
+						console.log(`External script loaded: ${script.src}`);
+					};
+					newScript.onerror = () => {
+						console.error(`Failed to load external script: ${script.src}`);
+					};
+				} else {
+					// Handle inline scripts
+					newScript.textContent = script.textContent;
+				}
+
+				// Append to head to execute
+				document.head.appendChild(newScript);
+				
+				// Clean up the original script
+				script.remove();
+				
+				console.log(`Sidebar script ${index + 1} executed successfully`);
+			} catch (error) {
+				console.error(`Error executing sidebar script ${index + 1}:`, error);
+			}
+		});
+	};
 	ixmaps.closeSidebar = function(){
 		if ( ixmaps.sidebar ){
+			let sidebarwidth = parseFloat($(ixmaps.sidebar).css("width"));
+			let left = parseFloat($("#ixmap").css("left"));
+			let width = parseFloat($("#ixmap").css("width"));
+			$("#ixmap").css({
+				"left": (left-sidebarwidth)+"0px",
+				"width": (width+sidebarwidth)+"px"
+			});
 			$(ixmaps.sidebar).css("visibility","hidden");
+			$(ixmaps.sidebar).css("display","none");
 			ixmaps.sidebar.innerHTML = "";
 			ixmaps.sidebar = null;
+	
 			return;
 		}
 	};
@@ -276,7 +523,7 @@ $Log: htmlgui.js,v $
 	};
 
 	ixmaps.shareMap = function(target,position){
-		this.openDialog(null,'share-dialog',"./tools/share_new.html",'share map',position||'auto',400,550);
+		this.openDialog('share-dialog',ixmaps.szResourceBase+"ui/html/tools/share_new.html",'share map',position||'auto',400,550);
 	};
 
 	ixmaps.popupShare = function(position) {
@@ -286,61 +533,92 @@ $Log: htmlgui.js,v $
 	ixmaps.exportMap = function(target,position){
 		window.szMapTypeId = ixmaps.getMapTypeId();
 		window.DOMViewerObj = ixmaps.embeddedSVG.window.document;
-		this.openDialog(null,'export-dialog',"./tools/export.html",'export map',position||'auto',500,150);
+		this.openDialog('export-dialog',ixmaps.szResourceBase+"ui/html/tools/export.html",'export map',position||'auto',500,150);
 	};
 
 	ixmaps.viewTable = function(target,position){
-		this.openDialog(null,'table-dialog',"./tools/table_new.html",'data table',position||'auto',800,600);
+		this.openDialog('table-dialog',ixmaps.szResourceBase+"ui/html/tools/table_new.html",'data table',position||'auto',800,600);
 	};
 
 	ixmaps.selectBasemap = function(target,position){
-		this.openDialog(null,'basemap-dialog',"./tools/layer.html",'layer table',position||'auto',400,600);
+		this.openDialog('basemap-dialog',ixmaps.szResourceBase+"ui/html/tools/layer.html",'layer table',position||'auto',400,600);
 	};
 
 	ixmaps.popupBookmarks = function(position){
-		this.openDialog(null,'bookmarks',ixmaps.szResourceBase+'ui/html/tools/history.html','Bookmarks',position||'50%,103',250,450);
+		this.openDialog('bookmarks',ixmaps.szResourceBase+'ui/html/tools/history.html','Bookmarks',position||'50%,103',250,450);
 	};
 
 	ixmaps.popupProject = function(position){
-		this.openDialog(null,'projects',ixmaps.szResourceBase+'ui/html/tools/project_save.html','Save actual map & theme as project',position||'200,103',550,620);
-	};
+		this.openDialog('projects',ixmaps.szResourceBase+'ui/html/tools/project_save.html','Save actual map & theme as project',position||'200,103',450,600);
+};
 
 	ixmaps.popupThemeEditor = function(position,szId){
 		ixmaps.editor = ixmaps.editor || {};
 		ixmaps.editor.szThemeId = szId;
-		window.idialog = this.openDialog(null,'editor',ixmaps.szResourceBase+'ui/html/tools/theme_editor.html','Theme Editor',position||'10,103',500,700);
+		this.openDialog('editor',ixmaps.szResourceBase+'ui/html/tools/theme_editor.html','Theme Editor',position||'10,103',500,670);
 	};
 
 	ixmaps.popupProjectEditor = function(position){
-		window.idialog = this.openDialog(null,'editor',ixmaps.szResourceBase+'ui/html/tools/project_editor.html','Project Editor',position||'10,103',380,600);
-	};
+		this.openDialog('editor',ixmaps.szResourceBase+'ui/html/tools/project_editor.html','Project Editor',position||'10,103',500,650);
+};
 
 	ixmaps.popupThemeConfigurator = function(position){
-		window.idialog = this.openDialog(null,'configurator',ixmaps.szResourceBase+'ui/html/tools/theme_configurator.html','Theme Configuator',position||'10,10',450,660);
+		this.openDialog('sidebar',ixmaps.szResourceBase+'ui/html/tools/theme_configurator.html','Theme Configuator',position||'10,10',450,660);
+	};
+
+	/**
+	 * Example function showing how to use loadSidebarContent directly
+	 * @param {string} position - Position for the sidebar
+	 */
+	ixmaps.loadSidebarExample = function(position) {
+		// First open the sidebar
+		ixmaps.openSidebar('sidebar', '', 'Custom Sidebar', position||'10,10', 400, 600);
+		
+		// Then load content using the new function
+		ixmaps.loadSidebarContent('sidebar-content', 'path/to/your/content.html', {
+			showLoading: true,
+			loadingText: 'Loading custom content...',
+			timeout: 10000,
+			complete: function(response, status, xhr) {
+				console.log('Custom sidebar content loaded successfully');
+				// You can add custom logic here after content loads
+			},
+			error: function(xhr, status, errorMsg) {
+				console.error('Failed to load custom sidebar content:', errorMsg);
+				// You can add custom error handling here
+			}
+		});
 	};
 
 	ixmaps.popupThemeFacets = function(position,columns){
 		ixmaps.themeFacetColumns = columns;
-		window.idialog = this.openDialog(null,'facets',ixmaps.szResourceBase+'ui/html/tools/theme_facets.html','Theme Facets',position||'10,10',450,660);
+		this.openDialog('facets',ixmaps.szResourceBase+'ui/html/tools/theme_facets.html','Theme Facets',position||'10,10',450,660);
 	};
 
 	ixmaps.popupTools = function(position){
+        /**
 		var szPos = String(parseInt($(ixmaps.gmapDiv).css('left')) + 55) + ',13';
- 		ixmaps.openDialog(null, 'dialog', ixmaps.szResourceBase+'ui/html/tools/popuptools_line_v2.html', '', szPos, 700, 100);
+ 		ixmaps.openDialog('dialog', ixmaps.szResourceBase+'ui/html/tools/popuptools_line_v2.html', '', szPos, 700, 100);
 		$("#dialog").css("height", "100%");
 		$("#dialog").css("width", "90%");
 		$("#dialog").css("position", "absolute");
 		$("#dialog").css("top", "10px");
 		$("#dialog").css("overflow", "hidden");
 		//ixmaps.openDialog(null, "tools", './tools/popuptools_line_v2.html', 'Tools', '10,10', "95%", 150);
+        **/
+
+		$(".dialog-header").css("min-width","500px");
+        $(".dialog-header").load(ixmaps.szResourceBase+'ui/html/tools/popuptools_line_v2.html');
+        $(".dialog-body").hide();
+        document.getElementById('myDialog').show();
 	};
 
 	ixmaps.showAbout= function(szUrl,position){
 		if ( szUrl ){
-			ixmaps.openDialog(null, "tools", szUrl, '', position||'0,0',"350","500");
+			ixmaps.openDialog("tools", szUrl, '', position||'0,0',"350","500");
 		}
 		if ( ixmaps.loadedProject.metadata.about && ixmaps.loadedProject.metadata.about.length ) {
-			ixmaps.openDialog(null, "tools", ixmaps.loadedProject.metadata.about, 'about', position||'100,100',"90%","500");
+			ixmaps.openDialog("tools", ixmaps.loadedProject.metadata.about, 'about', position||'100,100',"90%","500");
 		}
 	};
 
@@ -389,7 +667,7 @@ $Log: htmlgui.js,v $
 		// GR 30.04.2015 get the last valid map name to query the bookmark from
 		// ------------------------------------------------------------------
 		szName = "map";
-		for ( i in ixmaps.embeddedApiA ){
+		for ( let i in ixmaps.embeddedApiA ){
 			szName = i;	
 		}
 
@@ -439,7 +717,7 @@ $Log: htmlgui.js,v $
 		var szQuery = "&legend=1&project=" + szProject;
 		// if szProject is JSON, encode URI
 		if (szProject.match(/\{/)){
-			var szQuery = "&legend=1&project=" + encodeURIComponent(szProject);
+			szQuery = "&legend=1&project=" + encodeURIComponent(szProject);
 		}
 
 		szEmbedUrl  = szEmbedUrl || (szTemplateEmbed + szQuery);
@@ -513,7 +791,7 @@ $Log: htmlgui.js,v $
 		var szPopOutUrl = szUrl;
 
 		if ( !fFlag.match(/window/) ){
-			this.openDialog(null,null,szPopOutUrl,'','auto',400,450);
+			this.openDialog(null,szPopOutUrl,'','auto',400,450);
 		}
 		if ( !fFlag.match(/dialog/) ){
 			window.open(szPopOutUrl,'map popout'+Math.random(), 'alwaysRaised=yes, titlebar=no, toolbar=no, location=no, directories=no, status=no, menubar=no, scrollbars=no, resizable=no, copyhistory=no, width=400, height=450');
@@ -590,7 +868,7 @@ $Log: htmlgui.js,v $
 		var cssMainContainer = $('#css-modifier-container-dialog');
 
 		if (cssMainContainer.length == 0) {
-			var cssMainContainer = $('<style id="css-modifier-container-dialog"></style>');
+			cssMainContainer = $('<style id="css-modifier-container-dialog"></style>');
 			cssMainContainer.appendTo($('head'));
 		}
 		cssMainContainer.append(className + " {" + classValue + "}\n");
@@ -728,12 +1006,12 @@ $Log: htmlgui.js,v $
 
 		var switchLayerObject = {};
 
-		for ( a in layerA ){
+		for ( var a in layerA ){
 			fOff = false;
 
 			var sub = false;
 			var layer = layerA[a];
-			for ( c in layer.categoryA ){
+			for ( var c in layer.categoryA ){
 				if ( c && (layer.categoryA[c].type != "single") && (layer.categoryA[c].legendname) ){
 					sub = true;
 				}
@@ -757,9 +1035,9 @@ $Log: htmlgui.js,v $
 						}
 					}
 					if ( offlist.length < onlist.length ){
-						switchLayerObject[a]["off"] = offlist;
+						switchLayerObject[a].off = offlist;
 					}else{
-						switchLayerObject[a]["on"]  = onlist;
+						switchLayerObject[a].on  = onlist;
 					}
 				}
 			}else{
@@ -768,7 +1046,7 @@ $Log: htmlgui.js,v $
 				}
 			}
 		}
-		return "map.Api.setMapLayer('"+JSON.stringify(switchLayerObject)+"');"
+		return "map.Api.setMapLayer('"+JSON.stringify(switchLayerObject)+"');";
 	};
 
 	ixmaps.getThemesString = function(){
@@ -803,7 +1081,7 @@ $Log: htmlgui.js,v $
 			d[xA[0]] = xA[1];
 		}
 		var szResult = "";
-		for ( i in d ){
+		for ( var i in d ){
 			szResult += i +":" + d[i] +";";
 		}
 		return "map.Api.setMapFeatures('"+szResult+"');";
@@ -1016,7 +1294,7 @@ $Log: htmlgui.js,v $
 		// create dialog (oversized) to host the ChartMenu
 		//
 		if ( !fChartMenuDialog ){
-			ixmaps.openDialog(null,'chartmenue','',ixmaps.szChartTitle,'10,103',300,400);
+			ixmaps.openDialog('chartmenue','',ixmaps.szChartTitle,'10,103',300,400);
 			fChartMenuDialog = true;
 		}
 
@@ -1057,6 +1335,59 @@ $Log: htmlgui.js,v $
 				console.log('Something went wrong', err);
 			});
 	};
+
+    // new dialog !!!
+    // --- SMOOTH DRAGGING FOR DIALOG ---
+    const dialog = document.getElementById('myDialog');
+    const header = document.getElementById('dialogHeader');
+    let isDragging = false;
+    let startX, startY, dialogStartX, dialogStartY;
+
+    header.addEventListener('mousedown', function(e) {
+      // Don't initiate drag if close button was clicked
+      if (e.target.classList.contains('close-btn')) return;
+      isDragging = true;
+      // Use computed style to get current position
+      const rect = dialog.getBoundingClientRect();
+      dialog.style.left = rect.left + "px";
+      dialog.style.top = rect.top + "px";
+      startX = e.clientX;
+      startY = e.clientY;
+      dialogStartX = rect.left;
+      dialogStartY = rect.top;
+      document.body.style.userSelect = 'none';
+    });
+
+    document.addEventListener('mousemove', function(e) {
+      if (!isDragging) return;
+      // Calculate new position
+      let dx = e.clientX - startX;
+      let dy = e.clientY - startY;
+      dialog.style.left = (dialogStartX + dx) + "px";
+      dialog.style.top = (dialogStartY + dy) + "px";
+    });
+
+    document.addEventListener('mouseup', function() {
+      isDragging = false;
+      document.body.style.userSelect = '';
+    });
+
+    // Allow closing with Escape key
+    document.addEventListener('keydown', function(event){
+      if(event.key === "Escape"){
+        dialog.close();
+      }
+    });
+
+    // Reset dialog position on close (optional)
+    dialog.addEventListener('close', function() {
+      dialog.style.top = '100px';
+      dialog.style.left = '100px';
+	  $(".dialog-body").html("");
+	  $(".dialog-body").width("");
+	  $(".dialog-body").height("");
+    });
+
 
 }( window.ixmaps = window.ixmaps || {}, jQuery ));
 
