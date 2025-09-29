@@ -5540,7 +5540,7 @@ textarea.form-control-lg {
   line-break: auto;
   font-size: var(--bs-tooltip-font-size);
   word-wrap: break-word;
-  opacity: 0;
+  opacity: 1;
 }
 .tooltip.show {
   opacity: var(--bs-tooltip-opacity);
