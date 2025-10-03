@@ -39,7 +39,7 @@ window.ixmaps = window.ixmaps || {};
 
 		var fontsize = 22 / 1200 * window.innerWidth;
 
-		szHtml += "<div id='tooltipDiv' style='position:absolute;left:" + xPos + "px;top:" + yPos + "px;font-family: arial narrow, system;font-size:" + fontsize + "px;color: #444;background: white;border: 0.5px solid black;border-radius: 5px'>";
+		szHtml += "<div id='tooltipDiv' style='position:absolute;left:" + xPos + "px;top:" + yPos + "px;font-family: arial, system;font-size:" + fontsize + "px;color: #444;background: white;border: 0.5px solid black;border-radius: 5px'>";
 
 		szHtml += "<div style='margin:0.5em 0.5em'>" + szText + "</div>";
 

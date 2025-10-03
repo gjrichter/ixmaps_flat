@@ -353,7 +353,6 @@ window.ixmaps.legend = window.ixmaps.legend || {};
                 } else
                 if (themeObj.partsA[i] && typeof (themeObj.partsA[i].nSum) != "undefined") {
                     if (themeObj.szFlag.match(/SUM/) && themeObj.szFlag.match(/PERCENT/) && !themeObj.szFlag.match(/COUNT/)) {
-                        console.log(themeObj);
                         sortA.push({
                             index: i,
                             color: (themeObj.szFlag.match(/INVERT/) ? (nRows - i - 1) : ic),
@@ -650,8 +649,7 @@ window.ixmaps.legend = window.ixmaps.legend || {};
                             (themeObj.nOrigMinA[i] < themeObj.nOrigMaxA[i])) {
                             szHtml += "<span style='padding-left:10px'>" + ixmaps.__formatValue(themeObj.nOrigMinA[i], 2, "BLANK") + " " + szUnit + "</span>  ... <span style='padding-left:5px'>" + ixmaps.__formatValue(themeObj.nOrigMaxA[i], 2, "BLANK") + " " + szUnit + "</span>";
                         } else {
-                            console.log(themeObj);
-                        }
+                         }
                     }
                 }
 
@@ -1154,6 +1152,109 @@ window.ixmaps.legend = window.ixmaps.legend || {};
             }
 			return;
 		}
+
+        // Check if we should show legends for all themes
+        if (1 || ixmaps.showAllThemesLegend) {
+            // Show legends for all themes (excluding those with NOLEGEND flag)
+            var allThemes = ixmaps.getThemes();
+            var szHtml = "";
+            
+            // Clear the legend first
+            $("#map-legend").html("");
+            
+            for (var i = 0; i < allThemes.length; i++) {
+                var theme = allThemes[i];
+                var themeObj = ixmaps.getThemeObj(theme.szId);
+                if (!themeObj) {
+                    continue;
+                }
+                
+                // Skip themes with NOLEGEND flag
+                if (themeObj.szFlag && themeObj.szFlag.match(/NOLEGEND/)) {
+                    continue;
+                }
+                
+                // Skip themes with FEATURE flag but not CHOROPLETH flag
+                if (themeObj.szFlag && themeObj.szFlag.match(/FEATURE/) && !themeObj.szFlag.match(/CHOROPLETH/)) {
+                    continue;
+                }
+                
+                // Skip themes that are not done loading
+                if (!themeObj.fDone || themeObj.fOutOfScale) {
+                    continue;
+                }
+ 
+                if (szHtml.length > 0) {
+                    szHtml += "<hr style='margin-top:1.6em;margin-bottom:-0.5em'>";
+                }
+                
+                // Add theme title
+                szHtml += "<h3 style='pointer-events:all;margin-top:" + (i > 0 ? "1.5em" : "0") + "'>" + (themeObj.szTitle || "Color Legend") + "</h3>";
+                
+                // Add theme snippet if available
+                if (themeObj.szSnippet) {
+                    szHtml += "<h4 style='pointer-events:none;margin-bottom:0.5em'>" + themeObj.szSnippet + "</h4>";
+                }
+                
+                // Add legend body
+                var szStyle = (ixmaps.legendAlign=="center")?"pointer-events:all;width:fit-content;margin:auto":"pointer-events:none";
+                szHtml += "<div class='map-legend-body' style='"+szStyle+"'>";
+                
+                if ( $("#map-legend").attr("data-align") == "left" ){
+                    szHtml += "<div style='max-height:"+window.innerHeight+"px;overflow:hidden;margin-right:24px;padding-right:1em;pointer-events:none'>";
+                }else{
+                    szHtml += "<div style='max-height:300px;overflow:auto;margin-right:24px;padding-right:1em;pointer-events:all'>";
+                }
+                
+                // Add color legend if not TEXTLEGEND
+                if (!themeObj.szFlag || !themeObj.szFlag.match(/\bTEXTLEGEND\b/)) {
+                    szHtml += ixmaps.legend.makeColorLegendHTML(theme.szId, "generic", "compact");
+                }
+                
+                szHtml += "</div>";
+                szHtml += "</div>";
+                
+                // Add description if available
+                if (themeObj.szDescription) {
+                    szHtml += "<div style='height:0em;'></div>";
+                    szHtml += "<div style='pointer-events:all;margin-bottom:1em'>" + themeObj.szDescription + "</div>";
+                } else {
+                    szHtml += "<div style='height:0.4em'></div>";
+                }
+            }
+
+            // Add the complete HTML to the legend
+            var szLegendPane = "";
+            szLegendPane += "<div id='map-legend-pane' class='map-legend-pane'>" +
+                "<a href='javascript:__toggleLegendPane()' title='unfold/fold the legend'>" +
+                "<div id='legend-type-switch' style='border:none' >" +
+                "<span style='font-size:28px;'>&#8942;</span>" +
+                "</div>" +
+                "</a>" +
+                "<div id='map-legend-content'>" + szHtml + "</div>";
+            
+            szLegendPane += "<a href='javascript:__toggleLegendPane(0);'>" +
+                "<div id='legend-type-switch-bottom' style='display:none'>" +
+                "<i id='map-legend-pane-switch' class='icon shareIcon blackHover icon-arrow-down2' title='close' style='color:#888;pointer-events:none;' tabindex='-1'></i>" +
+                "</div>" +
+                "</a>";
+
+            if ( $("#map-legend").attr("data-align") == "left" ){
+                $("#map-legend").append(szHtml);
+                $("#map-legend").css("pointer-events","none");
+            }else
+            if ( $("#map-legend").attr("data-align") == "right" ){
+                $("#map-legend").append(szHtml);
+                $("#map-legend").css("pointer-events","none");
+            }else{
+                $("#map-legend").html(szLegendPane);
+            }
+            
+            __actualThemeId = szId;
+            __switchLegendPanes();
+            ixmaps.legendType = "theme";
+            return;
+        }
 
         var themeObj = ixmaps.getThemeObj(szId);
         if (!themeObj) {
