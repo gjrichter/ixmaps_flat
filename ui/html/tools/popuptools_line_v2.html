@@ -74,6 +74,7 @@
 			padding: 4px 0 0 0;
 			border-radius: 4px;
 			transition: background-color 0.2s ease;
+			cursor: pointer;
 		}
 		
 		.tool-line:hover {
@@ -249,7 +250,7 @@
 	<div id="toolbar" role="toolbar" aria-label="Map Tools">
 		
 		<div class="toolbar-header" style="float:left; padding-bottom:0.5em;">
-			<button id="selectline" class="custom-button" title="Switch to next toolbar" style=""><span id="selectline-id"> Theme </span> &rarr;</button>
+			<button id="selectline" class="custom-button" title="Switch to next toolbar"><span id="selectline-id"> Theme </span> &rarr;</button>
 		</div>
 
 		<div id="Theme" class="tool-line" role="group" aria-label="Theme Controls">
@@ -656,21 +657,21 @@
 		// Popup functions
 		ixmaps.popupSelectColorScheme = function(szHtml) {
 			var szElement = "colorList";	
-			api.openDialog(null, szElement, null, "Color Schemes", '280,60', 80, 300);
+			api.openDialog(szElement, null, "Color Schemes", '280,60', 80, 300);
 			parentWindow.$("#" + szElement)[0].innerHTML = ixmaps.getColors();
 			api.onDialogClose = function(){ 
 				setTimeout("init_theme_line();", 100); 
 			};
 		};
 																	   
-		ixmaps.popupThemeInfo = function(szHtml) {
+		ixmaps.popupThemeInfo = function(szHtml) { 
 			var szElement = "info";	
-			api.openDialog(null, szElement, './tools/theme_info.html', 'Theme Info', '10,103', 380, 600);
+			api.openDialog(szElement, ixmaps.szResourceBase+'ui/html/tools/theme_info.html', 'Theme Info', '10,103', 380, 600);
 		};
 
 		ixmaps.popupThemeCharts = function() {
 			var szElement = "charts";	
-			api.openDialog(null, szElement, './tools/theme_charts.html', 'Theme Charts', '10,103', 380, 600);
+			api.openDialog(szElement, ixmaps.szResourceBase+'ui/html/tools/theme_charts.html', 'Theme Charts', '10,103', 380, 600);
 		};
 
 		ixmaps.popupLayerInfo = function(szHtml) {

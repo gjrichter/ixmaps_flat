@@ -13676,6 +13676,8 @@ $Log: maptheme.js,v $
 						"type:CHOROPLETH|LOG|DOPACITY|NOINFO|NOLEGEND|SUBTHEME|" + szFlag + ";colorscheme:7|white|" + this.colorScheme[nClass] + ";" + szAttributes + ";alphafield:null;alphafield100:null;dopacitypow:1;dopacityscale:2;", this.szLabelA ? this.szLabelA[nClass] : "", "");
 
 			}
+			
+		this.subTheme.szTitle = map.Dictionary.getLocalText("actual selection");	
 
 		map.Themes.subTheme = this;
 	};

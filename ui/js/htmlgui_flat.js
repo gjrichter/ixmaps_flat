@@ -423,7 +423,6 @@ $Log: htmlgui_api.js,v $
         // map/theme legend
         // -----------------
 
-
         if (opt.align) {
             if (opt.align.match(/left/)) {
                 ixmaps.legendAlign = "left";
@@ -497,7 +496,10 @@ $Log: htmlgui_api.js,v $
             $(".map-legend").css("right", "25px");
             $(".title-field").css("left", "100px");
         }
-        
+        setTimeout(() => {
+             ixmaps.mapTool(opt.mode||"pan");
+        }, 1000);
+
         // set text align for the map !
         $("#ixmap").parent().css("text-align", "left");
         

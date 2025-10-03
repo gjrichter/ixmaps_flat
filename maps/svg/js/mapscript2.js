@@ -8343,7 +8343,7 @@ $Log: mapscript2.js,v $
      * @param szType string that describes the tool type ( "zoomarea",...)
      */
     var setMapTool = function (szType) {
-        map.Layer.setPointerEvents(null);
+        //map.Layer.setPointerEvents(null);
 
         if ((szType == "info") && (map.szMapToolType == "info")) {
             deactivateTheme(map._activeTheme);
