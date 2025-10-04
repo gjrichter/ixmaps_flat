@@ -1134,7 +1134,7 @@ $Log: mapscript.js,v $
         alert("doInitAll_2");
 
         _TRACE("--- initAll_2()");
-
+        alert(map.HTMLWindow);
         if (map.HTMLWindow) {
             alert("htmlgui_onMapInit");
             map.pushInitAction(() => {
