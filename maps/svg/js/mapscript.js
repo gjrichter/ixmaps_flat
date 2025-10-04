@@ -1366,9 +1366,11 @@ $Log: mapscript.js,v $
 
         // GR 14.04.2010 set HTML document for __htmlgui calls (Firefox,Chrome,Opera,Safari)
         map.HTMLWindow = window;
+        /**
         if (window.parent && window.parent.window && window.parent.window.ixmaps) {
             map.HTMLWindow = window.parent.window;
         }
+        **/
     }
 
     // GR 09.05.2011 delay method calls for Firefox ( getBBox() error )
