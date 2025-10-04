@@ -1853,49 +1853,49 @@ $Log: htmlgui.js,v $
 				zoomSelect.selectedIndex = zoomSelect.options.length - 1;
 			}
 		} catch (e) {
-			alert('map api error 1!');
+			alert('map api error!');
 		}
 	};
 	ixmaps.clipLayer = function (szLayerName, nWidth) {
 		try {
 			ixmaps.embeddedSVG.window.map.Api.setLayerClip(szLayerName, nWidth);
 		} catch (e) {
-			alert('map api error 2!');
+			alert('map api error!');
 		}
 	};
 	ixmaps.clipMap = function (nWidth) {
 		try {
 			ixmaps.embeddedSVG.window.map.Api.setMapClip(nWidth);
 		} catch (e) {
-			alert('map api error 3!');
+			alert('map api error!');
 		}
 	};
 	ixmaps.backwardsMap = function () {
 		try {
 			ixmaps.embeddedSVG.window.map.Api.backwards();
 		} catch (e) {
-			alert('map api error 4!');
+			alert('map api error!');
 		}
 	};
 	ixmaps.forwardsMap = function () {
 		try {
 			ixmaps.embeddedSVG.window.map.Api.forwards();
 		} catch (e) {
-			alert('map api error 5!');
+			alert('map api error!');
 		}
 	};
-	ixmaps.mapTool = function (szMode) {return;
+	ixmaps.mapTool = function (szMode) {
 		if ((szMode == "pan")) {
 			try {
 				ixmaps.embeddedSVG.window.map.Api.clearAllOverlays();
 			} catch (e) {
-				alert('map api error 6!');
+				alert('map api error!');
 			}
 		}
 		try {
 			ixmaps.embeddedSVG.window.map.Api.setMapTool(szMode);
 		} catch (e) {
-			alert('map api error 7!');
+			alert('map api error!');
 		}
 	};
 	ixmaps.setMapTool = function (szMode) {
