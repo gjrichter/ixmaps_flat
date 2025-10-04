@@ -1884,7 +1884,7 @@ $Log: htmlgui.js,v $
 			alert('map api error 5!');
 		}
 	};
-	ixmaps.mapTool = function (szMode) {
+	ixmaps.mapTool = function (szMode) {return;
 		if ((szMode == "pan")) {
 			try {
 				ixmaps.embeddedSVG.window.map.Api.clearAllOverlays();
