@@ -1933,6 +1933,8 @@ $Log: htmlgui.js,v $
 
 		this.fSVGInitializing = true;
 
+		alert("onMapInit");
+
 		this.embeddedSVG = new Object({
 			window: mapwindow
 		});
