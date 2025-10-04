@@ -1131,6 +1131,8 @@ $Log: mapscript.js,v $
      */
     function doInitAll_2(evt) {
 
+        alert("doInitAll_2");
+
         _TRACE("--- initAll_2()");
 
         if (map.HTMLWindow) {
