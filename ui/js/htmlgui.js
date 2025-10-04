@@ -1885,7 +1885,6 @@ $Log: htmlgui.js,v $
 		}
 	};
 	ixmaps.mapTool = function (szMode) {
-		alert(ixmaps.embeddedSVG);
 		if ((szMode == "pan")) {
 			try {
 				ixmaps.embeddedSVG.window.map.Api.clearAllOverlays();
