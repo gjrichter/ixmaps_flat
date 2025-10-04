@@ -1370,7 +1370,6 @@ $Log: mapscript.js,v $
         // GR 14.04.2010 set HTML document for __htmlgui calls (Firefox,Chrome,Opera,Safari)
         map.HTMLWindow = window;
         if (window.parent && window.parent.window && window.parent.window.ixmaps) {
-            alert("map.HTMLWindow = window.parent.window;");
             map.HTMLWindow = window.parent.window;
         }
     }
