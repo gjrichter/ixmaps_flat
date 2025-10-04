@@ -1136,6 +1136,7 @@ $Log: mapscript.js,v $
         _TRACE("--- initAll_2()");
 
         if (map.HTMLWindow) {
+            alert("htmlgui_onMapInit");
             map.pushInitAction(() => {
                 map.HTMLWindow.ixmaps.htmlgui_onMapInit(window);
             });
