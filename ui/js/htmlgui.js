@@ -450,37 +450,53 @@ $Log: htmlgui.js,v $
             
 			console.log("Loading mapscript.js from:", ixmaps.szResourceBase+"maps/svg/js/mapscript.js");
             
-            // Load mapscript.js with a small delay to ensure everything is ready
-            setTimeout(function() {
-                $.when(
-                    $.getScript(ixmaps.szResourceBase+"maps/svg/js/mapscript.js"),
-                    $.Deferred(function(deferred) {
-                        $(deferred.resolve);
-                    })
-                ).done(function() {
-                    $.when(
-                        $.getScript(ixmaps.szResourceBase+"maps/svg/js/colorscheme.js"),
-                        $.getScript(ixmaps.szResourceBase+"maps/svg/js/mapscript2.js"),
-                        $.getScript(ixmaps.szResourceBase+"maps/svg/js/mapapi.js"),
-                        $.getScript(ixmaps.szResourceBase+"maps/svg/js/mapquery.js"),
-                        $.getScript(ixmaps.szResourceBase+"maps/svg/js/maptheme.js"),
-                        $.getScript(ixmaps.szResourceBase+"maps/svg/js/mapselect.js"),
-                        $.getScript(ixmaps.szResourceBase+"maps/svg/js/piechart.js"),
-                        $.Deferred(function(deferred) {
-                            $(deferred.resolve);
-                        })
-                    ).done(function() {
-                        setTimeout("initAll()", 100);
-                    }).fail(function(jqXHR, textStatus, errorThrown) {
-                        console.error("Failed to load :", textStatus, errorThrown);
-                        alert("Failed to load : " + textStatus);
-                    })
-                }).fail(function(jqXHR, textStatus, errorThrown) {
-                    console.error("Failed to load mapscript.js:", textStatus, errorThrown);
-                    alert("Failed to load mapscript.js: " + textStatus);
-                });
-            }, 100);
-            
+			// Try production mode first (mapscript.min.js)
+			// If it fails, fall back to development mode scripts
+			// Load mapscript.min.js with a small delay to ensure everything is ready
+			setTimeout(function() {
+				$.when(
+					$.getScript(ixmaps.szResourceBase+"maps/svg/js/mapscript.min.js"),
+					$.Deferred(function(deferred) {
+						$(deferred.resolve);
+					})
+				).done(function() {
+					console.log("Production mode: mapscript.min.js loaded successfully");
+					setTimeout("initAll()", 100);
+				}).fail(function(jqXHR, textStatus, errorThrown) {
+					console.warn("Failed to load mapscript.min.js (production):", textStatus, errorThrown);
+					console.log("Falling back to development mode scripts...");
+					
+					// Fall back to development mode
+					$.when(
+						$.getScript(ixmaps.szResourceBase+"maps/svg/js/mapscript.js"),
+						$.Deferred(function(deferred) {
+							$(deferred.resolve);
+						})
+					).done(function() {
+						$.when(
+							$.getScript(ixmaps.szResourceBase+"maps/svg/js/colorscheme.js"),
+							$.getScript(ixmaps.szResourceBase+"maps/svg/js/mapscript2.js"),
+							$.getScript(ixmaps.szResourceBase+"maps/svg/js/mapapi.js"),
+							$.getScript(ixmaps.szResourceBase+"maps/svg/js/mapquery.js"),
+							$.getScript(ixmaps.szResourceBase+"maps/svg/js/maptheme.js"),
+							$.getScript(ixmaps.szResourceBase+"maps/svg/js/mapselect.js"),
+							$.getScript(ixmaps.szResourceBase+"maps/svg/js/piechart.js"),
+							$.Deferred(function(deferred) {
+								$(deferred.resolve);
+							})
+						).done(function() {
+							console.log("Development mode: all scripts loaded successfully");
+							setTimeout("initAll()", 100);
+						}).fail(function(jqXHR, textStatus, errorThrown) {
+							console.error("Failed to load development mode scripts:", textStatus, errorThrown);
+							alert("Failed to load map scripts: " + textStatus);
+						})
+					}).fail(function(jqXHR, textStatus, errorThrown) {
+						console.error("Failed to load mapscript.js (fallback):", textStatus, errorThrown);
+						alert("Failed to load mapscript.js: " + textStatus);
+					});
+				});
+			}, 100);
 		}
 		// register window resize event to adapt the map always to the window size
 		// -----------------------------------------------------------------------
