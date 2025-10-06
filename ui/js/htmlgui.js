@@ -726,9 +726,7 @@ $Log: htmlgui.js,v $
 		if (ixmaps.embeddedSVG && ixmaps.embeddedSVG.window.fExecuteSilent && !fForce) {
 			return;
 		}
-		console.log("szMessageszMessageszMessage");
-		console.log(szMessage);
-		console.log("szMessageszMessageszMessage");
+
 		if (!szMessage){
 			return;
 		}
@@ -1915,6 +1913,9 @@ $Log: htmlgui.js,v $
 		}
 	};
 	ixmaps.setMapTool = function (szMode) {
+		ixmaps.mapTool(szMode);
+	};
+	ixmaps.setMode = function (szMode) {
 		ixmaps.mapTool(szMode);
 	};
 	ixmaps.getMapTool = function () {
