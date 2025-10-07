@@ -1575,8 +1575,8 @@ window.ixmaps.legend = window.ixmaps.legend || {};
 			/**
 			$("#onmapbuttondiv").append("<button type='button' id='map-legend-switch' style='toolbutton shadow'><a href='javascript:ixmaps.legend.show()'><i id='clipbuttonicon' class='fa fa-bars fa-fw' style='font-size:2em;font-size:1.3em;padding:0.5em 0;color:#666666;'></i></a></button>");
 			**/
-			$("#onmapbuttondiv").append(szButton);
-			$("#onmapbuttondiv").show();
+			$("#onmapbuttondivlegend").append(szButton);
+			$("#onmapbuttondivlegend").show();
 		}
 		$("#map-legend-switch").show();
 	};

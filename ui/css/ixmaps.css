@@ -1,4 +1,4 @@
-	<style>
+
 		.disable-select {
 			user-select: none;
 			/* supported by Chrome and Opera */
@@ -12,9 +12,7 @@
 			/* Internet Explorer/Edge */
 		}
 
-	</style>
 
-	<style>
 		@-webkit-keyframes leaflet-gestures-fadein {
 			0% {
 				opacity: 0
@@ -75,5 +73,4 @@
 			content: attr(data-gesture-handling-scroll-content)
 		}
 
-	</style>
 

@@ -120,9 +120,7 @@
         }
 
         $(document).ready(function() {
-
             let themeObj = ixmaps.getThemes().at(-1);
-
             let tableObj = new Data.Table(null);
             tableObj.table = themeObj.objTheme.dbTable;
             tableObj.fields = themeObj.objTheme.dbFields;
@@ -159,7 +157,6 @@
             ];
             // this loads the resources and calls ixmaps.loadEditor as callback
             ixmaps.loadResources(_fileUrls, null, ixmaps.__showTable);
-
             var resize = function(resizeData){
                 $("#ft-data").css("height",(resizeData.height)+"px");
                 $("#ft-data").css("width",(resizeData.width)+"px");
