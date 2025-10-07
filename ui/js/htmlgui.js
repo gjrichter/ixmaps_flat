@@ -286,6 +286,12 @@ $Log: htmlgui.js,v $
 		if (options.footer) {
 			__mapFooter = options.footer;
 		}
+		if (options.scrollsafe) {
+			ixmaps.scrollsafe = options.scrollsafe;
+		}
+		if (options.scrollsafesilent) {
+			ixmaps.scrollsafesilent = options.scrollsafesilent;
+		}
 
 		ixmaps.options = options;
 

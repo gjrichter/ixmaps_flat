@@ -586,7 +586,9 @@ $Log: htmlgui_api.js,v $
             footer: ixmaps.footer || 0,
             mode: szSvgLegendFlag,
             controls: szControls,
-            silent: opt.silent || true
+            silent: opt.silent || true,
+            scrollsafe: opt.scrollsafe || false,
+            scrollsafesilent: opt.scrollsafesilent || false
         });
         
         console.log(ixmaps);

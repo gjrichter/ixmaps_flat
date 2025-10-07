@@ -143,11 +143,11 @@ $Log: htmlgui_sync_Leaflet.js,v $
 		// ---------------------
 		// create map
 		// ---------------------
-
+		
 		LMap = L.map(this.szGmapDiv, {
 			zoomControl: false,
 			zoomSnap: 0,
-			gestureHandling: ((ixmaps.scrollsafe | ixmaps.scrollsafesilent) ? true : false),
+			gestureHandling: ((ixmaps.scrollsafe || ixmaps.scrollsafesilent) ? true : false),
 			gestureHandlingOptions: {
 				duration: ixmaps.scrollsafesilent ? 0 : 1000
 			}
