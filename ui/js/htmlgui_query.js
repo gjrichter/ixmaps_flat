@@ -680,7 +680,7 @@ function doContextualSearch(szField){
 		}
 	}
 	catch(e){
-		alert("map api error!");
+		console.log("map api error!");
 	}
 }
 

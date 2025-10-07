@@ -1861,7 +1861,7 @@ $Log: htmlgui.js,v $
 		try {
 			ixmaps.embeddedSVG.window.map.Api.doPanMap(nDeltaX, nDeltaY, szMode);
 		} catch (e) {
-			alert('map api error!');
+			console.log('map api error!');
 		}
 	};
 	ixmaps.zoomMap = function (nIndex, szMode, newZoom) {
@@ -1873,35 +1873,35 @@ $Log: htmlgui.js,v $
 				zoomSelect.selectedIndex = zoomSelect.options.length - 1;
 			}
 		} catch (e) {
-			alert('map api error!');
+			console.log('map api error!');
 		}
 	};
 	ixmaps.clipLayer = function (szLayerName, nWidth) {
 		try {
 			ixmaps.embeddedSVG.window.map.Api.setLayerClip(szLayerName, nWidth);
 		} catch (e) {
-			alert('map api error!');
+			console.log('map api error!');
 		}
 	};
 	ixmaps.clipMap = function (nWidth) {
 		try {
 			ixmaps.embeddedSVG.window.map.Api.setMapClip(nWidth);
 		} catch (e) {
-			alert('map api error!');
+			console.log('map api error!');
 		}
 	};
 	ixmaps.backwardsMap = function () {
 		try {
 			ixmaps.embeddedSVG.window.map.Api.backwards();
 		} catch (e) {
-			alert('map api error!');
+			console.log('map api error!');
 		}
 	};
 	ixmaps.forwardsMap = function () {
 		try {
 			ixmaps.embeddedSVG.window.map.Api.forwards();
 		} catch (e) {
-			alert('map api error!');
+			console.log('map api error!');
 		}
 	};
 	ixmaps.mapTool = function (szMode) {
@@ -1909,13 +1909,13 @@ $Log: htmlgui.js,v $
 			try {
 				ixmaps.embeddedSVG.window.map.Api.clearAllOverlays();
 			} catch (e) {
-				alert('map api error!');
+				console.log('map api error!');
 			}
 		}
 		try {
 			ixmaps.embeddedSVG.window.map.Api.setMapTool(szMode);
 		} catch (e) {
-			alert('map api error!');
+			console.log('map api error!');
 		}
 	};
 	ixmaps.setMapTool = function (szMode) {
@@ -1928,14 +1928,14 @@ $Log: htmlgui.js,v $
 		try {
 			return ixmaps.embeddedSVG.window.map.Api.getMapTool();
 		} catch (e) {
-			alert('map api error!');
+			console.log('map api error!');
 		}
 	};
 	ixmaps.getLocalString = function (szOrig) {
 		try {
 			return ixmaps.embeddedSVG.window.map.Dictionary.getLocalText(szOrig);
 		} catch (e) {
-			alert('map api error!');
+			console.log('map api error!');
 		}
 	};
 
