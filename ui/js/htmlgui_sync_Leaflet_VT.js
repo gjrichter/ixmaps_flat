@@ -220,6 +220,12 @@ $Log: htmlgui_sync_Leaflet.js,v $
 			minZoom: 2
 		});
 
+		__addVectorTileLayer("DATAVIZ.DARK", {
+			name: "VT_DATAVIZ_DARK",
+			myname: "VT_DATAVIZ_DARK",
+			minZoom: 2
+		});
+
 		__addVectorTileLayer("BACKDROP", {
 			name: "VT_BACKDROP",
 			myname: "VT_BACKDROP",

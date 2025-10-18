@@ -801,11 +801,6 @@ $Log: htmlgui.js,v $
 				"left": String(left + "px"),
                 "width": String(width + "px")
 			});
-			$("#attribution-div").css({
-				"visibility": "visible",
-				"top": String((top+height-35) + "px"),
-				"left": String((left+50) + "px")
-			});
 			$("#loading-image").css("visibility", "visible");
 			$("#loading-text-div").show();
 			if (szMessage) {
@@ -2501,6 +2496,23 @@ $Log: htmlgui.js,v $
 	ixmaps.htmlgui_setAttributionString = function (szAttribution) {
 		if ($("#attribution")) {
 			$("#attribution").html(szAttribution);
+			var top = (window.innerHeight * 0.4);
+			var left = (window.innerWidth * 0.47);
+			var width = (window.innerWidth);
+			var height = (window.innerHeight);
+			var gmapDiv = this.gmapDiv;
+			if (gmapDiv && $(gmapDiv).css("visibility") == "visible") {
+				top = $(gmapDiv).offset().top;
+				left = $(gmapDiv).offset().left;
+				width =$(gmapDiv).innerWidth();
+				height = $(gmapDiv).innerHeight();
+			}
+			$("#attribution-div").css({
+				"visibility": "visible",
+				"top": String(top+height-$("#attribution-div").height()-12) + "px",
+				"left": "60px"
+			});
+
 		}
 	};
 
@@ -2852,8 +2864,10 @@ $Log: htmlgui.js,v $
 		
 		if (!ixmaps.fSilent)
 		ixmaps.showLoadingArray(["loading data ...", " ... "]);
-		
-		$.getScript(ixmaps.szResourceBase+"../data.min.js/data.js")
+		console.log('');
+		console.log('ixmaps.htmlgui_loadExternalData ******************');
+		console.log('');
+		$.getScript(ixmaps.szResourceBase+"../data.js/data.js")
 			.done(function (script, textStatus) {
 
 				// a) data is loaded by a specific data provider function
@@ -3083,7 +3097,7 @@ $Log: htmlgui.js,v $
 					});
 				});
 			} else {
-				$.getScript("../../../data.min.js/data.js")
+				$.getScript("../../../data.js/data.js")
 					.done(function (script, textStatus) {
 						// load the data using data.js
 						Data.object({

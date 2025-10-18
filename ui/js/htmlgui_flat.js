@@ -428,7 +428,7 @@ $Log: htmlgui_api.js,v $
                 ixmaps.legendAlign = "left";
                 $(".map-legend").attr("data-align", "left");
                 $(".map-legend").css("text-align", "left");
-                var szLeft = opt.align.split("left")[0] || "4%";
+                var szLeft = opt.align.split("left")[0] || "55px";
                 $(".map-legend").css("left", szLeft);
                 $(".map-legend").css("top", "12px");
                 $(".title-field").css("left", "100px");
@@ -503,6 +503,13 @@ $Log: htmlgui_api.js,v $
         // set text align for the map !
         $("#ixmap").parent().css("text-align", "left");
         
+        if (opt.attribution) {
+        	// set attribution (bottom left on map space)
+            var attribution = opt.attribution;
+            $("#attribution").html((attribution && (attribution != "null")) ? attribution : "");
+            ixmaps.attribution = attribution;
+        }                   
+
         // -------------
         // context menu
         // -------------
@@ -527,7 +534,122 @@ $Log: htmlgui_api.js,v $
             __contextMenuTrigger = setTimeout("$('#contextmenu').hide()", 100);
         }
 
+        if (opt.toolbutton || opt.tools ) {
+            //$("#switchtoolsbutton").show();
+            $("#modeToggle").show();
+            setTimeout('$("#onmapbuttondiv").show();', 1000);
+            $("#modeToggle").css("cursor", "pointer").click(function (e) {
+                e.preventDefault();
+                e.stopPropagation();
+                ixmaps.toggleInputMode();
+            });
+            // Keyboard shortcut: press 'M' to toggle mode
+            document.addEventListener('keydown', function(event) {
+                if (event.key === 'm' || event.key === 'M') {
+                    ixmaps.toggleInputMode();
+                }
+            });
+        }else{
+            $("#modeToggle").hide();
+        }
+        
+        if (opt.search) {
+
+            ixmaps.search.szSearchSuffix = opt.search;
+
+            $("#switchsearchbutton").show();
+            $("#switchsearchbutton").css("cursor", "pointer").click(function (e) {
+                e.preventDefault();
+                e.stopPropagation();
+                $(".search-container").css('top', $("#switchsearchbutton").parent().position().top+$("#switchsearchbutton").position().top);
+                $(".search-container").css('left', $("#switchsearchbutton").parent().position().left);
+                $("#switchsearchbutton").hide();
+                $(".search-container").show().animate({
+                    width: "400px"
+                }, 500);
+                $(".search-box").show();
+            });
+            $(".search-container").click(function (e) {
+                e.preventDefault();
+                e.stopPropagation();
+                $(".search-container").animate({
+                    width: "0px"
+                }, 500);
+                $(".search-container").hide();
+                $(".search-box").val("");
+                $("#switchsearchbutton").show();
+            });
+            $(".search-box").click(function (e) {
+                e.stopPropagation();
+            });
+            setTimeout('$("#onmapbuttondiv").show();', 1000);
+        }
+
+        ixmaps.search.initSearch();
+
+
     }
+
+    // ----------------------------
+    // M O D E   T O G G L E
+    // ----------------------------
+
+    var currentMode = 'pan';
+
+    // SVG icons (outlined style)
+    const panIcon = '<svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 3L12 8M12 16L12 21M3 12L8 12M16 12L21 12"/><path d="M8 8L12 12L8 16M16 8L12 12L16 16"/></svg>';
+    const infoIcon = '<svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><circle cx="12" cy="12" r="9"/><path d="M12 16L12 12"/><circle cx="12" cy="8" r="0.5" fill="currentColor"/></svg>';
+
+    ixmaps.toggleInputMode = function() {
+        const modeButton = document.getElementById('modeToggle');
+        const modeIcon = document.getElementById('modeIcon');
+        const modeLabel = modeButton.querySelector('.mode-label');
+
+        if (currentMode === 'pan') {
+            // Switch to INFO mode
+            currentMode = 'info';
+            ixmaps.setMode('info');
+            modeIcon.innerHTML = infoIcon;
+            modeLabel.textContent = 'INFO';
+            modeButton.classList.add('info-mode');
+            modeButton.title = 'Modalità INFO - Clicca per tornare a PAN';
+        } else {
+            // Switch to PAN mode
+            currentMode = 'pan';
+            ixmaps.setMode('pan');
+            modeIcon.innerHTML = panIcon;
+            modeLabel.textContent = 'PAN';
+            modeButton.classList.remove('info-mode');
+            modeButton.title = 'Modalità PAN - Clicca per passare a INFO';
+        }
+    }
+
+    __switchInputMode = function (szSource) {
+
+        switch (ixmaps.getMapTool()) {
+            case 'info':
+                ixmaps.mapTool((szSource && (szSource == "button")) ? 'pan' : 'idle');
+                ixmaps.switchAndroidEventPane(true);
+                $("#switchmodebuttonicon").attr("src", "../resources/images/mano.png");
+                $("#switchmodebuttonicon").css("opacity", "1");
+                $("#switchmodebutton").css("background", "#ffffff url(../resources/images/info.png) no-repeat 95% 55%");
+                $("#switchmodebutton").css("background-size", "13px");
+                $("#switchinfobutton").hide();
+                //$("#onmapbuttondivzoom").hide();
+                break;
+            case 'pan':
+            default:
+                ixmaps.mapTool('info');
+                ixmaps.switchAndroidEventPane(false);
+                $("#switchmodebuttonicon").attr("src", "../resources/images/info.png");
+                $("#switchmodebutton").css("background", "#ffffff url(../resources/images/mano.png) no-repeat 98% 55%");
+                $("#switchmodebutton").css("background-size", "13px");
+                $("#switchmodebuttonicon").css("opacity", "1");
+                $("#onmapbuttondivzoom").show();
+                break;
+        }
+    };
+
 
     /**
      * Initializes and loads the ixmaps map application.
@@ -949,6 +1071,11 @@ $Log: htmlgui_api.js,v $
             return this;
         },
 
+        toggleTheme: function (szTheme) {
+            ixmaps.toggleTheme(szTheme);
+            return this;
+        },
+
         replace: function (szTheme, theme, flag) {
             ixmaps.replaceTheme(szTheme, theme, flag);
             return this;
@@ -1255,7 +1382,6 @@ $Log: htmlgui_api.js,v $
          * To re-enable: Uncomment the entire block below and ensure proper API keys
          * and rate limiting are configured.
          */
-        /*
         ixmaps.search = ixmaps.search || {};
 
         ixmaps.search.show = function(fFlag) {
@@ -1290,8 +1416,8 @@ $Log: htmlgui_api.js,v $
         ixmaps.search.positionResultList = function(input) {
             $('.result-list').css({
                 width: input.outerWidth(),
-                top: input.offset().top + input.outerHeight(),
-                left: input.offset().left
+                top: input.offset().top + input.outerHeight() + 1,
+                left: input.position().left + input.parent().position().left
             });
         };
 
@@ -1316,7 +1442,7 @@ $Log: htmlgui_api.js,v $
             var i = 0;
             result.forEach(function(item) {
                 if (++i < 10) {
-                    var itemStr = '<div class="result-item" title="' + item.display_name + '">' + item.display_name + '</div>';
+                    var itemStr = '<div id="result-item-' + i + '" class="result-item" title="' + item.display_name + '">' + item.display_name + '</div>';
                     var itemObject = $(itemStr);
                     itemObject.data(item);
                     $('.result-list').append(itemObject);
@@ -1383,79 +1509,80 @@ $Log: htmlgui_api.js,v $
             $('.result-list').empty().hide();
         };
 
-        $('.result-list')
-            .on('click', '.result-item', ixmaps.search.renderMapFromResult)
-            .on('mouseenter', '.result-item', function(e) {
-                $(e.currentTarget).addClass('selected');
-            })
-            .on('mouseleave', '.result-item', function(e) {
-                $(e.currentTarget).removeClass('selected');
+        ixmaps.search.initSearch = function() {
+
+            $('.result-list')
+                .on('click', '.result-item', ixmaps.search.renderMapFromResult)
+                .on('mouseenter', '.result-item', function(e) {
+                    $(e.currentTarget).addClass('selected');
+                })
+                .on('mouseleave', '.result-item', function(e) {
+                    $(e.currentTarget).removeClass('selected');
+                });
+
+            $(document).on('keydown', '.search-box', function(e) {
+                var pressed = e.which;
+                var keys = {
+                    enter: 13,
+                    up: 38,
+                    down: 40
+                };
+                if (pressed === keys.enter) {
+                    $('.result-item.selected').length ? ixmaps.search.renderMapFromResult() : ixmaps.search.queryNominatim();
+                } else if (pressed === keys.up) {
+                    if (!$('.result-item.selected').length || $('.result-item.selected').is(':first-child')) {
+                        // Choose last
+                        ixmaps.search.selectResult($('.result-item:last-child'));
+                    } else {
+                        // Choose prev item
+                        ixmaps.search.selectResult($('.result-item.selected').prev());
+                    }
+                } else if (pressed === keys.down) {
+                    if (!$('.result-item.selected').length || $('.result-item.selected').is(':last-child')) {
+                        // Choose first 
+                        ixmaps.search.selectResult($('.result-item:first-child'));
+                    } else {
+                        // Choose next item
+                        ixmaps.search.selectResult($('.result-item.selected').next());
+                    }
+                } else {
+                    if ($('.result-item').length) {
+                        $('.result-list').empty().hide();
+                    }
+                }
             });
 
-        $(document).on('keydown', '.search-box', function(e) {
-            var pressed = e.which;
-            var keys = {
-                enter: 13,
-                up: 38,
-                down: 40
-            };
-            if (pressed === keys.enter) {
-                $('.result-item.selected').length ? ixmaps.search.renderMapFromResult() : ixmaps.search.queryNominatim();
-            } else if (pressed === keys.up) {
-                if (!$('.result-item.selected').length || $('.result-item.selected').is(':first-child')) {
-                    // Choose last
-                    ixmaps.search.selectResult($('.result-item:last-child'));
-                } else {
-                    // Choose prev item
-                    ixmaps.search.selectResult($('.result-item.selected').prev());
+            var __queryNominatimTimeout = null;
+
+            $(document).on('keyup', '.search-box', function(e) {
+                var pressed = e.which;
+                var keys = {
+                    enter: 13,
+                    up: 38,
+                    down: 40
+                };
+                if (pressed !== keys.enter) {
+                    if (__queryNominatimTimeout) {
+                        clearTimeout(__queryNominatimTimeout);
+                    }
+                    __queryNominatimTimeout = setTimeout("ixmaps.search.queryNominatim()", 500);
                 }
-            } else if (pressed === keys.down) {
-                if (!$('.result-item.selected').length || $('.result-item.selected').is(':last-child')) {
-                    // Choose first 
-                    ixmaps.search.selectResult($('.result-item:first-child'));
-                } else {
-                    // Choose next item
-                    ixmaps.search.selectResult($('.result-item.selected').next());
-                }
-            } else {
+            });
+
+            $(document).on('blur', '.search-box', function() {
                 if ($('.result-item').length) {
-                    $('.result-list').empty().hide();
+                    setTimeout("$('.result-list').empty().hide();", 500);
                 }
-            }
-        });
-
-        var __queryNominatimTimeout = null;
-
-        $(document).on('keyup', '.search-box', function(e) {
-            var pressed = e.which;
-            var keys = {
-                enter: 13,
-                up: 38,
-                down: 40
-            };
-            if (pressed !== keys.enter) {
-                if (__queryNominatimTimeout) {
-                    clearTimeout(__queryNominatimTimeout);
-                }
-                __queryNominatimTimeout = setTimeout("ixmaps.search.queryNominatim()", 500);
-            }
-        });
-
-        $(document).on('blur', '.search-box', function() {
-            if ($('.result-item').length) {
-                setTimeout("$('.result-list').empty().hide();", 500);
-            }
-        });
+            });
 
 
-        $(document).on('click', '.search-btn', ixmaps.search.queryNominatim);
-
+            $(document).on('click', '.search-btn', ixmaps.search.queryNominatim);
+        };
 
         // ------------------------------------------- 
         // END search tool 
         // ------------------------------------------- 
 
-        **/
 
     /**
      * Multi-Map Registry System

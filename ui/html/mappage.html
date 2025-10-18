@@ -24,6 +24,11 @@
         .tool-button-label {
             height: 36px;
         }
+		.tool-button:hover {
+			transform: translateY(-1px);
+			background: #f8f9fa;
+			box-shadow: 0 2px 6px rgba(155, 255, 255, 0.5);
+		}
         .icon-margin {
             margin-left: -5px;
             margin-right: -4px;
@@ -61,7 +66,7 @@
             vertical-align: -4px;
         }
         .search-help-icon {
-            height: 29px;
+            height: 25px;
             margin-left: -5px;
             margin-top: 2px;
             opacity: 0.6;
@@ -217,6 +222,68 @@
       border-bottom-left-radius: 6px;
       text-align: right;
     }
+		/* Mode Toggle Icon */
+		.mode-toggle {
+			width: auto;
+			min-width: 60px;
+			height: 36px;
+            margin-bottom: 2px;
+			padding: 0 12px;
+			background: white;
+			color: #2c3e50;
+			border-radius: 8px;
+			display: flex;
+			flex-direction: row;
+			align-items: center;
+			justify-content: center;
+			gap: 6px;
+			font-size: 20px;
+			cursor: pointer;
+			z-index: 10000;
+			transition: all 0.3s ease;
+			border: 1px solid #46494c;
+		}
+
+		.mode-toggle:hover {
+			transform: translateY(-1px);
+			background: #f8f9fa;
+			box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+		}
+
+		.mode-toggle.info-mode {
+			border-color: #e74c3c;
+			color: #e74c3c;
+		}
+
+		.mode-toggle.info-mode:hover {
+			background: #fef5f5;
+		}
+
+		.mode-toggle .mode-icon {
+			font-size: 20px;
+			line-height: 1;
+			width: 20px;
+			height: 20px;
+		}
+
+		.mode-toggle .mode-icon svg {
+			width: 100%;
+			height: 100%;
+			fill: none;
+			stroke: currentColor;
+			stroke-width: 1;
+			stroke-linecap: round;
+			stroke-linejoin: round;
+		}
+
+		.mode-toggle .mode-label {
+			font-size: 11px;
+			font-weight: 600;
+			text-transform: uppercase;
+			letter-spacing: 0.5px;
+			font-family: Arial, sans-serif;
+			line-height: 1;
+		}
         
         
         
@@ -243,11 +310,16 @@
                 </label>
             </button>
 
-            <button type="button" id="switchmodebutton" title="info/pan" class="toolbutton shadow tool-button">
-                <label for="switchmodebutton" class="tool-button-label">
-                    <img id="switchmodebuttonicon" src="https://gjrichter.github.io/ixmaps_flat/ui/resources/images/mano.png" style="height:24px;margin-left:-5px;margin-right:0px;" alt="switch mode info/pan"/>
-                </label>
-            </button>
+            <!-- Mode Toggle Icon -->
+            <div class="mode-toggle" id="modeToggle" title="Clicca per cambiare modalità">
+                <div class="mode-icon" id="modeIcon">
+                    <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M12 3L12 8M12 16L12 21M3 12L8 12M16 12L21 12"/>
+                        <path d="M8 8L12 12L8 16M16 8L12 12L16 16"/>
+                    </svg>
+                </div>
+                <div class="mode-label">PAN</div>
+            </div>
 
             <button type="button" id="switchtoolsbutton" title="show toolbar" class="toolbutton shadow tool-button">
                 <label for="switchtoolsbutton" class="tool-button-label">
@@ -295,6 +367,12 @@
         </aside>
         <div class="result-list"></div>
 
+        <div id="attribution-div" class="attribution-div" style="user-select: none">
+            <span id="attribution"></span>
+            <span>|</span>
+            <span class="map-footer"><button type="button" onclick="ixmaps.popupTools()" class="footer-button">tools</button></span>
+        </div>
+    
         <nav id="onmapbuttondivbottom" class="z-index-999 hidden" style="position:absolute;bottom:30px;right:10px;display:inline;opacity:0.95;">
 
             <button type="button" id="switchlegendbutton" title="switch legend display" class="tool-button">
@@ -371,12 +449,6 @@
             <div id="loading-gif" class="spinner" style="margin-top:1em;display:none;">
             </div>
         </div>
-    </div>
-
-    <div id="attribution-div" class="attribution-div" style="user-select: none">
-        <span id="attribution"></span>
-        <span>|</span>
-        <span class="map-footer"><button type="button" onclick="ixmaps.popupTools()" class="footer-button">tools</button></span>
     </div>
 
     <div id="divstart" style="	visibility:hidden;
