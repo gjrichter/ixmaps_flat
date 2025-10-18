@@ -6283,6 +6283,13 @@ $Log: maptheme.js,v $
 					eval("this.dbFields = " + szTableName + "_fields");
 				} catch (e) { }
 			}
+			this.dbTable.fields = this.dbFields.length;
+			
+			// if the table is empty, return false
+			if (this.dbTable.fields == 0 || this.dbTable.records == 0 ){
+				return false;
+			}
+
 			try {
 				if (!this.szSelectionField) {
 					this.szSelectionField = map.Layer.getLayerObj(this.szName).szSelection;
@@ -9037,13 +9044,13 @@ $Log: maptheme.js,v $
 				this.removeDefinitionFromFlag("ZOOMTO");
 				this.removeDefinitionFromFlag("SHOW");
 
-				this.fContinueLoadAndAggregate = true;
-				this.continueIndex = j;
-				this.szThemeLayer = szThemeLayer;
+				//this.fContinueLoadAndAggregate = true;
+				//this.continueIndex = j;
+				//this.szThemeLayer = szThemeLayer;
 				//setTimeout(function () {
-				map.Themes.executeContinue();
+				//map.Themes.executeContinue();
 				//}, 1);
-				return true;
+				//return true;
 				//var defObj = map.Themes.getMapThemeDefinitionObj(this.szId);
 				//map.Themes.newThemeObjA = map.Themes.newThemeObjA || [];
 				//map.Themes.newThemeObjA.push(defObj);
@@ -9494,7 +9501,6 @@ $Log: maptheme.js,v $
 
 			const nAlphaValue = this.szAlphaField ? __scanValue(this.objTheme.dbRecords[j][this.objTheme.nAlphaFieldIndex]) : null;
 			let szTitle = this.szTitleField ? this.objTheme.dbRecords[j][this.objTheme.nTitleFieldIndex] : null;
-			console.log("szTitle: " + szTitle);
 			const szColor = this.szColorField ? (this.szColorField === "$index$" ? (j + 1) : __mpap_decode_utf8(this.objTheme.dbRecords[j][this.objTheme.nColorFieldIndex])) : null;
 			const szTime = this.szTimeField ? (this.szTimeField === "$index$" ? (j + 1) : __mpap_decode_utf8(this.objTheme.dbRecords[j][this.objTheme.nTimeFieldIndex]).replace(/ - /g, " ")) : null;
 			const nX = this.szXField ? __scanValue(this.objTheme.dbRecords[j][this.objTheme.nXFieldIndex]) : null;
@@ -21780,7 +21786,7 @@ $Log: maptheme.js,v $
 		) {
 			var szLabel = this.itemA[a].szLabel;
 			if (!szLabel) {
-				szLabel = this.szLabelField + "?";
+				szLabel = this.itemA[a].szTitle ? this.itemA[a].szTitle : this.szLabelField + "?";
 			} else {
 				if (!isNaN(__scanValue(szLabel))) {
 					szLabel = this.formatValue(__scanValue(szLabel), this.nValueDecimals || 2) + (this.szLabelUnits || "");
